@@ -1,556 +1,757 @@
 /**
- * Products Listing Page — ICON ELECTROMATIC
- * Clean, Uncluttered, Professional Layout (UI Only)
+ * Products Catalog Page — ICON ELECTROMATIC
+ * Hierarchical Navigation: Companies (15 OEMs) → Categories → Products
+ * Direct source: 'Icon Website Product Info - Mrora.v2.xlsx'
  */
-import { CATEGORIES, getProducts, getProductsByCategory, searchProducts } from '../data/products.js';
-import { renderProductCard, renderSkeletonCard } from '../components/ProductCard.js';
+import {
+  CATALOG,
+  getOEMs,
+  getOEM,
+  getCategories,
+  getCategory,
+  getProductsForCategory,
+  getAllProducts,
+  getTotalProductCount,
+  getTotalCategoryCount,
+  getTotalOEMCount
+} from '../data/catalogData.js';
 
-const ITEMS_PER_PAGE = 24;
-let currentPage = 1;
-let currentCategory = '';
-let currentSearch = '';
-let currentSort = 'name-asc';
-let filteredProducts = [];
-
-// Curated prominent categories for quick one-click pills
-const PRIMARY_CATEGORY_PILLS = [
-  { id: '', name: 'All Products' },
-  { id: 'amplifiers', name: 'Amplifiers' },
-  { id: 'filters', name: 'Filters' },
-  { id: 'mixers', name: 'Mixers' },
-  { id: 'attenuators', name: 'Attenuators' },
-  { id: 'waveguides', name: 'Waveguides' },
-  { id: 'switches', name: 'RF Switches' },
-  { id: 'couplers', name: 'Couplers' },
-  { id: 'oscillators', name: 'Oscillators' },
-];
+let navState = {
+  level: 'oems',       // 'oems' | 'categories' | 'products'
+  oemId: null,
+  categoryId: null,
+  activeFilter: 'all', // for OEM filter
+  searchQuery: '',
+  viewMode: 'cards'    // 'cards' | 'table'
+};
 
 export function renderProductsPage() {
-  const params = new URLSearchParams(window.location.hash.split('?')[1] || '');
-  currentCategory = params.get('category') || '';
-  currentSearch = params.get('search') || '';
-  currentPage = 1;
+  const hash = window.location.hash || '';
+  const queryStr = hash.includes('?') ? hash.split('?')[1] : '';
+  const params = new URLSearchParams(queryStr);
 
-  const categoryName = currentCategory
-    ? CATEGORIES.find(c => c.id === currentCategory)?.name || 'Products'
-    : 'All Products';
+  navState.level = params.get('level') || 'oems';
+  navState.oemId = params.get('oem') || null;
+  navState.categoryId = params.get('category') || null;
 
   return `
-    <div class="page-content" style="padding-top:calc(var(--header-height) + 24px);padding-bottom:var(--space-24);background:var(--bg-dark);min-height:100vh;">
-      <div class="container">
-        
-        <!-- Minimal Breadcrumb -->
-        <nav class="breadcrumb-dark">
-          <a data-route="/">Home</a>
-          <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i></span>
-          <a data-route="/products" style="color:${currentCategory ? 'var(--text-gray-400)' : 'var(--text-white)'};">Products</a>
-          ${currentCategory ? `
-            <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i></span>
-            <span style="color:var(--logo-red-light);font-weight:600;">${categoryName}</span>
-          ` : ''}
-        </nav>
+    <div class="catalog-page" id="catalog-page">
+      ${renderPageShell()}
+    </div>
+  `;
+}
 
-        <!-- Unified Page Header -->
-        <div class="page-header-unified" style="display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-6);flex-wrap:wrap;max-width:100%;">
-          <div style="max-width:820px;">
+function renderPageShell() {
+  const totalProds = getTotalProductCount();
+  const totalCats = getTotalCategoryCount();
+  const totalOEMs = getTotalOEMCount();
+
+  return `
+    <!-- Top Hero Section -->
+    <div class="catalog-hero-strip">
+      <div class="container">
+        <div class="catalog-hero-inner">
+          <div class="catalog-hero-text">
             <div class="page-eyebrow-pill">
               <span class="hub-dot-pulse"></span>
-              <span>PRECISION COMPONENT CATALOG</span>
+              <span>AUTHORIZED MANUFACTURER CATALOG</span>
             </div>
-            <h1 class="page-title-unified">${categoryName}</h1>
-            <p class="page-lead-unified">
-              Over 4,000+ precision RF, microwave, and millimeter-wave catalog components from DC to 86 GHz.
+            <h1 class="catalog-hero-title">Product Portfolio &amp; Component Catalog</h1>
+            <p class="catalog-hero-sub">
+              Authorized distributor for world-leading RF, microwave, mmWave, semiconductor, and Hi-Rel materials manufacturers.
+              Explore all 15 global OEM partners, multi-frequency categories, and specialized product lines.
             </p>
           </div>
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
-            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:8px 14px;font-size:0.8rem;color:var(--text-gray-300);display:flex;align-items:center;gap:6px;">
-              <i class="fa-solid fa-certificate" style="color:var(--logo-blue-light);"></i> ISO 9001:2015
+          <div class="catalog-hero-stats">
+            <div class="catalog-stat">
+              <span class="catalog-stat-num">${totalOEMs}</span>
+              <span class="catalog-stat-label">Global OEMs</span>
             </div>
-            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:8px 14px;font-size:0.8rem;color:var(--text-gray-300);display:flex;align-items:center;gap:6px;">
-              <i class="fa-solid fa-bolt" style="color:var(--logo-red-light);"></i> Rapid RFQ Quote
+            <div class="catalog-stat-div"></div>
+            <div class="catalog-stat">
+              <span class="catalog-stat-num">${totalCats}</span>
+              <span class="catalog-stat-label">Categories</span>
+            </div>
+            <div class="catalog-stat-div"></div>
+            <div class="catalog-stat">
+              <span class="catalog-stat-num">${totalProds}+</span>
+              <span class="catalog-stat-label">Products &amp; Lines</span>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Sleek Unified Control Bar -->
-        <div style="background:#090E1A;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px 20px;margin-bottom:var(--space-6);box-shadow:0 12px 32px -10px rgba(0,0,0,0.5);">
-          
-          <!-- Top Row: Search & Filters Dropdown -->
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
-            
-            <!-- Sleek Search Input -->
-            <div style="position:relative;flex:1;min-width:260px;">
-              <i class="fa-solid fa-magnifying-glass" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#64748B;font-size:0.85rem;"></i>
-              <input type="text" id="product-search-input" value="${currentSearch}" 
-                     placeholder="Search model (e.g. ZX60, VAT), frequency, or keyword..." 
-                     style="width:100%;padding:9px 36px 9px 38px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#FFFFFF;font-size:0.875rem;outline:none;transition:border-color 0.2s;" />
-              <button id="clear-search-btn" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#64748B;cursor:pointer;display:${currentSearch ? 'block' : 'none'};padding:2px;" title="Clear search">
-                <i class="fa-solid fa-circle-xmark"></i>
-              </button>
-            </div>
+    <!-- Catalog Body -->
+    <div class="catalog-body">
+      <div class="container">
+        <!-- Interactive Breadcrumb -->
+        <nav class="catalog-breadcrumb" id="catalog-breadcrumb">
+          ${renderBreadcrumb()}
+        </nav>
 
-            <!-- Full Categories Custom Dropdown -->
-            <div class="relay-custom-dropdown" id="category-dropdown-wrapper" style="min-width:220px;">
-              <div class="relay-dropdown-trigger" id="category-dropdown-trigger" role="button" aria-haspopup="listbox" aria-expanded="false">
-                <div style="display:flex;align-items:center;gap:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                  <i class="fa-solid fa-layer-group" style="color:var(--logo-blue-light);font-size:0.85rem;flex-shrink:0;"></i>
-                  <span id="category-dropdown-label" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                    ${currentCategory ? (CATEGORIES.find(c => c.id === currentCategory)?.name || 'All 24 Categories') : 'All 24 Categories'}
-                  </span>
-                </div>
-                <i class="fa-solid fa-chevron-down dropdown-chevron" style="font-size:0.75rem;color:#94A3B8;flex-shrink:0;"></i>
-              </div>
-              <div class="relay-dropdown-menu" id="category-dropdown-menu" role="listbox">
-                <div class="relay-dropdown-item ${!currentCategory ? 'selected' : ''}" data-value="">
-                  <span>All 24 Categories</span>
-                  ${!currentCategory ? '<i class="fa-solid fa-check" style="color:var(--logo-red);font-size:0.75rem;"></i>' : ''}
-                </div>
-                ${CATEGORIES.map(cat => `
-                  <div class="relay-dropdown-item ${currentCategory === cat.id ? 'selected' : ''}" data-value="${cat.id}">
-                    <span>${cat.name}</span>
-                    ${currentCategory === cat.id ? '<i class="fa-solid fa-check" style="color:var(--logo-red);font-size:0.75rem;"></i>' : ''}
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-
-            <!-- Sort Selector Custom Dropdown -->
-            <div class="relay-custom-dropdown" id="sort-dropdown-wrapper" style="min-width:185px;">
-              <div class="relay-dropdown-trigger" id="sort-dropdown-trigger" role="button" aria-haspopup="listbox" aria-expanded="false">
-                <div style="display:flex;align-items:center;gap:8px;">
-                  <i class="fa-solid fa-arrow-down-short-wide" style="color:var(--logo-red-light);font-size:0.85rem;flex-shrink:0;"></i>
-                  <span id="sort-dropdown-label">Model (A–Z)</span>
-                </div>
-                <i class="fa-solid fa-chevron-down dropdown-chevron" style="font-size:0.75rem;color:#94A3B8;flex-shrink:0;"></i>
-              </div>
-              <div class="relay-dropdown-menu" id="sort-dropdown-menu" style="right:0;left:auto;" role="listbox">
-                <div class="relay-dropdown-item ${currentSort === 'name-asc' ? 'selected' : ''}" data-value="name-asc">
-                  <span>Model (A–Z)</span>
-                  ${currentSort === 'name-asc' ? '<i class="fa-solid fa-check" style="color:var(--logo-red);font-size:0.75rem;"></i>' : ''}
-                </div>
-                <div class="relay-dropdown-item ${currentSort === 'name-desc' ? 'selected' : ''}" data-value="name-desc">
-                  <span>Model (Z–A)</span>
-                  ${currentSort === 'name-desc' ? '<i class="fa-solid fa-check" style="color:var(--logo-red);font-size:0.75rem;"></i>' : ''}
-                </div>
-                <div class="relay-dropdown-item ${currentSort === 'category' ? 'selected' : ''}" data-value="category">
-                  <span>By Category</span>
-                  ${currentSort === 'category' ? '<i class="fa-solid fa-check" style="color:var(--logo-red);font-size:0.75rem;"></i>' : ''}
-                </div>
-                <div class="relay-dropdown-item ${currentSort === 'newest' ? 'selected' : ''}" data-value="newest">
-                  <span>New Releases</span>
-                  ${currentSort === 'newest' ? '<i class="fa-solid fa-check" style="color:var(--logo-red);font-size:0.75rem;"></i>' : ''}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Quick Category Pills Row -->
-          <div class="products-nav-bar" id="products-category-pills" style="margin-bottom:0;padding-top:4px;border-top:1px solid rgba(255,255,255,0.05);">
-            ${PRIMARY_CATEGORY_PILLS.map(cat => `
-              <button class="filter-chip-dark ${currentCategory === cat.id ? 'active' : ''}" data-cat-id="${cat.id}">
-                ${cat.name}
-              </button>
-            `).join('')}
-          </div>
+        <!-- Dynamic Content View -->
+        <div id="catalog-content">
+          ${renderCurrentLevel()}
         </div>
-
-        <!-- Clean Status & Active Filter Strip -->
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-6);font-size:0.85rem;color:var(--text-gray-400);flex-wrap:wrap;gap:8px;">
-          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-            <div id="results-count" style="font-weight:600;color:var(--text-white);">
-              Loading catalog...
-            </div>
-            
-            <!-- Active filter chips -->
-            <div id="active-filter-chips" style="display:flex;gap:6px;align-items:center;"></div>
-          </div>
-
-          <div style="display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--text-gray-400);">
-            <span class="pulse-dot"></span>
-            <span>All models available for prototype and volume order</span>
-          </div>
-        </div>
-
-        <!-- Spacious, Uncluttered Products Grid -->
-        <div class="products-grid-dark" id="products-grid">
-          ${Array(8).fill(renderSkeletonCard()).join('')}
-        </div>
-
-        <!-- Clean Pagination -->
-        <div id="pagination" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:var(--space-12);"></div>
       </div>
     </div>
   `;
 }
 
-export function initProductsPage() {
-  setTimeout(() => {
-    applyFiltersAndRender();
-  }, 50);
+function renderBreadcrumb() {
+  const crumbs = [{ label: 'All Companies', level: 'oems' }];
 
-  // Search input with debounce
-  const searchInput = document.getElementById('product-search-input');
-  const clearBtn = document.getElementById('clear-search-btn');
-
-  if (searchInput) {
-    let debounce;
-    searchInput.addEventListener('input', () => {
-      if (clearBtn) clearBtn.style.display = searchInput.value ? 'block' : 'none';
-      clearTimeout(debounce);
-      debounce = setTimeout(() => {
-        currentSearch = searchInput.value.trim();
-        currentPage = 1;
-        applyFiltersAndRender();
-      }, 200);
+  if (navState.oemId) {
+    const oem = getOEM(navState.oemId);
+    crumbs.push({
+      label: oem ? oem.shortName : navState.oemId,
+      level: 'categories',
+      oemId: navState.oemId
     });
   }
 
-  if (clearBtn && searchInput) {
-    clearBtn.addEventListener('click', () => {
-      searchInput.value = '';
-      currentSearch = '';
-      clearBtn.style.display = 'none';
-      currentPage = 1;
-      applyFiltersAndRender();
+  if (navState.categoryId && navState.oemId) {
+    const cat = getCategory(navState.oemId, navState.categoryId);
+    crumbs.push({
+      label: cat ? cat.name : navState.categoryId,
+      level: 'products',
+      oemId: navState.oemId,
+      categoryId: navState.categoryId,
+      active: true
     });
   }
 
-  // Helper to initialize custom Relay dropdowns
-  function setupRelayDropdown(wrapperId, triggerId, menuId, labelId, onSelect) {
-    const wrapper = document.getElementById(wrapperId);
-    const trigger = document.getElementById(triggerId);
-    const menu = document.getElementById(menuId);
-    const label = document.getElementById(labelId);
-
-    if (!wrapper || !trigger || !menu) return;
-
-    trigger.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const wasOpen = wrapper.classList.contains('open');
-      // Close any other open dropdowns
-      document.querySelectorAll('.relay-custom-dropdown').forEach(d => {
-        d.classList.remove('open');
-        d.querySelector('.relay-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
-      });
-      if (!wasOpen) {
-        wrapper.classList.add('open');
-        trigger.setAttribute('aria-expanded', 'true');
-      }
-    });
-
-    menu.querySelectorAll('.relay-dropdown-item').forEach(item => {
-      item.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const val = item.getAttribute('data-value');
-        const text = item.querySelector('span')?.textContent || val;
-
-        menu.querySelectorAll('.relay-dropdown-item').forEach(i => {
-          i.classList.remove('selected');
-          const check = i.querySelector('.fa-check');
-          if (check) check.remove();
-        });
-
-        item.classList.add('selected');
-        item.insertAdjacentHTML('beforeend', '<i class="fa-solid fa-check" style="color:var(--logo-red);font-size:0.75rem;"></i>');
-
-        if (label) label.textContent = text;
-        wrapper.classList.remove('open');
-        trigger.setAttribute('aria-expanded', 'false');
-
-        onSelect(val);
-      });
-    });
-  }
-
-  // Initialize Category custom dropdown
-  setupRelayDropdown('category-dropdown-wrapper', 'category-dropdown-trigger', 'category-dropdown-menu', 'category-dropdown-label', (catId) => {
-    currentCategory = catId;
-    currentPage = 1;
-
-    // Sync pills
-    document.querySelectorAll('#products-category-pills button').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-cat-id') === currentCategory);
-    });
-
-    applyFiltersAndRender();
-  });
-
-  // Initialize Sort custom dropdown
-  setupRelayDropdown('sort-dropdown-wrapper', 'sort-dropdown-trigger', 'sort-dropdown-menu', 'sort-dropdown-label', (sortVal) => {
-    currentSort = sortVal;
-    currentPage = 1;
-    applyFiltersAndRender();
-  });
-
-  // Quick category pills
-  document.querySelectorAll('#products-category-pills button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#products-category-pills button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const catId = btn.getAttribute('data-cat-id');
-      currentCategory = catId;
-      currentPage = 1;
-
-      // Sync custom category dropdown
-      const catLabel = document.getElementById('category-dropdown-label');
-      const catMenu = document.getElementById('category-dropdown-menu');
-      if (catMenu) {
-        catMenu.querySelectorAll('.relay-dropdown-item').forEach(item => {
-          const isMatch = item.getAttribute('data-value') === currentCategory;
-          item.classList.toggle('selected', isMatch);
-          const check = item.querySelector('.fa-check');
-          if (check) check.remove();
-          if (isMatch) {
-            item.insertAdjacentHTML('beforeend', '<i class="fa-solid fa-check" style="color:var(--logo-red);font-size:0.75rem;"></i>');
-            if (catLabel) catLabel.textContent = item.querySelector('span')?.textContent || 'All 24 Categories';
-          }
-        });
-      }
-
-      applyFiltersAndRender();
-    });
-  });
-
-  // Close dropdowns on outside click
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.relay-custom-dropdown')) {
-      document.querySelectorAll('.relay-custom-dropdown').forEach(d => {
-        d.classList.remove('open');
-        d.querySelector('.relay-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
-      });
+  return crumbs.map((c, i) => {
+    const isLast = i === crumbs.length - 1;
+    if (isLast) {
+      return `<span class="crumb crumb-active"><i class="fa-solid fa-angle-right crumb-sep"></i> ${c.label}</span>`;
     }
-  });
-
-  // Close dropdowns on Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      document.querySelectorAll('.relay-custom-dropdown').forEach(d => {
-        d.classList.remove('open');
-        d.querySelector('.relay-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
-      });
-    }
-  });
+    const params = buildNavParams(c.level, c.oemId, c.categoryId);
+    return `
+      ${i > 0 ? '<i class="fa-solid fa-angle-right crumb-sep"></i>' : ''}
+      <a class="crumb crumb-link" data-nav-params="${params}">${c.label}</a>
+    `;
+  }).join('');
 }
 
-function applyFiltersAndRender() {
-  let products;
-  if (currentSearch) {
-    products = searchProducts(currentSearch);
-    if (currentCategory) {
-      products = products.filter(p => p.category === currentCategory);
-    }
-  } else if (currentCategory) {
-    products = getProductsByCategory(currentCategory);
-  } else {
-    products = getProducts();
-  }
-
-  // Apply sorting
-  products = sortProducts(products, currentSort);
-  filteredProducts = products;
-
-  renderProductsGrid();
-  renderPagination();
-  updateResultsCountAndFilterChips();
+function buildNavParams(level, oemId, categoryId) {
+  const p = new URLSearchParams();
+  p.set('level', level);
+  if (oemId) p.set('oem', oemId);
+  if (categoryId) p.set('category', categoryId);
+  return p.toString();
 }
 
-function sortProducts(products, sort) {
-  const sorted = [...products];
-  switch (sort) {
-    case 'name-asc':
-      sorted.sort((a, b) => a.model.localeCompare(b.model));
-      break;
-    case 'name-desc':
-      sorted.sort((a, b) => b.model.localeCompare(a.model));
-      break;
-    case 'category':
-      sorted.sort((a, b) => a.categoryName.localeCompare(b.categoryName));
-      break;
-    case 'newest':
-      sorted.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
-      break;
+function renderCurrentLevel() {
+  switch (navState.level) {
+    case 'oems': return renderOEMsLevel();
+    case 'categories': return renderCategoriesLevel();
+    case 'products': return renderProductsLevel();
+    default: return renderOEMsLevel();
   }
-  return sorted;
 }
 
-function renderProductsGrid() {
-  const grid = document.getElementById('products-grid');
-  if (!grid) return;
+// ═════════════════════════════════════════════════════════════════════════════
+// LEVEL 1: ALL COMPANIES (15 OEMs)
+// ═════════════════════════════════════════════════════════════════════════════
+function renderOEMsLevel() {
+  const oems = getOEMs();
+  
+  return `
+    <!-- Search and Domain Filter Controls -->
+    <div class="catalog-controls-bar">
+      <div class="catalog-search-wrap">
+        <i class="fa-solid fa-magnifying-glass catalog-search-icon"></i>
+        <input 
+          type="text" 
+          id="oem-search-input" 
+          class="catalog-search-input" 
+          placeholder="Search by company, category, product, or application..."
+          value="${navState.searchQuery || ''}"
+        />
+        ${navState.searchQuery ? `
+          <button class="catalog-search-clear" id="catalog-search-clear" title="Clear search">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        ` : ''}
+      </div>
 
-  const start = (currentPage - 1) * ITEMS_PER_PAGE;
-  const end = start + ITEMS_PER_PAGE;
-  const pageProducts = filteredProducts.slice(start, end);
-
-  if (pageProducts.length === 0) {
-    grid.innerHTML = `
-      <div style="grid-column: 1/-1; text-align:center; padding:var(--space-16) var(--space-6); background:#080D1A; border-radius:16px; border:1px solid rgba(255,255,255,0.08);">
-        <i class="fa-solid fa-magnifying-glass" style="font-size:2.2rem; color:var(--text-gray-500); margin-bottom:var(--space-4); display:block;"></i>
-        <h3 style="color:var(--text-white); font-size:1.25rem; font-weight:700; margin-bottom:var(--space-2);">No matching components found</h3>
-        <p style="color:var(--text-gray-400); font-size:0.9rem; margin-bottom:var(--space-5);">Try searching by partial model number or resetting your category filter.</p>
-        <button class="btn-relay-blue" id="reset-filter-btn" style="padding:8px 20px; font-size:0.85rem;">
-          Reset Catalog Filters
+      <div class="oem-domain-filters" id="oem-domain-filters">
+        <button class="domain-filter-pill ${navState.activeFilter === 'all' ? 'active' : ''}" data-domain="all">
+          All Partners (${oems.length})
+        </button>
+        <button class="domain-filter-pill ${navState.activeFilter === 'materials' ? 'active' : ''}" data-domain="materials">
+          RF Laminates &amp; Materials
+        </button>
+        <button class="domain-filter-pill ${navState.activeFilter === 'semiconductors' ? 'active' : ''}" data-domain="semiconductors">
+          Semiconductors &amp; GaN
+        </button>
+        <button class="domain-filter-pill ${navState.activeFilter === 'components' ? 'active' : ''}" data-domain="components">
+          RF/MW Components
+        </button>
+        <button class="domain-filter-pill ${navState.activeFilter === 'sdr' ? 'active' : ''}" data-domain="sdr">
+          SDR &amp; Optics
+        </button>
+        <button class="domain-filter-pill ${navState.activeFilter === 'sensors' ? 'active' : ''}" data-domain="sensors">
+          Sensors, Power &amp; PCB
         </button>
       </div>
+    </div>
+
+    <!-- Active Count Display -->
+    <div class="catalog-section-meta">
+      <div class="catalog-level-header">
+        <h2 class="catalog-level-title">Authorized Technology Manufacturers</h2>
+        <p class="catalog-level-desc">Select an OEM partner below to explore their specialized categories and product models</p>
+      </div>
+      <div class="catalog-counter-tag">
+        Showing <strong id="visible-oem-count">${oems.length}</strong> Global OEMs
+      </div>
+    </div>
+
+    <!-- Grid of All 15 OEM Cards -->
+    <div class="oem-cards-grid" id="oem-cards-grid">
+      ${oems.map(oem => renderOEMCard(oem)).join('')}
+    </div>
+  `;
+}
+
+function renderOEMCard(oem) {
+  const totalProducts = oem.categories.reduce((acc, cat) => acc + cat.products.length, 0);
+  const totalCategories = oem.categories.length;
+  const params = buildNavParams('categories', oem.id);
+
+  // Derive domain category
+  let domain = 'components';
+  const nameL = oem.name.toLowerCase();
+  if (nameL.includes('rogers') || nameL.includes('ohmega')) domain = 'materials';
+  else if (nameL.includes('qorvo') || nameL.includes('gan')) domain = 'semiconductors';
+  else if (nameL.includes('fortify') || nameL.includes('yttek')) domain = 'sdr';
+  else if (nameL.includes('spellman') || nameL.includes('thermosen') || nameL.includes('tecdia') || nameL.includes('nee') || nameL.includes('transline') || nameL.includes('evans')) domain = 'sensors';
+
+  return `
+    <div class="oem-card" data-nav-params="${params}" data-oem-id="${oem.id}" data-domain="${domain}" style="--oem-accent: ${oem.accentColor}; --oem-glow: ${oem.glowColor};">
+      <div class="oem-card-accent-bar"></div>
+      
+      <!-- Prominent OEM Logo Header Showcase -->
+      <div class="oem-card-logo-showcase" style="border-bottom: 1px solid ${oem.accentColor}25;">
+        <div class="oem-card-logo-container">
+          ${oem.logoSvg}
+        </div>
+      </div>
+
+      <div class="oem-card-body">
+        <div class="oem-card-title-row">
+          <h3 class="oem-card-name">${oem.name}</h3>
+          <span class="oem-specialty-pill" style="background: ${oem.accentColor}18; color: ${oem.accentColor}; border: 1px solid ${oem.accentColor}40;">
+            ${oem.specialty}
+          </span>
+        </div>
+
+        <p class="oem-card-tagline">${oem.tagline}</p>
+        <p class="oem-card-desc">${oem.description}</p>
+
+        <!-- Categories preview pills -->
+        <div class="oem-card-categories-preview">
+          <span class="preview-label">Categories:</span>
+          <div class="preview-pills">
+            ${oem.categories.slice(0, 3).map(c => `<span class="preview-pill">${c.name}</span>`).join('')}
+            ${oem.categories.length > 3 ? `<span class="preview-pill preview-pill-more">+${oem.categories.length - 3} more</span>` : ''}
+          </div>
+        </div>
+
+        <!-- Meta Counters -->
+        <div class="oem-card-meta">
+          <span class="oem-meta-badge" style="background: ${oem.accentColor}15; border-color: ${oem.accentColor}35; color: ${oem.accentColor};">
+            <i class="fa-solid fa-folder-tree"></i> ${totalCategories} ${totalCategories === 1 ? 'Category' : 'Categories'}
+          </span>
+          <span class="oem-meta-badge" style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.12); color: #E2E8F0;">
+            <i class="fa-solid fa-microchip"></i> ${totalProducts} ${totalProducts === 1 ? 'Product Line' : 'Products &amp; Lines'}
+          </span>
+        </div>
+      </div>
+
+      <div class="oem-card-cta" style="color: ${oem.accentColor};">
+        <span>Explore Categories &amp; Products</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </div>
+    </div>
+  `;
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// LEVEL 2: CATEGORIES (When OEM is selected)
+// ═════════════════════════════════════════════════════════════════════════════
+function renderCategoriesLevel() {
+  const oem = getOEM(navState.oemId);
+  if (!oem) {
+    return `
+      <div class="catalog-empty-state">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <h3>Manufacturer Not Found</h3>
+        <p>The selected OEM could not be located in our catalog database.</p>
+        <a class="btn-primary" data-nav-params="level=oems">Return to All Manufacturers</a>
+      </div>
     `;
-
-    document.getElementById('reset-filter-btn')?.addEventListener('click', resetAllFilters);
-    return;
   }
 
-  grid.innerHTML = pageProducts.map((product, i) => renderProductCard(product, i)).join('');
+  const totalProducts = oem.categories.reduce((acc, cat) => acc + cat.products.length, 0);
+
+  return `
+    <!-- OEM Header Banner -->
+    <div class="catalog-oem-banner" style="--oem-accent: ${oem.accentColor}; --oem-glow: ${oem.glowColor};">
+      <div class="catalog-oem-banner-top">
+        <div class="catalog-oem-banner-logo-box">
+          ${oem.logoSvg}
+        </div>
+        <div class="catalog-oem-banner-links">
+          ${oem.website ? `
+            <a href="${oem.website}" target="_blank" rel="noopener noreferrer" class="oem-external-site-btn" style="color:${oem.accentColor}; border-color:${oem.accentColor}40;">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              <span>Official Website</span>
+            </a>
+          ` : ''}
+          <a class="oem-back-btn" data-nav-params="level=oems">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>All Companies</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="catalog-oem-banner-info">
+        <div class="catalog-oem-tag-row">
+          <span class="catalog-spec-badge" style="background:${oem.accentColor}20; color:${oem.accentColor}; border:1px solid ${oem.accentColor}50;">
+            <i class="fa-solid fa-industry"></i>
+            <span>Specialty: ${oem.specialty}</span>
+          </span>
+          <span class="catalog-oem-count-badge">
+            <i class="fa-solid fa-box-open"></i> ${totalProducts} Products / Lines across ${oem.categories.length} Categories
+          </span>
+        </div>
+        <h2 class="catalog-oem-name">${oem.name}</h2>
+        <p class="catalog-oem-desc">${oem.description}</p>
+      </div>
+    </div>
+
+    <!-- Category Section Header -->
+    <div class="catalog-section-meta" style="margin-top: 32px;">
+      <div>
+        <h3 class="catalog-level-title">Select a Product Category</h3>
+        <p class="catalog-level-desc">Browse through ${oem.name}'s product families and click any category to view individual models and specifications.</p>
+      </div>
+    </div>
+
+    <!-- Categories Grid -->
+    <div class="category-cards-grid">
+      ${oem.categories.map(cat => renderCategoryCard(oem, cat)).join('')}
+    </div>
+  `;
 }
 
-function resetAllFilters() {
-  currentSearch = '';
-  currentCategory = '';
-  const searchInput = document.getElementById('product-search-input');
-  const clearBtn = document.getElementById('clear-search-btn');
-  const catSelect = document.getElementById('all-categories-select');
-  if (searchInput) searchInput.value = '';
-  if (clearBtn) clearBtn.style.display = 'none';
-  if (catSelect) catSelect.value = '';
-  document.querySelectorAll('#products-category-pills button').forEach(b => {
-    b.classList.toggle('active', b.getAttribute('data-cat-id') === '');
-  });
-  currentPage = 1;
-  applyFiltersAndRender();
+function renderCategoryCard(oem, cat) {
+  const params = buildNavParams('products', oem.id, cat.id);
+  const sampleProd = cat.products[0] || {};
+  const image = sampleProd.image || oem.defaultImage || '/images/rf-filter.jpg';
+
+  return `
+    <div class="category-card" data-nav-params="${params}" style="--oem-accent: ${oem.accentColor};">
+      <!-- Category Visual Header Preview -->
+      <div class="category-card-visual" style="background-image: url('${image}');">
+        <div class="category-visual-overlay"></div>
+        <div class="category-count-badge" style="background: ${oem.accentColor}; color: #ffffff;">
+          ${cat.products.length} ${cat.products.length === 1 ? 'Part' : 'Parts'}
+        </div>
+      </div>
+
+      <div class="category-card-content">
+        <div class="category-header-row">
+          <h4 class="category-name">${cat.name}</h4>
+        </div>
+        <p class="category-desc">${cat.description}</p>
+
+        <!-- Product Preview List -->
+        <div class="category-products-preview">
+          <div class="category-preview-title">Models &amp; Variants:</div>
+          ${cat.products.slice(0, 3).map(p => `
+            <div class="category-prod-preview-item">
+              <i class="fa-solid fa-check" style="color: ${oem.accentColor}; font-size: 0.65rem;"></i>
+              <span class="preview-name">${p.name}</span>
+            </div>
+          `).join('')}
+          ${cat.products.length > 3 ? `
+            <div class="category-prod-preview-item" style="color: #94A3B8; font-style: italic;">
+              <i class="fa-solid fa-ellipsis" style="color: #64748B;"></i>
+              <span>+${cat.products.length - 3} more product specifications</span>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+
+      <div class="category-cta" style="color: ${oem.accentColor};">
+        <span>View All ${cat.products.length} Products</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </div>
+    </div>
+  `;
 }
 
-function updateResultsCountAndFilterChips() {
-  const el = document.getElementById('results-count');
-  const chipsContainer = document.getElementById('active-filter-chips');
-  if (!el) return;
+// ═════════════════════════════════════════════════════════════════════════════
+// LEVEL 3: PRODUCTS (Visual Cards with Product Pictures + Detailed Table)
+// ═════════════════════════════════════════════════════════════════════════════
+function renderProductsLevel() {
+  const oem = getOEM(navState.oemId);
+  const cat = getCategory(navState.oemId, navState.categoryId);
+  const products = getProductsForCategory(navState.oemId, navState.categoryId);
 
-  const total = filteredProducts.length;
-  if (total === 0) {
-    el.textContent = '0 components match filter';
-  } else {
-    const start = (currentPage - 1) * ITEMS_PER_PAGE + 1;
-    const end = Math.min(currentPage * ITEMS_PER_PAGE, total);
-    el.innerHTML = `Showing <span style="color:var(--text-white);font-weight:700;">${start}–${end}</span> of <span style="color:var(--text-white);font-weight:700;">${total}</span> components`;
+  if (!oem || !cat) {
+    return `
+      <div class="catalog-empty-state">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <h3>Category Not Found</h3>
+        <p>The requested product category could not be found.</p>
+        <a class="btn-primary" data-nav-params="level=oems">Return to Catalog Home</a>
+      </div>
+    `;
   }
 
-  if (chipsContainer) {
-    let chips = [];
-    if (currentCategory) {
-      const catObj = CATEGORIES.find(c => c.id === currentCategory);
-      chips.push(`
-        <button id="chip-remove-cat" style="background:rgba(37,99,235,0.15);border:1px solid rgba(37,99,235,0.35);color:#93C5FD;border-radius:20px;padding:3px 10px;font-size:0.72rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-          <span>Category: ${catObj ? catObj.name : currentCategory}</span>
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      `);
-    }
-    if (currentSearch) {
-      chips.push(`
-        <button id="chip-remove-search" style="background:rgba(225,29,72,0.15);border:1px solid rgba(225,29,72,0.35);color:#FDA4AF;border-radius:20px;padding:3px 10px;font-size:0.72rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-          <span>Search: "${currentSearch}"</span>
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      `);
+  const backToCatsParams = buildNavParams('categories', oem.id);
+
+  return `
+    <!-- Category & OEM Header Strip -->
+    <div class="catalog-product-level-header" style="--oem-accent: ${oem.accentColor};">
+      <div class="cpl-left">
+        <div class="cpl-oem-badge-row">
+          <div class="cpl-logo-inline">
+            ${oem.logoSvg}
+          </div>
+          <span class="cpl-divider">/</span>
+          <span class="cpl-cat-tag">${cat.name}</span>
+        </div>
+        <h2 class="cpl-title">${cat.name}</h2>
+        <p class="cpl-desc">${cat.description}</p>
+      </div>
+
+      <div class="cpl-actions">
+        <div class="cpl-counter-pill" style="border-color:${oem.accentColor}40; color:${oem.accentColor}; background:${oem.accentColor}12;">
+          <i class="fa-solid fa-boxes-stacked"></i>
+          <span>${products.length} ${products.length === 1 ? 'Product Model' : 'Products &amp; Lines'}</span>
+        </div>
+        
+        <div class="cpl-view-toggle">
+          <button class="view-toggle-btn ${navState.viewMode === 'cards' ? 'active' : ''}" id="view-toggle-cards" title="Visual Cards View">
+            <i class="fa-solid fa-grip"></i>
+            <span>Cards</span>
+          </button>
+          <button class="view-toggle-btn ${navState.viewMode === 'table' ? 'active' : ''}" id="view-toggle-table" title="Data Table View">
+            <i class="fa-solid fa-table-list"></i>
+            <span>Table</span>
+          </button>
+        </div>
+
+        <a class="cpl-back-link" data-nav-params="${backToCatsParams}">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Back to Categories</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Products View: Visual Cards or Data Table -->
+    ${navState.viewMode === 'cards' ? `
+      <div class="product-cards-grid" id="product-cards-grid">
+        ${products.map((p, i) => renderProductCard(p, i, oem, cat)).join('')}
+      </div>
+    ` : `
+      <div class="products-table-wrap">
+        <div class="products-table-header">
+          <div class="ptable-col ptable-col-num">#</div>
+          <div class="ptable-col ptable-col-img">Visual</div>
+          <div class="ptable-col ptable-col-name">Product Name &amp; Code</div>
+          <div class="ptable-col ptable-col-desc">Technical Description</div>
+          <div class="ptable-col ptable-col-apps">Target Applications</div>
+          <div class="ptable-col ptable-col-actions">Request RFQ</div>
+        </div>
+        <div class="products-table-body">
+          ${products.map((p, i) => renderProductRow(p, i, oem)).join('')}
+        </div>
+      </div>
+    `}
+  `;
+}
+
+function renderProductCard(product, index, oem, cat) {
+  const isValidLink = product.link && product.link.startsWith('http');
+  const image = product.image || oem.defaultImage || '/images/rf-filter.jpg';
+
+  // Format applications into individual chips
+  let apps = [];
+  if (product.applications) {
+    apps = product.applications
+      .split(/[,;\n•]/)
+      .map(a => a.replace(/^[0-9]+[\.\)]\s*/, '').trim())
+      .filter(a => a.length > 2)
+      .slice(0, 4);
+  }
+
+  return `
+    <div class="product-detail-card" style="--oem-accent: ${oem.accentColor};" data-product-id="${product.id}">
+      <!-- Dedicated Product Picture Banner -->
+      <div class="product-card-image-wrap">
+        <img 
+          src="${image}" 
+          alt="${product.name}" 
+          class="product-card-img" 
+          loading="lazy"
+          onerror="this.onerror=null; this.src='/images/rf-filter.jpg';"
+        />
+        <div class="product-card-img-gradient"></div>
+
+        <!-- OEM Mini-Badge Overlay -->
+        <div class="product-card-oem-overlay" style="background: rgba(10,15,30,0.85); border: 1px solid ${oem.accentColor}40;">
+          <span style="color: ${oem.accentColor}; font-weight: 800; font-size: 0.72rem; letter-spacing: 0.05em;">
+            ${oem.shortName}
+          </span>
+        </div>
+
+        <!-- Category Pill Overlay -->
+        <div class="product-card-cat-overlay">
+          ${cat.name}
+        </div>
+      </div>
+
+      <!-- Card Information -->
+      <div class="product-card-body">
+        <h4 class="product-card-name" title="${product.name}">${product.name}</h4>
+        
+        <p class="product-card-desc">
+          ${product.description}
+        </p>
+
+        <!-- Applications Tags -->
+        ${apps.length ? `
+          <div class="product-card-apps-section">
+            <span class="product-card-apps-title">
+              <i class="fa-solid fa-bullseye" style="color:${oem.accentColor};"></i> Key Applications:
+            </span>
+            <div class="product-card-apps-tags">
+              ${apps.map(app => `
+                <span class="product-app-pill" style="border-color:${oem.accentColor}30; background:${oem.accentColor}10; color:#E2E8F0;">
+                  ${app}
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+      </div>
+
+      <!-- Card Action Buttons -->
+      <div class="product-card-footer">
+        <a href="#/contact?subject=technical&model=${encodeURIComponent(product.name)}&product=${encodeURIComponent(product.name)}&oem=${encodeURIComponent(oem.name)}" class="pcard-link-btn" style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.12); color: #CBD5E1;">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Technical Inquiry</span>
+        </a>
+        <a href="#/contact?subject=rfq&model=${encodeURIComponent(product.name)}&product=${encodeURIComponent(product.name)}&oem=${encodeURIComponent(oem.name)}" class="pcard-rfq-btn" style="background: ${oem.accentColor};">
+          <span>Request RFQ</span>
+        </a>
+      </div>
+    </div>
+  `;
+}
+
+function renderProductRow(product, index, oem) {
+  const isValidLink = product.link && product.link.startsWith('http');
+  const image = product.image || oem.defaultImage || '/images/rf-filter.jpg';
+
+  let apps = [];
+  if (product.applications) {
+    apps = product.applications
+      .split(/[,;\n•]/)
+      .map(a => a.replace(/^[0-9]+[\.\)]\s*/, '').trim())
+      .filter(a => a.length > 2)
+      .slice(0, 3);
+  }
+
+  return `
+    <div class="ptable-row" style="--row-index: ${index}; --oem-accent: ${oem.accentColor};">
+      <div class="ptable-col ptable-col-num">
+        <span class="ptable-num" style="background: ${oem.accentColor}18; color: ${oem.accentColor};">
+          ${String(index + 1).padStart(2, '0')}
+        </span>
+      </div>
+      <div class="ptable-col ptable-col-img">
+        <img 
+          src="${image}" 
+          alt="${product.name}" 
+          class="ptable-thumb" 
+          loading="lazy"
+          onerror="this.onerror=null; this.src='/images/rf-filter.jpg';"
+        />
+      </div>
+      <div class="ptable-col ptable-col-name">
+        <span class="ptable-product-name">${product.name}</span>
+        <span class="ptable-oem-sub" style="color: ${oem.accentColor};">${oem.shortName}</span>
+      </div>
+      <div class="ptable-col ptable-col-desc">
+        <span class="ptable-desc-text">${product.description}</span>
+      </div>
+      <div class="ptable-col ptable-col-apps">
+        <div class="ptable-apps-wrap">
+          ${apps.map(app => `<span class="ptable-app-badge">${app}</span>`).join('')}
+        </div>
+      </div>
+      <div class="ptable-col ptable-col-actions">
+        <a href="#/contact?subject=rfq&model=${encodeURIComponent(product.name)}&product=${encodeURIComponent(product.name)}&oem=${encodeURIComponent(oem.name)}" class="ptable-action-rfq" title="Request Quote" style="background: ${oem.accentColor};">
+          Request RFQ
+        </a>
+      </div>
+    </div>
+  `;
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// INTERACTIVITY & EVENT LISTENERS
+// ═════════════════════════════════════════════════════════════════════════════
+export function initProductsPage() {
+  attachCatalogEvents();
+}
+
+function attachCatalogEvents() {
+  const page = document.getElementById('catalog-page');
+  if (!page) return;
+
+  // Delegated click on elements with data-nav-params
+  page.addEventListener('click', (e) => {
+    const navBtn = e.target.closest('[data-nav-params]');
+    if (navBtn) {
+      e.preventDefault();
+      const paramsStr = navBtn.getAttribute('data-nav-params');
+      navigateTo(paramsStr);
+      return;
     }
 
-    if (chips.length > 0) {
-      chips.push(`
-        <button id="chip-clear-all" style="background:none;border:none;color:var(--text-gray-400);font-size:0.72rem;cursor:pointer;text-decoration:underline;padding:2px 4px;">
-          Clear all
-        </button>
-      `);
+    // Domain filter pills
+    const domainPill = e.target.closest('.domain-filter-pill');
+    if (domainPill) {
+      const domain = domainPill.getAttribute('data-domain');
+      filterOEMsByDomain(domain);
+      return;
     }
 
-    chipsContainer.innerHTML = chips.join('');
+    // View toggle buttons
+    const cardsBtn = e.target.closest('#view-toggle-cards');
+    if (cardsBtn) {
+      navState.viewMode = 'cards';
+      refreshProductsView();
+      return;
+    }
 
-    document.getElementById('chip-remove-cat')?.addEventListener('click', () => {
-      currentCategory = '';
-      const catSelect = document.getElementById('all-categories-select');
-      if (catSelect) catSelect.value = '';
-      document.querySelectorAll('#products-category-pills button').forEach(b => {
-        b.classList.toggle('active', b.getAttribute('data-cat-id') === '');
-      });
-      currentPage = 1;
-      applyFiltersAndRender();
+    const tableBtn = e.target.closest('#view-toggle-table');
+    if (tableBtn) {
+      navState.viewMode = 'table';
+      refreshProductsView();
+      return;
+    }
+
+    // Clear search button
+    const clearBtn = e.target.closest('#catalog-search-clear');
+    if (clearBtn) {
+      const input = document.getElementById('oem-search-input');
+      if (input) input.value = '';
+      navState.searchQuery = '';
+      filterOEMsBySearch('');
+      return;
+    }
+  });
+
+  // Search input typing
+  const searchInput = document.getElementById('oem-search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.trim().toLowerCase();
+      navState.searchQuery = query;
+      filterOEMsBySearch(query);
     });
-
-    document.getElementById('chip-remove-search')?.addEventListener('click', () => {
-      currentSearch = '';
-      const searchInput = document.getElementById('product-search-input');
-      const clearBtn = document.getElementById('clear-search-btn');
-      if (searchInput) searchInput.value = '';
-      if (clearBtn) clearBtn.style.display = 'none';
-      currentPage = 1;
-      applyFiltersAndRender();
-    });
-
-    document.getElementById('chip-clear-all')?.addEventListener('click', resetAllFilters);
   }
 }
 
-function renderPagination() {
-  const pagination = document.getElementById('pagination');
-  if (!pagination) return;
+function filterOEMsByDomain(domain) {
+  navState.activeFilter = domain;
 
-  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
-  if (totalPages <= 1) {
-    pagination.innerHTML = '';
-    return;
-  }
-
-  let html = '';
-
-  // Previous button
-  if (currentPage > 1) {
-    html += `<button class="filter-chip-dark" id="prev-page"><i class="fa-solid fa-chevron-left"></i> Previous</button>`;
-  }
-
-  // Page numbers
-  for (let i = 1; i <= totalPages; i++) {
-    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
-      html += `
-        <button class="filter-chip-dark ${i === currentPage ? 'active' : ''}" data-page="${i}">
-          ${i}
-        </button>
-      `;
-    } else if (i === currentPage - 2 || i === currentPage + 2) {
-      html += `<span style="color:var(--text-gray-500);padding:0 4px;">…</span>`;
-    }
-  }
-
-  // Next button
-  if (currentPage < totalPages) {
-    html += `<button class="filter-chip-dark" id="next-page">Next <i class="fa-solid fa-chevron-right"></i></button>`;
-  }
-
-  pagination.innerHTML = html;
-
-  // Pagination event listeners
-  pagination.querySelectorAll('[data-page]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      currentPage = parseInt(btn.getAttribute('data-page'));
-      renderProductsGrid();
-      renderPagination();
-      updateResultsCountAndFilterChips();
-      window.scrollTo({ top: 150, behavior: 'smooth' });
-    });
+  // Update pill active classes
+  const pills = document.querySelectorAll('.domain-filter-pill');
+  pills.forEach(p => {
+    if (p.getAttribute('data-domain') === domain) p.classList.add('active');
+    else p.classList.remove('active');
   });
 
-  document.getElementById('prev-page')?.addEventListener('click', () => {
-    if (currentPage > 1) {
-      currentPage--;
-      renderProductsGrid();
-      renderPagination();
-      updateResultsCountAndFilterChips();
-      window.scrollTo({ top: 150, behavior: 'smooth' });
+  applyFilters();
+}
+
+function filterOEMsBySearch(query) {
+  applyFilters();
+}
+
+function applyFilters() {
+  const cards = document.querySelectorAll('.oem-card');
+  let visibleCount = 0;
+  const query = (navState.searchQuery || '').toLowerCase();
+  const domain = navState.activeFilter || 'all';
+
+  cards.forEach(card => {
+    const cardDomain = card.getAttribute('data-domain') || 'components';
+    const text = card.textContent.toLowerCase();
+
+    const matchesDomain = (domain === 'all') || (cardDomain === domain);
+    const matchesQuery = (!query) || text.includes(query);
+
+    if (matchesDomain && matchesQuery) {
+      card.style.display = 'flex';
+      visibleCount++;
+    } else {
+      card.style.display = 'none';
     }
   });
 
-  document.getElementById('next-page')?.addEventListener('click', () => {
-    if (currentPage < totalPages) {
-      currentPage++;
-      renderProductsGrid();
-      renderPagination();
-      updateResultsCountAndFilterChips();
-      window.scrollTo({ top: 150, behavior: 'smooth' });
-    }
-  });
+  const counter = document.getElementById('visible-oem-count');
+  if (counter) counter.textContent = visibleCount;
+}
+
+function refreshProductsView() {
+  const content = document.getElementById('catalog-content');
+  if (content) {
+    content.innerHTML = renderCurrentLevel();
+  }
+}
+
+function navigateTo(paramsStr) {
+  const params = new URLSearchParams(paramsStr);
+  navState.level = params.get('level') || 'oems';
+  navState.oemId = params.get('oem') || null;
+  navState.categoryId = params.get('category') || null;
+
+  // Update browser hash
+  const newHash = `#/products?${paramsStr}`;
+  history.replaceState(null, '', newHash);
+
+  // Transition content
+  const content = document.getElementById('catalog-content');
+  const breadcrumb = document.getElementById('catalog-breadcrumb');
+
+  if (content) {
+    content.style.opacity = '0';
+    content.style.transform = 'translateY(10px)';
+    setTimeout(() => {
+      content.innerHTML = renderCurrentLevel();
+      content.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+      content.style.opacity = '1';
+      content.style.transform = 'translateY(0)';
+    }, 100);
+  }
+
+  if (breadcrumb) {
+    breadcrumb.innerHTML = renderBreadcrumb();
+  }
+
+  // Smooth scroll to catalog view
+  document.querySelector('.catalog-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }

@@ -11,7 +11,7 @@ export function renderFooter() {
       <div class="container">
         <div class="footer-relay-inner">
           <div class="footer-relay-brand">
-            <img src="/ICON ELECTROMATIC LOGO.jpeg" alt="ICON ELECTROMATIC" />
+            <img src="/icon-logo-transparent.png" alt="ICON ELECTROMATIC" />
             <p>
               Delivering advanced RF, Microwave, and Hi-Rel electronic components from DC to 86 GHz 
               for aerospace, defense, SATCOM, and telecommunications.
@@ -45,7 +45,9 @@ export function renderFooter() {
               <li><a data-route="/about">About Us</a></li>
               <li><a data-route="/services">Services</a></li>
               <li><a data-route="/partners">Partners</a></li>
-              <li><a data-route="/contact">Contact & Support</a></li>
+              <li><a data-route="/blogs">OEM Blogs &amp; Tech News</a></li>
+              <li><a data-route="/contact?tab=careers">Careers &amp; Recruiting <span style="font-size:0.65rem;background:rgba(16,185,129,0.2);color:#34D399;padding:1px 6px;border-radius:4px;font-weight:700;margin-left:4px;">HIRING</span></a></li>
+              <li><a data-route="/contact">Contact &amp; Support</a></li>
               <li><a data-route="/contact">Request a Quote</a></li>
               <li><a href="mailto:sales@iconelectromatic.com">sales@iconelectromatic.com</a></li>
             </ul>

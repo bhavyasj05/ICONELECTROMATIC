@@ -1,8 +1,8 @@
 /**
  * Main Entry Point — ICON ELECTROMATIC
  */
-import { registerRoute, initRouter } from './router.js';
-import { renderHeader, initHeader } from './components/Header.js';
+import { registerRoute, initRouter, getCurrentPath } from './router.js';
+import { renderHeader, renderHeaderInner, initHeader } from './components/Header.js';
 import { renderFooter } from './components/Footer.js';
 import { renderHomePage, initHomePage } from './pages/Home.js';
 import { renderProductsPage, initProductsPage } from './pages/Products.js';
@@ -10,6 +10,7 @@ import { renderProductDetailPage, initProductDetailPage } from './pages/ProductD
 import { renderAboutPage, initAboutPage } from './pages/About.js';
 import { renderServicesPage, initServicesPage } from './pages/Services.js';
 import { renderPartnersPage, initPartnersPage } from './pages/Partners.js';
+import { renderBlogsPage, initBlogsPage } from './pages/Blogs.js';
 import { renderContactPage, initContactPage } from './pages/Contact.js';
 import { renderChatbot, initChatbot } from './components/Chatbot.js';
 import { initCustomCursor } from './components/CustomCursor.js';
@@ -24,8 +25,26 @@ app.innerHTML = `
 `;
 
 function renderPage(content, initFn) {
-  app.innerHTML = renderHeader() + content + renderFooter() + renderBackToTop() + renderChatbot();
-  initHeader();
+  const currentPath = getCurrentPath();
+  let header = document.getElementById('site-header');
+
+  if (!header) {
+    header = document.createElement('header');
+    header.className = 'site-header';
+    header.id = 'site-header';
+    document.body.insertBefore(header, app);
+  }
+
+  if (!header.innerHTML.trim()) {
+    header.innerHTML = renderHeaderInner(currentPath);
+    initHeader();
+  } else {
+    header.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.toggle('active', link.getAttribute('data-route') === currentPath);
+    });
+  }
+
+  app.innerHTML = content + renderFooter() + renderBackToTop() + renderChatbot();
   initChatbot();
   if (initFn) initFn();
   initBackToTop();
@@ -51,6 +70,8 @@ registerRoute('/product/:id', (params) => renderPage(renderProductDetailPage(par
 registerRoute('/about', () => renderPage(renderAboutPage(), initAboutPage));
 registerRoute('/services', () => renderPage(renderServicesPage(), initServicesPage));
 registerRoute('/partners', () => renderPage(renderPartnersPage(), initPartnersPage));
+registerRoute('/blogs', (params) => renderPage(renderBlogsPage(params), () => initBlogsPage(params)));
+registerRoute('/blog', (params) => renderPage(renderBlogsPage(params), () => initBlogsPage(params)));
 registerRoute('/contact', () => renderPage(renderContactPage(), initContactPage));
 
 setTimeout(() => {

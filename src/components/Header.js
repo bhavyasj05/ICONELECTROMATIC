@@ -4,8 +4,8 @@
  */
 import { getCurrentPath } from '../router.js';
 
-export function renderHeader() {
-  const currentRoute = getCurrentPath();
+export function renderHeaderInner(currentRoute) {
+  const route = currentRoute || getCurrentPath();
 
   const navLinks = [
     { path: '/', label: 'Home' },
@@ -13,36 +13,46 @@ export function renderHeader() {
     { path: '/about', label: 'About Us' },
     { path: '/services', label: 'Services' },
     { path: '/partners', label: 'Partners' },
+    { path: '/blogs', label: 'Blogs' },
     { path: '/contact', label: 'Contact' },
   ];
 
   return `
-    <header class="site-header" id="site-header">
-      <div class="header-inner">
-        <a class="logo-container" data-route="/">
-          <img src="/ICON ELECTROMATIC LOGO.jpeg" alt="ICON ELECTROMATIC" />
-        </a>
+    <div class="header-inner">
+      <a class="logo-container" data-route="/" title="ICON ELECTROMATIC Home">
+        <img src="/icon-logo-transparent.png" alt="ICON ELECTROMATIC" />
+      </a>
 
-        <nav class="main-nav" id="main-nav">
-          ${navLinks.map(link => `
-            <a class="nav-link ${currentRoute === link.path ? 'active' : ''}" data-route="${link.path}">
-              ${link.label}
-            </a>
-          `).join('')}
-        </nav>
-
-        <div class="header-actions">
-          <a class="btn-relay-border" data-route="/contact">
-            Request Quote
+      <nav class="main-nav" id="main-nav">
+        ${navLinks.map(link => `
+          <a class="nav-link ${route === link.path ? 'active' : ''}" data-route="${link.path}">
+            ${link.label}
           </a>
-        </div>
+        `).join('')}
+      </nav>
 
-        <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation">
-          <span></span>
-          <span></span>
-          <span></span>
+      <div class="header-actions">
+        <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Toggle light/dark theme" title="Switch Theme">
+          <i class="fa-solid fa-sun" id="theme-toggle-icon"></i>
         </button>
+        <a class="btn-relay-border" data-route="/contact">
+          Request Quote
+        </a>
       </div>
+
+      <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  `;
+}
+
+export function renderHeader() {
+  return `
+    <header class="site-header" id="site-header">
+      ${renderHeaderInner()}
     </header>
   `;
 }
@@ -50,8 +60,72 @@ export function renderHeader() {
 export function initHeader() {
   const header = document.getElementById('site-header');
   if (header) {
-    window.addEventListener('scroll', () => {
-      header.classList.toggle('scrolled', window.scrollY > 20);
+    const handleScroll = () => {
+      header.classList.toggle('scrolled', window.scrollY > 15);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    if (window.location.hash.includes('scroll=')) {
+      const match = window.location.hash.match(/scroll=(\d+)/);
+      if (match) {
+        setTimeout(() => {
+          window.scrollTo(0, parseInt(match[1], 10));
+          handleScroll();
+        }, 150);
+      }
+    }
+  }
+
+  // Mobile menu toggle
+  const mobileToggle = document.getElementById('mobile-toggle');
+  const mainNav = document.getElementById('main-nav');
+  if (mobileToggle && mainNav) {
+    mobileToggle.addEventListener('click', () => {
+      mainNav.classList.toggle('mobile-active');
+    });
+    mainNav.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mainNav.classList.remove('mobile-active');
+      });
+    });
+  }
+
+  // Theme toggle — persist to localStorage
+  const toggleBtn = document.getElementById('theme-toggle-btn');
+  const toggleIcon = document.getElementById('theme-toggle-icon');
+  const savedTheme = localStorage.getItem('icon-theme') || 'dark';
+
+  if (savedTheme === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    if (toggleIcon) {
+      toggleIcon.className = 'fa-solid fa-moon';
+    }
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    if (toggleIcon) {
+      toggleIcon.className = 'fa-solid fa-sun';
+    }
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('icon-theme', 'dark');
+        if (toggleIcon) toggleIcon.className = 'fa-solid fa-sun';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('icon-theme', 'light');
+        if (toggleIcon) toggleIcon.className = 'fa-solid fa-moon';
+      }
+      // Ensure hero video keeps playing smoothly
+      const heroVid = document.getElementById('hero-bg-video');
+      if (heroVid) {
+        heroVid.muted = true;
+        heroVid.play().catch(() => {});
+      }
     });
   }
 }

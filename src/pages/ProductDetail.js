@@ -101,10 +101,10 @@ export function renderProductDetailPage(params) {
               </div>
 
               <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;">
-                <a class="btn-relay-blue" data-route="/contact?model=${encodeURIComponent(product.model)}" style="flex:1;justify-content:center;">
+                <a class="btn-relay-blue" data-route="/contact?subject=rfq&model=${encodeURIComponent(product.model)}&product=${encodeURIComponent(product.name || product.model)}&oem=${encodeURIComponent(product.oem || '')}" style="flex:1;justify-content:center;">
                   <i class="fa-solid fa-paper-plane"></i> Inquire for ${product.model}
                 </a>
-                <a class="btn-relay-dark" data-route="/contact">
+                <a class="btn-relay-dark" data-route="/contact?subject=technical&model=${encodeURIComponent(product.model)}&product=${encodeURIComponent(product.name || product.model)}&oem=${encodeURIComponent(product.oem || '')}">
                   Speak to Engineer
                 </a>
               </div>

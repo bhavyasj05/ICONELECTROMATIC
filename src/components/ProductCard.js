@@ -1,88 +1,109 @@
 /**
  * Product Card Component — ICON ELECTROMATIC
- * Sleek Dark Card matching the Relay aesthetic with high-res photography and brief specs
+ * Sleek Dark Card matching the Relay aesthetic with high-res photography and brief specs.
+ * Note: "In Stock", "Authorized" badges, and direct external datasheet links are omitted per company policy.
  */
 
 export function getProductDisplayImage(product) {
-  const cat = (product.category || '').toLowerCase();
-  const model = (product.model || '').toLowerCase();
+  if (product.image) return product.image;
 
-  if (cat.includes('switch') || model.startsWith('sw') || model.startsWith('rc-') || model.startsWith('usb-')) {
+  const cat = (product.category || product.categoryName || '').toLowerCase();
+  const name = (product.name || product.model || '').toLowerCase();
+
+  if (cat.includes('lens') || name.includes('lens') || cat.includes('dielectric')) {
+    return '/images/dielectric-3d-lens.jpg';
+  }
+  if (cat.includes('laminate') || name.includes('duroid') || name.includes('ro4') || name.includes('ro3') || name.includes('prepreg') || name.includes('tcr') || name.includes('rcm')) {
+    return '/images/rf-laminate.jpg';
+  }
+  if (cat.includes('amplifier') || name.includes('gan') || name.includes('hemt') || name.includes('amplifier') || name.includes('power supply')) {
+    return '/images/gan-power-chip.jpg';
+  }
+  if (cat.includes('switch') || name.includes('switch') || cat.includes('limiter') || name.includes('limiter')) {
     return '/images/rf-switch.jpg';
   }
-  if (cat.includes('waveguide') || cat.includes('horn') || model.startsWith('wr-')) {
-    return '/images/rf-waveguide.jpg';
-  }
-  if (cat.includes('attenuator') || cat.includes('termination') || cat.includes('adapter') || model.startsWith('vat-') || model.startsWith('bw-') || model.startsWith('an-')) {
-    return '/images/rf-attenuator.jpg';
-  }
-  if (cat.includes('filter') || cat.includes('diplexer') || model.startsWith('vbf-') || model.startsWith('zbf-') || model.startsWith('hpf-')) {
+  if (cat.includes('filter') || name.includes('filter')) {
     return '/images/rf-filter.webp';
   }
-  if (cat.includes('mixer') || cat.includes('coupler') || cat.includes('splitter') || cat.includes('hybrid') || model.startsWith('sim-') || model.startsWith('zx05-') || model.startsWith('zdc-')) {
+  if (cat.includes('mixer') || cat.includes('modulator')) {
     return '/images/rf-mixer.jpg';
   }
-  if (cat.includes('defense') || cat.includes('aerospace') || cat.includes('satcom')) {
+  if (cat.includes('attenuator') || cat.includes('coupler') || cat.includes('splitter')) {
+    return '/images/rf-attenuator.jpg';
+  }
+  if (cat.includes('pcb') || cat.includes('sensor') || cat.includes('thermistor')) {
+    return '/images/rf-microwave-pcb.jpg';
+  }
+  if (cat.includes('sdr') || cat.includes('radio') || cat.includes('satcom') || cat.includes('radar') || cat.includes('pids')) {
     return '/images/defense-satcom.jpg';
+  }
+  if (cat.includes('waveguide') || cat.includes('adapter') || cat.includes('cable')) {
+    return '/images/rf-waveguide.jpg';
   }
   return '/images/hero-amplifier.jpg';
 }
 
 export function renderProductCard(product, index = 0) {
   const displayImage = getProductDisplayImage(product);
-  const freq = product.specs['Frequency Range'] || 'DC to 18 GHz';
+  const name = product.name || product.model || 'RF Component';
+  const oemName = product.oemName || product.oemShort || 'Authorized OEM';
+  const oemAccent = product.oemAccent || '#2563EB';
+  const categoryName = product.categoryName || product.category || 'High-Frequency';
   
-  // Choose the single most informative technical specification
-  const primarySpec = product.specs['Gain'] 
-    ? `Gain: ${product.specs['Gain']}`
-    : product.specs['Attenuation']
-    ? `Atten: ${product.specs['Attenuation']}`
-    : product.specs['Conversion Loss']
-    ? `Loss: ${product.specs['Conversion Loss']}`
-    : product.specs['Coupling']
-    ? `Coupling: ${product.specs['Coupling']}`
-    : product.specs['Isolation']
-    ? `Iso: ${product.specs['Isolation']}`
-    : product.specs['Bandwidth']
-    ? `BW: ${product.specs['Bandwidth']}`
-    : '50 Ω Matched';
+  // Format concise description
+  let desc = product.description || '';
+  if (desc.length > 120) desc = desc.slice(0, 117) + '...';
 
-  const packageType = product.specs['Package'] || product.specs['Connector'] || 'Coaxial / Surface';
+  // Format applications tags
+  let appTags = [];
+  if (product.applications) {
+    appTags = product.applications
+      .split(/[,;\n•]/)
+      .map(a => a.replace(/^[0-9]+[\.\)]\s*/, '').trim())
+      .filter(a => a.length > 2)
+      .slice(0, 2);
+  }
+
+  // Route to catalog view for this item
+  const catalogRoute = product.oemId && product.catId 
+    ? `#/products?level=products&oem=${encodeURIComponent(product.oemId)}&category=${encodeURIComponent(product.catId)}`
+    : `#/products`;
 
   return `
-    <div class="product-card-relay" data-route="/product/${product.id}">
+    <div class="product-card-relay" style="--oem-accent: ${oemAccent};">
       <div class="product-card-relay-img">
-        <img src="${displayImage}" alt="${product.model}" loading="lazy" />
+        <img src="${displayImage}" alt="${name}" loading="lazy" onerror="this.onerror=null; this.src='/images/rf-filter.jpg';" />
         <div class="relay-card-overlay"></div>
-        ${product.isNew ? '<span class="relay-product-badge">New</span>' : ''}
-        <span class="relay-stock-pill"><span class="pulse-dot"></span>In Stock</span>
+        <div class="relay-oem-pill" style="border: 1px solid ${oemAccent}40; background: rgba(10,15,30,0.85); color: ${oemAccent};">
+          ${oemName}
+        </div>
       </div>
       <div class="product-card-relay-body">
         <div class="relay-card-header">
-          <span class="relay-cat-label">${product.categoryName}</span>
-          <h3 class="relay-product-title">${product.model}</h3>
+          <span class="relay-cat-label">${categoryName}</span>
+          <h3 class="relay-product-title" title="${name}">${name}</h3>
         </div>
         
-        <!-- Clean, Concise Spec Bar (No text paragraph clutter) -->
-        <div class="relay-specs-brief">
-          <div class="relay-spec-tag">
-            <i class="fa-solid fa-wave-square" style="color:var(--logo-blue-light);font-size:0.7rem;margin-right:5px;"></i>
-            <span>${freq}</span>
+        <p class="relay-card-desc-snippet">${desc}</p>
+
+        ${appTags.length ? `
+          <div class="relay-specs-brief">
+            ${appTags.map(tag => `
+              <div class="relay-spec-tag">
+                <i class="fa-solid fa-circle-dot" style="color:${oemAccent};font-size:0.5rem;margin-right:5px;"></i>
+                <span>${tag}</span>
+              </div>
+            `).join('')}
           </div>
-          <div class="relay-spec-tag">
-            <i class="fa-solid fa-microchip" style="color:var(--text-gray-400);font-size:0.7rem;margin-right:5px;"></i>
-            <span>${primarySpec}</span>
-          </div>
-        </div>
+        ` : ''}
         
         <div class="product-card-relay-footer">
-          <span class="relay-package-label" title="${packageType}">
-            <i class="fa-solid fa-plug" style="color:var(--text-gray-500);font-size:0.7rem;margin-right:4px;"></i>
-            ${packageType}
-          </span>
-          <button class="relay-inquire-btn" data-route="/product/${product.id}">
-            View Specs <i class="fa-solid fa-chevron-right" style="font-size:0.7rem;margin-left:2px;"></i>
-          </button>
+          <a class="relay-inquire-btn" data-route="${catalogRoute}">
+            <span>Catalog</span> <i class="fa-solid fa-arrow-right" style="font-size:0.7rem;margin-left:2px;"></i>
+          </a>
+          <a class="relay-rfq-btn" href="#/contact?subject=rfq&model=${encodeURIComponent(name)}&product=${encodeURIComponent(name)}&oem=${encodeURIComponent(oemName)}" style="background:${oemAccent};">
+            <span>Request RFQ</span>
+          </a>
         </div>
       </div>
     </div>

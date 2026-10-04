@@ -1,7 +1,8 @@
 /**
  * Partners Page — ICON ELECTROMATIC
- * High-End Dark Relay-styled layout matching the authentic Icon Electromatic partners
- * Source: https://iconelectromatic2.lbimedia.in/partners
+ * High-End Dark Relay-styled layout matching authentic Icon Electromatic partners.
+ * Features alternating animated multi-row streams (Row 1 right, Row 2 left, Row 3 right, Row 4 left).
+ * Completely clean cards showcasing authorized OEM partnerships without clutter.
  */
 
 const PARTNERS = [
@@ -21,7 +22,6 @@ const PARTNERS = [
       </svg>
     `,
     description: 'A global leader in engineered materials, Rogers provides high-frequency laminates and prepregs widely used in radar, aerospace, defence, and high-speed communication systems where signal integrity and reliability are critical.',
-    offerings: ['RO4000® Series', 'RT/duroid®', 'High-Dk Ceramics', 'Sub-THz Bondplies'],
   },
   {
     id: 'mini-circuits',
@@ -40,7 +40,6 @@ const PARTNERS = [
       </svg>
     `,
     description: 'Mini-Circuits offers an extensive portfolio of RF and microwave components supporting design, prototyping, and production across defence, SATCOM, test & measurement, and advanced communication platforms.',
-    offerings: ['Amplifiers', 'Cavity Filters', 'Mixers', 'Attenuators', 'Couplers'],
   },
   {
     id: 'qorvo',
@@ -57,7 +56,6 @@ const PARTNERS = [
       </svg>
     `,
     description: 'Qorvo develops advanced RF and mmWave technologies including RFICs, Power amplifiers, Switches, Converters, and Active antenna ASICs, enabling high-performance Radar, SATCOM, and next-generation Wireless systems.',
-    offerings: ['GaN Power Amplifiers', 'Beamforming ASICs', 'Front-End Modules', 'RF Converters'],
   },
   {
     id: 'rfuw',
@@ -75,7 +73,6 @@ const PARTNERS = [
       </svg>
     `,
     description: 'RFuW Engineering specialises in rugged RF switches, limiters, and integrated microwave modules designed for high-power, wideband, and mission-critical aerospace and defence applications.',
-    offerings: ['Coaxial PIN Switches', 'Receiver Protectors', 'High-Power Limiters', 'Custom Modules'],
   },
   {
     id: 'quantic-ohmega',
@@ -94,7 +91,6 @@ const PARTNERS = [
       </svg>
     `,
     description: 'Ohmega-Ticer provides embedded thin-film resistive copper foils that enable compact, high-performance digital and RF PCB designs for defence, aerospace, and advanced electronics.',
-    offerings: ['OhmegaPly® Resistor Foils', 'TCR® Thin-Film', 'Embedded Passives', 'High-Density Interconnect'],
   },
   {
     id: 'tecdia',
@@ -114,7 +110,6 @@ const PARTNERS = [
       </svg>
     `,
     description: 'Tecdia manufactures single-layer capacitors, thin-film chip resistors, mmWave varactors, and ground blocks for demanding aerospace, defence, medical, and RF applications.',
-    offerings: ['Single-Layer Capacitors', 'Thin-Film Chip Resistors', 'mmWave Varactors', 'Ground Blocks'],
   },
   {
     id: 'fortify',
@@ -132,7 +127,6 @@ const PARTNERS = [
       </svg>
     `,
     description: 'Fortify enables advanced dielectric 3D printing materials for RF and microwave components, supporting complex geometries, rapid prototyping, and next-generation device development.',
-    offerings: ['DLP 3D-Printed RF Lenses', 'GRIN Antennas', 'Low-Loss Radomes', 'Dielectric Resonators'],
   },
   {
     id: 'quantic-eulex',
@@ -150,7 +144,6 @@ const PARTNERS = [
       </svg>
     `,
     description: 'Quantic Eulex develops ceramic capacitors engineered for high-frequency microwave, millimetre-wave, and 5G applications, supporting radar, SATCOM, and space systems.',
-    offerings: ['Broadband Ceramic Capacitors', 'High-Q Dielectric Chips', 'Mil-PRF Rated Caps', 'Space-Grade Passives'],
   },
   {
     id: 'tri-teq',
@@ -169,7 +162,6 @@ const PARTNERS = [
       </svg>
     `,
     description: 'Tri-TeQ is a leader in harmonic switch filter banks, high/low and tunable band-pass filters, and multifunction RF assemblies used in defence, SATCOM, and electronic warfare systems.',
-    offerings: ['Switch Filter Banks', 'Tunable Bandpass Filters', 'Multifunction RF Assemblies', 'EW Subsystems'],
   },
   {
     id: 'yttek',
@@ -187,7 +179,6 @@ const PARTNERS = [
       </svg>
     `,
     description: 'YTTEK builds flexible and reconfigurable software-defined radio platforms supporting research, defence, and advanced wireless communication applications.',
-    offerings: ['Wideband SDR Transceivers', 'FPGA Signal Processing', 'Reconfigurable Radios', 'Wireless Test Beds'],
   },
   {
     id: 'thermosen',
@@ -206,7 +197,6 @@ const PARTNERS = [
       </svg>
     `,
     description: 'Thermosen develops temperature sensing solutions focused on Hi-Rel, aerospace, and defence sectors, ensuring accurate thermal monitoring in extreme environments.',
-    offerings: ['Hi-Rel NTC/PTC Thermistors', 'Cryogenic Thermal Probes', 'Extreme-Temp Sensors', 'Defense Sensors'],
   },
   {
     id: 'nee',
@@ -224,11 +214,56 @@ const PARTNERS = [
       </svg>
     `,
     description: 'NEE International is a leading fabricator of microwave and satellite communication PCBs, supporting high-frequency and space-grade electronic applications.',
-    offerings: ['Space-Grade PTFE PCBs', 'Rigid-Flex Interconnects', 'mmWave High-Frequency Boards', 'Multi-Layer Backplanes'],
   },
 ];
 
+// Clean Card Component (Showcases only the authentic partner association without badges)
+function renderPartnerCardMarkup(partner) {
+  const isRed = partner.accentColor === 'red';
+  const accentClass = isRed ? 'accent-red' : '';
+
+  return `
+    <div class="partner-stream-card ${accentClass}" data-partner-id="${partner.id}" data-category="${partner.category}" title="${partner.name}">
+      <!-- Card Top: Centered Brand Logo Box -->
+      <div class="partner-stream-card-top" style="justify-content:center;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.07);">
+        <div class="partner-stream-card-logo-box" style="width:100%;display:flex;justify-content:center;">
+          ${partner.logoSvg}
+        </div>
+      </div>
+
+      <!-- Partner Name & Domain -->
+      <h3 class="partner-stream-card-name">${partner.name}</h3>
+      <div class="partner-stream-card-domain">${partner.domain}</div>
+
+      <!-- Description of the Partner Association -->
+      <p class="partner-stream-card-desc" style="margin-bottom:0;">${partner.description}</p>
+    </div>
+  `;
+}
+
+// Generate continuous stream track containing repetitions of the 3 cards
+function renderStreamTrack(cards, direction) {
+  // 4 repetitions of the 3 cards = 12 cards total in track for seamless 50% loop
+  const repeatedCards = [...cards, ...cards, ...cards, ...cards]
+    .map(p => renderPartnerCardMarkup(p))
+    .join('');
+
+  return `
+    <div class="partner-stream-row" data-direction="${direction}">
+      <div class="partner-stream-track ${direction === 'right' ? 'move-right' : 'move-left'}">
+        ${repeatedCards}
+      </div>
+    </div>
+  `;
+}
+
 export function renderPartnersPage() {
+  // Exactly 3 cards per row:
+  const row1Cards = PARTNERS.slice(0, 3);   // Rogers, Mini-Circuits, Qorvo
+  const row2Cards = PARTNERS.slice(3, 6);   // RFuW, Quantic Ohmega, Tecdia
+  const row3Cards = PARTNERS.slice(6, 9);   // Fortify, Quantic Eulex, Tri-TeQ
+  const row4Cards = PARTNERS.slice(9, 12);  // YTTEK, Thermosen, NEE
+
   return `
     <div class="page-content" style="padding-top:calc(var(--header-height) + 24px);padding-bottom:var(--space-24);background:var(--bg-dark);min-height:100vh;">
       <div class="container">
@@ -250,7 +285,7 @@ export function renderPartnersPage() {
             Authorized Technology Partners
           </h1>
           <p class="page-lead-unified">
-            Icon Electromatic collaborates with a select group of globally recognised technology partners to deliver advanced RF, microwave, mmWave, semiconductor, and Hi-Rel solutions. Together, these partnerships enable reliable access to cutting-edge components, materials, and systems for mission-critical aerospace, defence, space, SATCOM, and next-generation communication applications.
+            Icon Electromatic collaborates with a select group of globally recognised technology principals to deliver advanced RF, microwave, mmWave, semiconductor, and Hi-Rel solutions across India's mission-critical aerospace, defence, and space platforms.
           </p>
 
           <!-- Ecosystem Trust Highlights -->
@@ -274,25 +309,50 @@ export function renderPartnersPage() {
           </div>
         </div>
 
-        <!-- Filter Navigation Pills -->
+        <!-- Filter & Animation Navigation Bar -->
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:var(--space-8);padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.07);">
           <div style="display:flex;flex-wrap:wrap;gap:8px;" id="partner-filter-pills">
-            <button class="filter-pill active" data-filter="all">All Partners (12)</button>
-            <button class="filter-pill" data-filter="components">RF & Microwave</button>
-            <button class="filter-pill" data-filter="semiconductors">Semiconductors & SDR</button>
-            <button class="filter-pill" data-filter="materials">Materials & 3D Printing</button>
-            <button class="filter-pill" data-filter="sensors">Sensors & PCBs</button>
+            <button class="filter-pill active" data-filter="all">
+              <i class="fa-solid fa-film" style="margin-right:5px;font-size:0.75rem;"></i>
+              All Partners Flow (12)
+            </button>
+            <button class="filter-pill" data-filter="components">RF &amp; Microwave</button>
+            <button class="filter-pill" data-filter="semiconductors">Semiconductors &amp; SDR</button>
+            <button class="filter-pill" data-filter="materials">Materials &amp; 3D Printing</button>
+            <button class="filter-pill" data-filter="sensors">Sensors &amp; PCBs</button>
           </div>
-          <div style="font-size:0.85rem;color:var(--text-gray-400);">
-            Showing <strong id="partner-count" style="color:#FFFFFF;">12</strong> Technology Partners
+          <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;color:var(--text-gray-400);">
+            <span style="display:inline-flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--text-gray-400);">
+              <i class="fa-solid fa-hand-pointer" style="color:var(--logo-blue-light);"></i> Hover any card to pause flow
+            </span>
           </div>
         </div>
 
-        <!-- Partners Cards Grid -->
-        <div id="partners-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(360px, 1fr));gap:24px;">
-          ${PARTNERS.map(partner => renderPartnerCard(partner)).join('')}
-        </div>
+      </div>
 
+      <!-- Alternating Multi-Row Animated Showcase (Row 1 Right, Row 2 Left, Row 3 Right, Row 4 Left) -->
+      <div id="partners-stream-view" class="partners-page-stream-container">
+        <!-- Row 1: 3 cards moving towards the RIGHT -->
+        ${renderStreamTrack(row1Cards, 'right')}
+
+        <!-- Row 2: 3 cards moving towards the LEFT -->
+        ${renderStreamTrack(row2Cards, 'left')}
+
+        <!-- Row 3: 3 cards moving towards the RIGHT -->
+        ${renderStreamTrack(row3Cards, 'right')}
+
+        <!-- Row 4: 3 cards moving towards the LEFT -->
+        ${renderStreamTrack(row4Cards, 'left')}
+      </div>
+
+      <!-- Filtered Grid View (Only shown when a specific category filter pill is clicked) -->
+      <div class="container" id="partners-filtered-container" style="display:none;margin-top:var(--space-6);">
+        <div id="partners-filtered-grid" class="partners-filtered-grid">
+          ${PARTNERS.map(p => renderPartnerCardMarkup(p)).join('')}
+        </div>
+      </div>
+
+      <div class="container">
         <!-- Partnership CTA Section -->
         <div style="margin-top:var(--space-16);background:linear-gradient(135deg, rgba(8,13,26,0.95), rgba(15,23,42,0.95));border:1px solid rgba(37,99,235,0.25);border-radius:20px;padding:48px 40px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:32px;position:relative;overflow:hidden;">
           <div style="position:absolute;top:-80px;right:-80px;width:240px;height:240px;background:radial-gradient(circle, rgba(37,99,235,0.25) 0%, transparent 70%);border-radius:50%;pointer-events:none;"></div>
@@ -302,7 +362,7 @@ export function renderPartnersPage() {
               Collaborate With Us
             </div>
             <h2 style="font-family:var(--font-display);font-size:clamp(1.6rem, 2.5vw, 2.2rem);font-weight:800;color:#FFFFFF;letter-spacing:-0.02em;margin-bottom:12px;line-height:1.2;">
-              Looking to Distribute Your RF & Hi-Rel Technologies in India?
+              Looking to Distribute Your RF &amp; Hi-Rel Technologies in India?
             </h2>
             <p style="font-size:0.95rem;color:var(--text-gray-300);line-height:1.65;margin:0;">
               Icon Electromatic provides world-class market entry, design-in engineering support, defense sector compliance, and nationwide distribution for global technology principals.
@@ -317,76 +377,17 @@ export function renderPartnersPage() {
             </a>
           </div>
         </div>
-
-      </div>
-    </div>
-  `;
-}
-
-function renderPartnerCard(partner) {
-  const isRed = partner.accentColor === 'red';
-  const badgeBg = isRed ? 'rgba(225,29,72,0.12)' : 'rgba(37,99,235,0.12)';
-  const badgeBorder = isRed ? 'rgba(225,29,72,0.3)' : 'rgba(37,99,235,0.3)';
-  const badgeColor = isRed ? 'var(--logo-red-light)' : 'var(--logo-blue-light)';
-  const accentClass = isRed ? 'accent-red' : '';
-
-  return `
-    <div class="product-card-relay partner-card-item ${accentClass}" data-category="${partner.category}" style="display:flex;flex-direction:column;padding:26px;border-radius:18px;">
-      <!-- Card Top Header: Prominent Company Brand Logo Showcase & Category Tag -->
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.07);">
-        <!-- Authentic Corporate Company Logo Hero with Ambient Glow and Shimmer -->
-        <div class="partner-logo-box" title="${partner.name}">
-          <div class="partner-logo-glow" style="background:${partner.glowColor};"></div>
-          ${partner.logoSvg}
-        </div>
-        <span style="display:inline-block;font-size:0.7rem;font-weight:700;color:${badgeColor};background:${badgeBg};border:1px solid ${badgeBorder};padding:5px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap;flex-shrink:0;">
-          ${partner.category.toUpperCase()}
-        </span>
       </div>
 
-      <!-- Partner Name & Domain -->
-      <h3 style="font-family:var(--font-display);font-size:1.35rem;font-weight:800;color:#FFFFFF;letter-spacing:-0.02em;margin-bottom:4px;line-height:1.25;">
-        ${partner.name}
-      </h3>
-      <div style="font-size:0.8rem;color:var(--text-gray-400);font-weight:600;margin-bottom:14px;">
-        ${partner.domain}
-      </div>
-
-      <!-- Description -->
-      <p style="font-size:0.875rem;color:var(--text-gray-300);line-height:1.65;margin-bottom:18px;flex:1;">
-        ${partner.description}
-      </p>
-
-      <!-- Key Technology Offerings -->
-      <div style="margin-bottom:18px;">
-        <div style="font-size:0.7rem;font-weight:700;color:var(--text-gray-400);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">
-          Key Specializations:
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;">
-          ${partner.offerings.map(item => `
-            <span style="font-size:0.72rem;color:#CBD5E1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);padding:3px 8px;border-radius:4px;">
-              ${item}
-            </span>
-          `).join('')}
-        </div>
-      </div>
-
-      <!-- Card Action Footer -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);margin-top:auto;">
-        <span style="font-size:0.75rem;color:#64748B;">
-          <i class="fa-solid fa-circle-check" style="color:var(--success);margin-right:4px;"></i>Direct Supply
-        </span>
-        <button class="relay-inquire-btn" data-route="/contact?partner=${encodeURIComponent(partner.name)}">
-          Inquire Solutions &rarr;
-        </button>
-      </div>
     </div>
   `;
 }
 
 export function initPartnersPage() {
   const pills = document.querySelectorAll('#partner-filter-pills button');
-  const countEl = document.getElementById('partner-count');
+  const streamView = document.getElementById('partners-stream-view');
+  const filteredContainer = document.getElementById('partners-filtered-container');
+  const filteredGrid = document.getElementById('partners-filtered-grid');
 
   if (pills.length) {
     pills.forEach(btn => {
@@ -395,28 +396,37 @@ export function initPartnersPage() {
         btn.classList.add('active');
 
         const filter = btn.getAttribute('data-filter');
-        const cards = document.querySelectorAll('.partner-card-item');
-        let visibleCount = 0;
 
-        cards.forEach(card => {
-          const cardCat = card.getAttribute('data-category');
-          const isMatch = filter === 'all' || 
-                          cardCat === filter || 
-                          (filter === 'sensors' && (cardCat === 'sensors' || cardCat === 'pcb')) ||
-                          (filter === 'semiconductors' && cardCat === 'semiconductors');
+        if (filter === 'all') {
+          if (streamView) streamView.style.display = 'flex';
+          if (filteredContainer) filteredContainer.style.display = 'none';
+        } else {
+          if (streamView) streamView.style.display = 'none';
+          if (filteredContainer) filteredContainer.style.display = 'block';
 
-          if (isMatch) {
-            card.style.display = 'flex';
-            visibleCount++;
-          } else {
-            card.style.display = 'none';
+          if (filteredGrid) {
+            const cards = filteredGrid.querySelectorAll('.partner-stream-card');
+            cards.forEach(card => {
+              const cardCat = card.getAttribute('data-category');
+              const isMatch = cardCat === filter || 
+                              (filter === 'sensors' && (cardCat === 'sensors' || cardCat === 'pcb')) ||
+                              (filter === 'semiconductors' && cardCat === 'semiconductors');
+
+              card.style.display = isMatch ? 'flex' : 'none';
+            });
           }
-        });
-
-        if (countEl) {
-          countEl.textContent = visibleCount;
         }
       });
     });
   }
+
+  // Interactive click on any partner card to explore related OEM blogs or catalog
+  document.querySelectorAll('.partner-stream-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const pid = card.getAttribute('data-partner-id');
+      if (pid) {
+        window.location.hash = `#/blogs?oem=${pid === 'rogers' ? 'rogers-corporation' : pid}`;
+      }
+    });
+  });
 }

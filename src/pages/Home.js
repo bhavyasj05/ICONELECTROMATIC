@@ -2,11 +2,11 @@
  * Home Page — ICON ELECTROMATIC
  * Sleek Cinematic Dark Aesthetic directly modeled after the Relay Framer reference
  */
-import { getFeaturedProducts } from '../data/products.js';
+import { getPopularProducts } from '../data/catalogData.js';
 import { renderProductCard } from '../components/ProductCard.js';
 
 export function renderHomePage() {
-  const featured = getFeaturedProducts().slice(0, 8);
+  const popular = getPopularProducts();
 
   return `
     <!-- RELAY CINEMATIC HERO -->
@@ -124,37 +124,41 @@ export function renderHomePage() {
       </div>
     </section>
 
-    <!-- PRODUCTS: Business Units Portfolio (Dark Theme, Brief Info) -->
+    <!-- POPULAR PRODUCTS SECTION -->
     <section class="products-dark-section">
       <div class="container">
         <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:var(--space-8);flex-wrap:wrap;gap:var(--space-4);">
           <div>
-            <span class="section-tag-mono">PRODUCTS & INVENTORY</span>
-            <h2 class="section-h2">Business Units Portfolio</h2>
+            <div class="page-eyebrow-pill" style="margin-bottom:8px;">
+              <span class="hub-dot-pulse"></span>
+              <span>POPULAR HARDWARE &amp; MATERIALS</span>
+            </div>
+            <h2 class="section-h2">Popular Products &amp; Components</h2>
             <p class="section-lead">
-              High-resolution product units with brief engineering parameters for rapid evaluation.
+              High-frequency laminates, precision GaN semiconductors, 3D metamaterial optics, and microwave modules from our global OEM partners.
             </p>
           </div>
           <div>
             <a class="btn-relay-dark" data-route="/products">
-              View All 4,000+ Catalog &rarr;
+              Explore Full Catalog (15 OEMs) &rarr;
             </a>
           </div>
         </div>
 
         <!-- Filter Chips -->
         <div class="products-nav-bar" id="home-category-tabs" style="margin-bottom:var(--space-8);">
-          <button class="filter-chip-dark active" data-cat="all">All Components</button>
-          <button class="filter-chip-dark" data-cat="amplifiers">Amplifiers</button>
-          <button class="filter-chip-dark" data-cat="filters">Cavity Filters</button>
-          <button class="filter-chip-dark" data-cat="mixers">Frequency Mixers</button>
-          <button class="filter-chip-dark" data-cat="attenuators">Attenuators</button>
-          <button class="filter-chip-dark" data-cat="switches">RF Switches</button>
+          <button class="filter-chip-dark active" data-filter="all">All Popular (${popular.length})</button>
+          <button class="filter-chip-dark" data-filter="rogers">Rogers Laminates</button>
+          <button class="filter-chip-dark" data-filter="qorvo">Qorvo GaN &amp; ICs</button>
+          <button class="filter-chip-dark" data-filter="ohmega">Ohmega-Ticer</button>
+          <button class="filter-chip-dark" data-filter="fortify">Fortify 3D Optics</button>
+          <button class="filter-chip-dark" data-filter="components">Mini-Circuits &amp; RFuW</button>
+          <button class="filter-chip-dark" data-filter="sensors">Sensors &amp; PCB</button>
         </div>
 
         <!-- Product Cards Grid -->
         <div class="products-grid-dark" id="home-products-grid">
-          ${featured.map((p, i) => renderProductCard(p, i)).join('')}
+          ${popular.map((p, i) => renderProductCard(p, i)).join('')}
         </div>
       </div>
     </section>
@@ -493,12 +497,20 @@ export function initHomePage() {
   if (video) {
     video.muted = true;
     video.defaultMuted = true;
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        // Handled safely if autoplay restricted
-      });
-    }
+    const attemptPlay = () => {
+      if (video.paused) {
+        video.muted = true;
+        video.play().catch(() => {});
+      }
+    };
+    attemptPlay();
+    // Re-verify after a short tick in case DOM insertion was immediate
+    setTimeout(attemptPlay, 100);
+    setTimeout(attemptPlay, 400);
+
+    // Fallback if browser requires interaction
+    window.addEventListener('click', attemptPlay, { once: true });
+    window.addEventListener('scroll', attemptPlay, { once: true, passive: true });
   }
 
   // Category tabs on home page
@@ -511,16 +523,28 @@ export function initHomePage() {
         tabButtons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
-        const cat = btn.getAttribute('data-cat');
-        const allFeatured = getFeaturedProducts();
-        const filtered = cat === 'all' 
-          ? allFeatured.slice(0, 8) 
-          : allFeatured.filter(p => p.category === cat || p.category.includes(cat)).slice(0, 8);
+        const filter = btn.getAttribute('data-filter') || 'all';
+        const allPopular = getPopularProducts();
+        
+        let filtered = allPopular;
+        if (filter === 'rogers') {
+          filtered = allPopular.filter(p => p.oemId === 'rogers-corporation');
+        } else if (filter === 'qorvo') {
+          filtered = allPopular.filter(p => p.oemId === 'qorvo');
+        } else if (filter === 'ohmega') {
+          filtered = allPopular.filter(p => p.oemId === 'ohmega-ticer');
+        } else if (filter === 'fortify') {
+          filtered = allPopular.filter(p => p.oemId === 'fortify');
+        } else if (filter === 'components') {
+          filtered = allPopular.filter(p => p.oemId === 'minicircuits' || p.oemId === 'rfuw-engineering' || p.oemId === 'triteq');
+        } else if (filter === 'sensors') {
+          filtered = allPopular.filter(p => p.oemId === 'spellman' || p.oemId === 'thermosen' || p.oemId === 'nee' || p.oemId === 'transline-technology');
+        }
 
         if (filtered.length === 0) {
           productsGrid.innerHTML = `
             <div style="grid-column:1/-1;text-align:center;padding:var(--space-8);color:var(--text-gray-500);">
-              No featured components currently in this view. <a data-route="/products?category=${cat}" style="color:var(--logo-blue-light);font-weight:600;">View full line in catalog &rarr;</a>
+              No popular items currently in this view. <a data-route="/products" style="color:var(--logo-blue-light);font-weight:600;">View full catalog &rarr;</a>
             </div>
           `;
         } else {

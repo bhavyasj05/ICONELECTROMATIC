@@ -35,8 +35,10 @@ export function renderProductsPage() {
   navState.categoryId = params.get('category') || null;
 
   return `
-    <div class="catalog-page" id="catalog-page">
-      ${renderPageShell()}
+    <div class="page-content catalog-page" id="catalog-page" style="padding-top:calc(var(--header-height) + 24px);padding-bottom:var(--space-24);background:var(--bg-dark);min-height:100vh;">
+      <div class="container">
+        ${renderPageShell()}
+      </div>
     </div>
   `;
 }
@@ -47,60 +49,56 @@ function renderPageShell() {
   const totalOEMs = getTotalOEMCount();
 
   return `
-    <!-- Top Hero Section -->
-    <div class="catalog-hero-strip">
-      <div class="container">
-        <div class="catalog-hero-inner">
-          <div class="catalog-hero-text">
-            <div class="page-eyebrow-pill">
-              <span class="hub-dot-pulse"></span>
-              <span>AUTHORIZED MANUFACTURER CATALOG</span>
-            </div>
-            <h1 class="catalog-hero-title">Product Portfolio &amp; Component Catalog</h1>
-            <p class="catalog-hero-sub">
-              Authorized distributor for world-leading RF, microwave, mmWave, semiconductor, and Hi-Rel materials manufacturers.
-              Explore all 15 global OEM partners, multi-frequency categories, and specialized product lines.
-            </p>
-          </div>
-          <div class="catalog-hero-stats">
-            <div class="catalog-stat">
-              <span class="catalog-stat-num">${totalOEMs}</span>
-              <span class="catalog-stat-label">Global OEMs</span>
-            </div>
-            <div class="catalog-stat-div"></div>
-            <div class="catalog-stat">
-              <span class="catalog-stat-num">${totalCats}</span>
-              <span class="catalog-stat-label">Categories</span>
-            </div>
-            <div class="catalog-stat-div"></div>
-            <div class="catalog-stat">
-              <span class="catalog-stat-num">${totalProds}+</span>
-              <span class="catalog-stat-label">Products &amp; Lines</span>
-            </div>
-          </div>
+    <!-- Interactive Breadcrumb matching all pages -->
+    <nav class="breadcrumb-dark catalog-breadcrumb-nav" id="catalog-breadcrumb">
+      ${renderBreadcrumb()}
+    </nav>
+
+    <!-- Unified Page Header matching Partners, Services, Blogs, About -->
+    <div class="page-header-unified catalog-page-header">
+      <div class="page-eyebrow-pill">
+        <span class="hub-dot-pulse"></span>
+        <span>AUTHORIZED MANUFACTURER CATALOG</span>
+      </div>
+      <h1 class="page-title-unified">Product Portfolio &amp; Component Catalog</h1>
+      <p class="page-lead-unified">
+        Authorized distributor for world-leading RF, microwave, mmWave, semiconductor, and Hi-Rel materials manufacturers.
+        Explore all 15 global OEM partners, multi-frequency categories, and specialized product lines.
+      </p>
+
+      <!-- Trust & Capability Highlights matching Partners and Services -->
+      <div class="catalog-trust-strip" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:24px;margin-bottom:var(--space-8);">
+        <div class="catalog-trust-pill">
+          <i class="fa-solid fa-industry" style="color:var(--logo-blue-light);"></i>
+          <span><strong>${totalOEMs}</strong> Global OEM Partners</span>
+        </div>
+        <div class="catalog-trust-pill">
+          <i class="fa-solid fa-shapes" style="color:var(--logo-red-light);"></i>
+          <span><strong>${totalCats}</strong> Specialized Categories</span>
+        </div>
+        <div class="catalog-trust-pill">
+          <i class="fa-solid fa-microchip" style="color:#10B981;"></i>
+          <span><strong>${totalProds}+</strong> Precision Products &amp; Lines</span>
+        </div>
+        <div class="catalog-trust-pill">
+          <i class="fa-solid fa-certificate" style="color:#F59E0B;"></i>
+          <span>Direct Factory Warranties &amp; CoCs</span>
         </div>
       </div>
     </div>
 
-    <!-- Catalog Body -->
-    <div class="catalog-body">
-      <div class="container">
-        <!-- Interactive Breadcrumb -->
-        <nav class="catalog-breadcrumb" id="catalog-breadcrumb">
-          ${renderBreadcrumb()}
-        </nav>
-
-        <!-- Dynamic Content View -->
-        <div id="catalog-content">
-          ${renderCurrentLevel()}
-        </div>
-      </div>
+    <!-- Dynamic Content View -->
+    <div id="catalog-content">
+      ${renderCurrentLevel()}
     </div>
   `;
 }
 
 function renderBreadcrumb() {
-  const crumbs = [{ label: 'All Companies', level: 'oems' }];
+  const crumbs = [
+    { label: 'Home', route: '/' },
+    { label: 'Products', level: 'oems' }
+  ];
 
   if (navState.oemId) {
     const oem = getOEM(navState.oemId);
@@ -117,21 +115,21 @@ function renderBreadcrumb() {
       label: cat ? cat.name : navState.categoryId,
       level: 'products',
       oemId: navState.oemId,
-      categoryId: navState.categoryId,
-      active: true
+      categoryId: navState.categoryId
     });
   }
 
   return crumbs.map((c, i) => {
     const isLast = i === crumbs.length - 1;
+    const sep = i > 0 ? '<span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i></span>' : '';
     if (isLast) {
-      return `<span class="crumb crumb-active"><i class="fa-solid fa-angle-right crumb-sep"></i> ${c.label}</span>`;
+      return `${sep}<span style="color:var(--text-white);font-weight:600;" class="crumb-current">${c.label}</span>`;
+    }
+    if (c.route) {
+      return `${sep}<a data-route="${c.route}">${c.label}</a>`;
     }
     const params = buildNavParams(c.level, c.oemId, c.categoryId);
-    return `
-      ${i > 0 ? '<i class="fa-solid fa-angle-right crumb-sep"></i>' : ''}
-      <a class="crumb crumb-link" data-nav-params="${params}">${c.label}</a>
-    `;
+    return `${sep}<a class="crumb-link" data-nav-params="${params}" style="cursor:pointer;">${c.label}</a>`;
   }).join('');
 }
 
@@ -753,5 +751,5 @@ function navigateTo(paramsStr) {
   }
 
   // Smooth scroll to catalog view
-  document.querySelector('.catalog-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelector('#catalog-content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }

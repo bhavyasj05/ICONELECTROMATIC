@@ -469,7 +469,7 @@ function renderSingleOemBlogView(oem, blog, activeTab) {
         ` : ''}
 
         <!-- Bottom OEM RFQ Box -->
-        <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border-card);border-radius:var(--radius-xl);padding:24px 30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+        <div class="blogs-oem-rfq-box" style="background:rgba(255,255,255,0.02);border:1px solid var(--border-card);border-radius:var(--radius-xl);padding:24px 30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
           <div>
             <h4 style="font-size:1.1rem;font-weight:800;color:var(--text-white);margin-bottom:4px;">
               Need Specific Components from ${oem.name}?

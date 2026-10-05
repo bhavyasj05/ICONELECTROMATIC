@@ -265,7 +265,7 @@ export function renderPartnersPage() {
   const row4Cards = PARTNERS.slice(9, 12);  // YTTEK, Thermosen, NEE
 
   return `
-    <div class="page-content" style="padding-top:calc(var(--header-height) + 24px);padding-bottom:var(--space-24);background:var(--bg-dark);min-height:100vh;">
+    <div class="page-content partners-page" style="padding-top:calc(var(--header-height) + 24px);padding-bottom:var(--space-24);background:var(--bg-dark);min-height:100vh;">
       <div class="container">
         
         <!-- Breadcrumb -->
@@ -310,7 +310,7 @@ export function renderPartnersPage() {
         </div>
 
         <!-- Filter & Animation Navigation Bar -->
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:var(--space-8);padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.07);">
+        <div class="partners-filter-bar" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:var(--space-8);padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.07);">
           <div style="display:flex;flex-wrap:wrap;gap:8px;" id="partner-filter-pills">
             <button class="filter-pill active" data-filter="all">
               <i class="fa-solid fa-film" style="margin-right:5px;font-size:0.75rem;"></i>
@@ -354,21 +354,21 @@ export function renderPartnersPage() {
 
       <div class="container">
         <!-- Partnership CTA Section -->
-        <div style="margin-top:var(--space-16);background:linear-gradient(135deg, rgba(8,13,26,0.95), rgba(15,23,42,0.95));border:1px solid rgba(37,99,235,0.25);border-radius:20px;padding:48px 40px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:32px;position:relative;overflow:hidden;">
-          <div style="position:absolute;top:-80px;right:-80px;width:240px;height:240px;background:radial-gradient(circle, rgba(37,99,235,0.25) 0%, transparent 70%);border-radius:50%;pointer-events:none;"></div>
+        <div class="partners-cta-section" style="margin-top:var(--space-16);background:linear-gradient(135deg, rgba(8,13,26,0.95), rgba(15,23,42,0.95));border:1px solid rgba(37,99,235,0.25);border-radius:20px;padding:48px 40px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:32px;position:relative;overflow:hidden;">
+          <div class="partners-cta-orb" style="position:absolute;top:-80px;right:-80px;width:240px;height:240px;background:radial-gradient(circle, rgba(37,99,235,0.25) 0%, transparent 70%);border-radius:50%;pointer-events:none;"></div>
           <div style="max-width:620px;position:relative;z-index:2;">
-            <div style="display:inline-flex;align-items:center;gap:6px;font-size:0.75rem;font-weight:700;color:var(--logo-red-light);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">
+            <div class="partners-cta-eyebrow" style="display:inline-flex;align-items:center;gap:6px;font-size:0.75rem;font-weight:700;color:var(--logo-red-light);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">
               <i class="fa-solid fa-handshake-angle"></i>
               Collaborate With Us
             </div>
-            <h2 style="font-family:var(--font-display);font-size:clamp(1.6rem, 2.5vw, 2.2rem);font-weight:800;color:#FFFFFF;letter-spacing:-0.02em;margin-bottom:12px;line-height:1.2;">
+            <h2 class="partners-cta-title" style="font-family:var(--font-display);font-size:clamp(1.6rem, 2.5vw, 2.2rem);font-weight:800;color:#FFFFFF;letter-spacing:-0.02em;margin-bottom:12px;line-height:1.2;">
               Looking to Distribute Your RF &amp; Hi-Rel Technologies in India?
             </h2>
-            <p style="font-size:0.95rem;color:var(--text-gray-300);line-height:1.65;margin:0;">
+            <p class="partners-cta-desc" style="font-size:0.95rem;color:var(--text-gray-300);line-height:1.65;margin:0;">
               Icon Electromatic provides world-class market entry, design-in engineering support, defense sector compliance, and nationwide distribution for global technology principals.
             </p>
           </div>
-          <div style="display:flex;flex-wrap:wrap;gap:12px;position:relative;z-index:2;">
+          <div class="partners-cta-buttons" style="display:flex;flex-wrap:wrap;gap:12px;position:relative;z-index:2;">
             <a data-route="/contact?subject=partnership" class="btn-relay btn-relay-primary" style="padding:12px 24px;">
               Become a Technology Partner &rarr;
             </a>

@@ -6,7 +6,7 @@
 
 export function renderServicesPage() {
   return `
-    <div class="page-content" style="padding-top:calc(var(--header-height) + 24px);padding-bottom:var(--space-24);background:var(--bg-dark);min-height:100vh;">
+    <div class="page-content services-page" style="padding-top:calc(var(--header-height) + 24px);padding-bottom:var(--space-24);background:var(--bg-dark);min-height:100vh;">
       <div class="container">
         
         <!-- Breadcrumb -->
@@ -31,7 +31,7 @@ export function renderServicesPage() {
         </div>
 
         <!-- Trust Badges Strip -->
-        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:var(--space-16);padding-bottom:var(--space-8);border-bottom:1px solid var(--border-subtle);">
+        <div class="services-trust-strip" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:var(--space-16);padding-bottom:var(--space-8);border-bottom:1px solid var(--border-subtle);">
           <div style="background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.25);border-radius:10px;padding:10px 18px;font-size:0.85rem;color:#93C5FD;display:flex;align-items:center;gap:8px;">
             <i class="fa-solid fa-handshake-angle" style="color:var(--logo-blue-light);"></i>
             <span>Tier-1 Global Manufacturers Representation</span>
@@ -231,22 +231,22 @@ export function renderServicesPage() {
         </div>
 
         <!-- Call to Action Card -->
-        <div style="background:#080D1A;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:var(--space-12) var(--space-8);text-align:center;position:relative;overflow:hidden;box-shadow:0 24px 48px -12px rgba(0,0,0,0.8);">
+        <div class="services-cta-card" style="background:#080D1A;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:var(--space-12) var(--space-8);text-align:center;position:relative;overflow:hidden;box-shadow:0 24px 48px -12px rgba(0,0,0,0.8);">
           <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg, var(--logo-blue), var(--logo-red));"></div>
           
-          <span class="section-tag-mono" style="margin-bottom:6px;">DIRECT COLLABORATION</span>
-          <h3 style="font-size:clamp(1.8rem, 3.2vw, 2.4rem);font-weight:800;color:#FFFFFF;letter-spacing:-0.03em;margin-bottom:12px;">
+          <span class="section-tag-mono services-cta-tag" style="margin-bottom:6px;">DIRECT COLLABORATION</span>
+          <h3 class="services-cta-title" style="font-size:clamp(1.8rem, 3.2vw, 2.4rem);font-weight:800;color:#FFFFFF;letter-spacing:-0.03em;margin-bottom:12px;">
             Ready to partner on your next mission-critical system?
           </h3>
-          <p style="font-size:1rem;color:var(--text-gray-400);max-width:640px;margin:0 auto var(--space-8) auto;line-height:1.6;">
+          <p class="services-cta-desc" style="font-size:1rem;color:var(--text-gray-400);max-width:640px;margin:0 auto var(--space-8) auto;line-height:1.6;">
             Connect with our Bengaluru engineering and global logistics office for component inquiries, government tenders, or bespoke design consulting.
           </p>
 
           <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">
-            <a class="btn-relay-blue" data-route="/contact">
+            <a class="btn-relay-blue services-cta-btn-primary" data-route="/contact">
               <i class="fa-solid fa-paper-plane"></i> Contact Our Team
             </a>
-            <a class="btn-relay-dark" data-route="/products">
+            <a class="btn-relay-dark services-cta-btn-secondary" data-route="/products">
               Explore Products Catalog
             </a>
           </div>

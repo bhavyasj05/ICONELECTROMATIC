@@ -4,9 +4,11 @@
  */
 import { getPopularProducts } from '../data/catalogData.js';
 import { renderProductCard } from '../components/ProductCard.js';
+import { ContentService } from '../data/ContentService.js';
 
 export function renderHomePage() {
   const popular = getPopularProducts();
+  const data = ContentService.getData('home');
 
   return `
     <!-- RELAY CINEMATIC HERO -->
@@ -20,18 +22,16 @@ export function renderHomePage() {
       <div class="container" style="position:relative;z-index:3;width:100%;">
         <div class="hero-relay-content">
           <h1 class="hero-title-giant" style="font-size: clamp(2.2rem, 4.5vw, 4.2rem);">
-            ICON ELECTROMATIC turns 
-            complex high-frequency requirements into <span class="accent-red" style="color: var(--logo-red);">mission-ready hardware.</span>
+            ${data.heroTitle || 'ICON ELECTROMATIC turns complex high-frequency requirements into <span class="accent-red" style="color: var(--logo-red);">mission-ready hardware.</span>'}
           </h1>
 
           <p class="hero-description-clean">
-            Delivering precision RF, microwave, and electronic components for 
-            defense, aerospace, SATCOM, and telecommunications.
+            ${data.heroSubtitle || 'Delivering precision RF, microwave, and electronic components for defense, aerospace, SATCOM, and telecommunications.'}
           </p>
 
           <div class="hero-actions-row">
             <a href="#/products" class="btn-relay-red" data-route="/products">
-              Explore Products <i class="fa-solid fa-arrow-right"></i>
+              ${data.ctaText || 'Explore Products'} <i class="fa-solid fa-arrow-right"></i>
             </a>
             <a href="#/contact" class="btn-relay-dark" style="background:#ffffff; color:#000000;" data-route="/contact">
               Request a Quote

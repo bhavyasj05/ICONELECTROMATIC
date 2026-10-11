@@ -1,10 +1,11 @@
 /**
  * Footer Component — ICON ELECTROMATIC
- * Clean, professional footer inspired by the reference design.
- * Two-part layout: blue banner + clean content area.
+ * Fully data-driven via ContentService
  */
+import { ContentService } from '../data/ContentService.js';
 
 export function renderFooter() {
+  const d = ContentService.getData('footer');
   const year = new Date().getFullYear();
 
   return `
@@ -12,22 +13,19 @@ export function renderFooter() {
       <div class="footer-main">
         <div class="container footer-main-inner">
           
-          <!-- Left: Logo, Text, Socials -->
+          <!-- Left: Logo, Tagline, Socials -->
           <div class="footer-brand-col">
             <a href="#/" data-route="/" class="footer-logo-link">
               <img src="/icon-logo-transparent.png" alt="ICON ELECTROMATIC" />
             </a>
             <p class="footer-tagline">
-              Delivering advanced RF, Microwave, and<br/>
-              High-Rel electronic components from DC to<br/>
-              86 GHz for aerospace, defense, SATCOM,<br/>
-              and telecommunications.
+              ${d.tagline || 'Delivering advanced RF, Microwave, and High-Rel electronic components from DC to 86 GHz for aerospace, defense, SATCOM, and telecommunications.'}
             </p>
             <div class="footer-social-icons">
-              <a href="#" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
-              <a href="#" target="_blank"><i class="fa-brands fa-youtube"></i></a>
-              <a href="mailto:salesiepl@iconelectromatic.com"><i class="fa-solid fa-envelope"></i></a>
-              <a href="tel:+918025429452"><i class="fa-solid fa-phone"></i></a>
+              <a href="${d.linkedinUrl || '#'}" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+              <a href="${d.youtubeUrl || '#'}" target="_blank" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+              <a href="mailto:${d.indiaEmail || 'salesiepl@iconelectromatic.com'}" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+              <a href="tel:${(d.indiaPhone || '+918025429452').replace(/\s/g,'')}" aria-label="Phone"><i class="fa-solid fa-phone"></i></a>
             </div>
           </div>
 
@@ -38,29 +36,29 @@ export function renderFooter() {
             <div class="footer-office-item">
               <div class="office-icon"><i class="fa-solid fa-location-dot"></i></div>
               <div class="office-details">
-                <h5>Icon Electromatic Pvt. Ltd. (India)</h5>
-                <p>#303/2, 5th 'A' Cross, HRBR Layout, III Block,<br/>Kalyan Nagar, Bengaluru – 560043</p>
-                <p>Tel: <a href="tel:+918025429452">+91 80 2542 9452</a></p>
-                <p>Email: <a href="mailto:salesiepl@iconelectromatic.com">salesiepl@iconelectromatic.com</a></p>
+                <h5>${d.indiaOfficeName || 'Icon Electromatic Pvt. Ltd. (India)'}</h5>
+                <p>${d.indiaAddress || '#303/2, 5th A Cross, HRBR Layout, Kalyan Nagar, Bengaluru – 560043'}</p>
+                <p>Tel: <a href="tel:${(d.indiaPhone || '+918025429452').replace(/\s/g,'')}">${d.indiaPhone || '+91 80 2542 9452'}</a></p>
+                <p>Email: <a href="mailto:${d.indiaEmail || 'salesiepl@iconelectromatic.com'}">${d.indiaEmail || 'salesiepl@iconelectromatic.com'}</a></p>
               </div>
             </div>
 
             <div class="footer-office-item">
               <div class="office-icon"><i class="fa-solid fa-location-dot"></i></div>
               <div class="office-details">
-                <h5>Icon Electromatic Singapore Pte Ltd</h5>
-                <p>204D Compassvale Drive #08-409<br/>Singapore 544204</p>
-                <p>Email: <a href="mailto:IESing@iconelectromatic.com">IESing@iconelectromatic.com</a></p>
+                <h5>${d.singaporeOfficeName || 'Icon Electromatic Singapore Pte Ltd'}</h5>
+                <p>${d.singaporeAddress || '204D Compassvale Drive #08-409, Singapore 544204'}</p>
+                <p>Email: <a href="mailto:${d.singaporeEmail || 'IESing@iconelectromatic.com'}">${d.singaporeEmail || 'IESing@iconelectromatic.com'}</a></p>
               </div>
             </div>
 
             <div class="footer-office-item">
               <div class="office-icon"><i class="fa-solid fa-location-dot"></i></div>
               <div class="office-details">
-                <h5>Icon Electromatic LLC (USA)</h5>
-                <p>15412 Meadow Vista Dr, Edmond,<br/>Oklahoma 73013, USA</p>
-                <p>Tel: <a href="tel:+14055935176">+1 405 593 5176</a></p>
-                <p>Email: <a href="mailto:salesiellc@iconelectromatic.com">salesiellc@iconelectromatic.com</a></p>
+                <h5>${d.usaOfficeName || 'Icon Electromatic LLC (USA)'}</h5>
+                <p>${d.usaAddress || '15412 Meadow Vista Dr, Edmond, Oklahoma 73013, USA'}</p>
+                <p>Tel: <a href="tel:${(d.usaPhone || '+14055935176').replace(/\s/g,'')}">${d.usaPhone || '+1 405 593 5176'}</a></p>
+                <p>Email: <a href="mailto:${d.usaEmail || 'salesiellc@iconelectromatic.com'}">${d.usaEmail || 'salesiellc@iconelectromatic.com'}</a></p>
               </div>
             </div>
           </div>
@@ -84,7 +82,7 @@ export function renderFooter() {
 
       <div class="footer-copyright-bar">
         <div class="container footer-copyright-inner" style="justify-content:center;text-align:center;">
-          <p>&copy; ${year} ICON ELECTROMATIC PRIVATE LIMITED. All rights reserved.</p>
+          <p>${d.copyrightText || '&copy; ' + year + ' ICON ELECTROMATIC PRIVATE LIMITED. All rights reserved.'}</p>
         </div>
       </div>
     </footer>

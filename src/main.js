@@ -2,7 +2,7 @@
  * Main Entry Point — ICON ELECTROMATIC
  */
 import { registerRoute, initRouter, getCurrentPath } from './router.js';
-import { renderHeader, renderHeaderInner, initHeader } from './components/Header.js';
+import { renderHeader, renderHeaderInner, initHeader, closeSidebarDrawer, updateDrawerActiveState } from './components/Header.js';
 import { renderFooter } from './components/Footer.js';
 import { renderHomePage, initHomePage } from './pages/Home.js';
 import { renderProductsPage, initProductsPage } from './pages/Products.js';
@@ -14,6 +14,7 @@ import { renderBlogsPage, initBlogsPage } from './pages/Blogs.js';
 import { renderContactPage, initContactPage } from './pages/Contact.js';
 import { renderChatbot, initChatbot } from './components/Chatbot.js';
 import { initCustomCursor } from './components/CustomCursor.js';
+import { renderAdminPage, initAdminPage } from './admin/Admin.js';
 
 const app = document.getElementById('app');
 
@@ -27,6 +28,7 @@ function renderPage(content, initFn) {
     header.id = 'site-header';
     document.body.insertBefore(header, app);
   }
+  header.style.display = 'block';
 
   if (!header.innerHTML.trim()) {
     header.innerHTML = renderHeaderInner(currentPath);
@@ -36,9 +38,10 @@ function renderPage(content, initFn) {
       const linkRoute = link.getAttribute('data-route') || link.getAttribute('href')?.replace(/^#/, '');
       link.classList.toggle('active', linkRoute === currentPath);
     });
+    updateDrawerActiveState(currentPath);
   }
 
-  // Always close mobile navigation drawer when a route loads
+  // Always close mobile navigation drawer and sidebar drawer when a route loads
   const mainNav = document.getElementById('main-nav');
   const mobileToggle = document.getElementById('mobile-toggle');
   if (mainNav) mainNav.classList.remove('mobile-active');
@@ -46,6 +49,7 @@ function renderPage(content, initFn) {
     mobileToggle.classList.remove('active');
     mobileToggle.setAttribute('aria-expanded', 'false');
   }
+  closeSidebarDrawer();
 
   app.innerHTML = content + renderFooter() + renderBackToTop() + renderChatbot();
   initChatbot();
@@ -76,6 +80,14 @@ registerRoute('/partners', () => renderPage(renderPartnersPage(), initPartnersPa
 registerRoute('/blogs', (params) => renderPage(renderBlogsPage(params), () => initBlogsPage(params)));
 registerRoute('/blog', (params) => renderPage(renderBlogsPage(params), () => initBlogsPage(params)));
 registerRoute('/contact', () => renderPage(renderContactPage(), initContactPage));
+registerRoute('/admin', () => {
+  closeSidebarDrawer();
+  const header = document.getElementById('site-header');
+  if (header) header.style.display = 'none';
+  const app = document.getElementById('app');
+  app.innerHTML = renderAdminPage();
+  initAdminPage();
+});
 
 // Initialize router and components immediately
 initRouter();

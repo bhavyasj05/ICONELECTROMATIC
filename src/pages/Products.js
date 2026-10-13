@@ -35,10 +35,8 @@ export function renderProductsPage() {
   navState.categoryId = params.get('category') || null;
 
   return `
-    <div class="page-content catalog-page" id="catalog-page" style="padding-top:calc(var(--header-height) + 24px);padding-bottom:var(--space-24);background:var(--bg-dark);min-height:100vh;">
-      <div class="container">
-        ${renderPageShell()}
-      </div>
+    <div class="page-content catalog-page" id="catalog-page" style="min-height:100vh;">
+      ${renderPageShell()}
     </div>
   `;
 }
@@ -49,47 +47,48 @@ function renderPageShell() {
   const totalOEMs = getTotalOEMCount();
 
   return `
-    <!-- Interactive Breadcrumb matching all pages -->
-    <nav class="breadcrumb-dark catalog-breadcrumb-nav" id="catalog-breadcrumb">
-      ${renderBreadcrumb()}
-    </nav>
+    <!-- Unified Page Hero Banner (Blue in light theme) -->
+    <section class="page-hero-banner">
+      <div class="container">
+        <!-- Interactive Breadcrumb matching all pages -->
+        <nav class="breadcrumb-dark catalog-breadcrumb-nav" id="catalog-breadcrumb">
+          ${renderBreadcrumb()}
+        </nav>
 
-    <!-- Unified Page Header matching Partners, Services, Blogs, About -->
-    <div class="page-header-unified catalog-page-header">
-      <div class="page-eyebrow-pill">
-        <span class="hub-dot-pulse"></span>
-        <span>AUTHORIZED MANUFACTURER CATALOG</span>
-      </div>
-      <h1 class="page-title-unified">Product Portfolio &amp; Component Catalog</h1>
-      <p class="page-lead-unified">
-        Authorized distributor for world-leading RF, microwave, mmWave, semiconductor, and Hi-Rel materials manufacturers.
-        Explore all 15 global OEM partners, multi-frequency categories, and specialized product lines.
-      </p>
+        <!-- Unified Page Header matching Partners, Services, Blogs, About -->
+        <div class="page-header-unified catalog-page-header" style="margin-bottom:0;">
+          <h1 class="page-title-unified">Product Portfolio &amp; Component Catalog</h1>
+          <p class="page-lead-unified">
+            Authorized distributor for world-leading RF, microwave, mmWave, semiconductor, and Hi-Rel materials manufacturers.
+            Explore authorized global OEM partners, multi-frequency categories, and specialized product lines.
+          </p>
 
-      <!-- Trust & Capability Highlights matching Partners and Services -->
-      <div class="catalog-trust-strip" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:24px;margin-bottom:var(--space-8);">
-        <div class="catalog-trust-pill">
-          <i class="fa-solid fa-industry" style="color:var(--logo-blue-light);"></i>
-          <span><strong>${totalOEMs}</strong> Global OEM Partners</span>
-        </div>
-        <div class="catalog-trust-pill">
-          <i class="fa-solid fa-shapes" style="color:var(--logo-red-light);"></i>
-          <span><strong>${totalCats}</strong> Specialized Categories</span>
-        </div>
-        <div class="catalog-trust-pill">
-          <i class="fa-solid fa-microchip" style="color:#10B981;"></i>
-          <span><strong>${totalProds}+</strong> Precision Products &amp; Lines</span>
-        </div>
-        <div class="catalog-trust-pill">
-          <i class="fa-solid fa-certificate" style="color:#F59E0B;"></i>
-          <span>Direct Factory Warranties &amp; CoCs</span>
+          <!-- Trust & Capability Highlights matching Partners and Services -->
+          <div class="catalog-trust-strip" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:24px;margin-bottom:0;">
+            <div class="catalog-trust-pill">
+              <i class="fa-solid fa-industry" style="color:var(--logo-blue-light);"></i>
+              <span>Global OEM Partners</span>
+            </div>
+            <div class="catalog-trust-pill">
+              <i class="fa-solid fa-shapes" style="color:var(--logo-red-light);"></i>
+              <span>Specialized Categories</span>
+            </div>
+            <div class="catalog-trust-pill">
+              <i class="fa-solid fa-microchip" style="color:#10B981;"></i>
+              <span>Precision Products &amp; Lines</span>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Dynamic Content View -->
-    <div id="catalog-content">
-      ${renderCurrentLevel()}
+    <!-- Main Content View -->
+    <div class="page-main-body" style="padding-top:var(--space-8);padding-bottom:var(--space-24);">
+      <div class="container">
+        <div id="catalog-content">
+          ${renderCurrentLevel()}
+        </div>
+      </div>
     </div>
   `;
 }
@@ -156,59 +155,104 @@ function renderCurrentLevel() {
 function renderOEMsLevel() {
   const oems = getOEMs();
   
+  // Extract unique specialties from catalog matching the Excel sheet's "Speciales in" column
+  const specialties = [];
+  oems.forEach(oem => {
+    if (oem.specialty && !specialties.includes(oem.specialty)) {
+      specialties.push(oem.specialty);
+    }
+  });
+
   return `
-    <!-- Search and Domain Filter Controls -->
-    <div class="catalog-controls-bar">
-      <div class="catalog-search-wrap">
-        <i class="fa-solid fa-magnifying-glass catalog-search-icon"></i>
-        <input 
-          type="text" 
-          id="oem-search-input" 
-          class="catalog-search-input" 
-          placeholder="Search by company, category, product, or application..."
-          value="${navState.searchQuery || ''}"
-        />
-        ${navState.searchQuery ? `
-          <button class="catalog-search-clear" id="catalog-search-clear" title="Clear search">
-            <i class="fa-solid fa-xmark"></i>
+    <!-- Search and Specialty Filter Command Center -->
+    <div class="catalog-filter-panel" id="catalog-filter-panel">
+      <!-- Top Row: Unified Search Bar & Quick Specialty Selector -->
+      <div class="catalog-filter-toolbar">
+        <div class="catalog-search-wrap">
+          <i class="fa-solid fa-magnifying-glass catalog-search-icon"></i>
+          <input 
+            type="text" 
+            id="oem-search-input" 
+            class="catalog-search-input" 
+            placeholder="Search by company, specialty, category, or product..."
+            value="${navState.searchQuery || ''}"
+          />
+          ${navState.searchQuery ? `
+            <button class="catalog-search-clear" id="catalog-search-clear" title="Clear search">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          ` : ''}
+        </div>
+
+        <div class="catalog-toolbar-actions">
+          <div class="catalog-select-wrap">
+            <i class="fa-solid fa-sliders select-icon"></i>
+            <select id="oem-specialty-select" class="catalog-specialty-select" aria-label="Filter by OEM Specialty">
+              <option value="all" ${(!navState.activeFilter || navState.activeFilter === 'all') ? 'selected' : ''}>
+                All Specialties (${specialties.length})
+              </option>
+              ${specialties.map(spec => {
+                const count = oems.filter(o => o.specialty === spec).length;
+                return `
+                  <option value="${spec}" ${navState.activeFilter === spec ? 'selected' : ''}>
+                    ${spec} (${count})
+                  </option>
+                `;
+              }).join('')}
+            </select>
+            <i class="fa-solid fa-chevron-down select-arrow"></i>
+          </div>
+
+          <button 
+            class="catalog-reset-filters-btn" 
+            id="catalog-reset-filters-btn" 
+            title="Reset active filters"
+            style="display: ${(navState.activeFilter && navState.activeFilter !== 'all') || navState.searchQuery ? 'inline-flex' : 'none'};"
+          >
+            <i class="fa-solid fa-rotate-left"></i>
+            <span>Reset</span>
           </button>
-        ` : ''}
+        </div>
       </div>
 
-      <div class="oem-domain-filters" id="oem-domain-filters">
-        <button class="domain-filter-pill ${navState.activeFilter === 'all' ? 'active' : ''}" data-domain="all">
-          All Partners (${oems.length})
+      <!-- Bottom Row: Sleek Horizontal Specialty Carousel Track -->
+      <div class="catalog-chips-carousel-wrapper">
+        <button class="chips-scroll-btn chips-scroll-prev" id="chips-scroll-prev" aria-label="Scroll specialties left" title="Scroll left">
+          <i class="fa-solid fa-chevron-left"></i>
         </button>
-        <button class="domain-filter-pill ${navState.activeFilter === 'materials' ? 'active' : ''}" data-domain="materials">
-          RF Laminates &amp; Materials
-        </button>
-        <button class="domain-filter-pill ${navState.activeFilter === 'semiconductors' ? 'active' : ''}" data-domain="semiconductors">
-          Semiconductors &amp; GaN
-        </button>
-        <button class="domain-filter-pill ${navState.activeFilter === 'components' ? 'active' : ''}" data-domain="components">
-          RF/MW Components
-        </button>
-        <button class="domain-filter-pill ${navState.activeFilter === 'sdr' ? 'active' : ''}" data-domain="sdr">
-          SDR &amp; Optics
-        </button>
-        <button class="domain-filter-pill ${navState.activeFilter === 'sensors' ? 'active' : ''}" data-domain="sensors">
-          Sensors, Power &amp; PCB
+
+        <div class="catalog-chips-track" id="catalog-chips-track">
+          <button class="domain-filter-pill ${(!navState.activeFilter || navState.activeFilter === 'all') ? 'active' : ''}" data-specialty="all">
+            <span class="pill-title">All Specialties</span>
+            <span class="pill-badge">${specialties.length}</span>
+          </button>
+          ${specialties.map(spec => {
+            const count = oems.filter(o => o.specialty === spec).length;
+            return `
+              <button class="domain-filter-pill ${navState.activeFilter === spec ? 'active' : ''}" data-specialty="${spec}" title="${spec}">
+                <span class="pill-title">${spec}</span>
+                <span class="pill-badge">${count}</span>
+              </button>
+            `;
+          }).join('')}
+        </div>
+
+        <button class="chips-scroll-btn chips-scroll-next" id="chips-scroll-next" aria-label="Scroll specialties right" title="Scroll right">
+          <i class="fa-solid fa-chevron-right"></i>
         </button>
       </div>
     </div>
 
-    <!-- Active Count Display -->
+    <!-- Active Count Display (Badge removed per user request) -->
     <div class="catalog-section-meta">
       <div class="catalog-level-header">
         <h2 class="catalog-level-title">Authorized Technology Manufacturers</h2>
         <p class="catalog-level-desc">Select an OEM partner below to explore their specialized categories and product models</p>
       </div>
-      <div class="catalog-counter-tag">
-        Showing <strong id="visible-oem-count">${oems.length}</strong> Global OEMs
-      </div>
+      <span id="visible-oem-count" style="display:none;">${oems.length}</span>
     </div>
 
-    <!-- Grid of All 15 OEM Cards -->
+    <!-- Grid of OEM Cards -->
     <div class="oem-cards-grid" id="oem-cards-grid">
       ${oems.map(oem => renderOEMCard(oem)).join('')}
     </div>
@@ -220,31 +264,33 @@ function renderOEMCard(oem) {
   const totalCategories = oem.categories.length;
   const params = buildNavParams('categories', oem.id);
 
-  // Derive domain category
-  let domain = 'components';
-  const nameL = oem.name.toLowerCase();
-  if (nameL.includes('rogers') || nameL.includes('ohmega')) domain = 'materials';
-  else if (nameL.includes('qorvo') || nameL.includes('gan')) domain = 'semiconductors';
-  else if (nameL.includes('fortify') || nameL.includes('yttek')) domain = 'sdr';
-  else if (nameL.includes('spellman') || nameL.includes('thermosen') || nameL.includes('tecdia') || nameL.includes('nee') || nameL.includes('transline') || nameL.includes('evans')) domain = 'sensors';
+  // Standardize preview categories to maximum 2-line footprint
+  let previewCats = oem.categories.slice(0, 3);
+  const totalLength = previewCats.reduce((sum, c) => sum + c.name.length, 0);
+  if (totalLength > 36 && oem.categories.length > 2) {
+    previewCats = oem.categories.slice(0, 2);
+  }
+  const remainingCount = oem.categories.length - previewCats.length;
 
   return `
-    <div class="oem-card" data-nav-params="${params}" data-oem-id="${oem.id}" data-domain="${domain}" style="--oem-accent: ${oem.accentColor}; --oem-glow: ${oem.glowColor};">
+    <div class="oem-card" data-nav-params="${params}" data-oem-id="${oem.id}" data-specialty="${oem.specialty}" style="--oem-accent: ${oem.accentColor}; --oem-glow: ${oem.glowColor};">
       <div class="oem-card-accent-bar"></div>
       
       <!-- Prominent OEM Logo Header Showcase -->
       <div class="oem-card-logo-showcase" style="border-bottom: 1px solid ${oem.accentColor}25;">
         <div class="oem-card-logo-container">
-          ${oem.logoSvg}
+          ${oem.logoImg ? `<img src="${oem.logoImg}" alt="${oem.name} Official Logo" class="oem-logo-img" loading="eager" />` : oem.logoSvg}
         </div>
       </div>
 
       <div class="oem-card-body">
-        <div class="oem-card-title-row">
+        <div class="oem-card-title-header">
           <h3 class="oem-card-name">${oem.name}</h3>
-          <span class="oem-specialty-pill" style="background: ${oem.accentColor}18; color: ${oem.accentColor}; border: 1px solid ${oem.accentColor}40;">
-            ${oem.specialty}
-          </span>
+          <div class="oem-specialty-row">
+            <span class="oem-specialty-pill" style="background: ${oem.accentColor}18; color: ${oem.accentColor}; border: 1px solid ${oem.accentColor}40;">
+              ${oem.specialty}
+            </span>
+          </div>
         </div>
 
         <p class="oem-card-tagline">${oem.tagline}</p>
@@ -254,8 +300,8 @@ function renderOEMCard(oem) {
         <div class="oem-card-categories-preview">
           <span class="preview-label">Categories:</span>
           <div class="preview-pills">
-            ${oem.categories.slice(0, 3).map(c => `<span class="preview-pill">${c.name}</span>`).join('')}
-            ${oem.categories.length > 3 ? `<span class="preview-pill preview-pill-more">+${oem.categories.length - 3} more</span>` : ''}
+            ${previewCats.map(c => `<span class="preview-pill">${c.name}</span>`).join('')}
+            ${remainingCount > 0 ? `<span class="preview-pill preview-pill-more">+${remainingCount} more</span>` : ''}
           </div>
         </div>
 
@@ -301,15 +347,9 @@ function renderCategoriesLevel() {
     <div class="catalog-oem-banner" style="--oem-accent: ${oem.accentColor}; --oem-glow: ${oem.glowColor};">
       <div class="catalog-oem-banner-top">
         <div class="catalog-oem-banner-logo-box">
-          ${oem.logoSvg}
+          ${oem.logoImg ? `<img src="${oem.logoImg}" alt="${oem.name} Official Logo" class="oem-banner-logo-img" loading="eager" />` : oem.logoSvg}
         </div>
         <div class="catalog-oem-banner-links">
-          ${oem.website ? `
-            <a href="${oem.website}" target="_blank" rel="noopener noreferrer" class="oem-external-site-btn" style="color:${oem.accentColor}; border-color:${oem.accentColor}40;">
-              <i class="fa-solid fa-arrow-up-right-from-square"></i>
-              <span>Official Website</span>
-            </a>
-          ` : ''}
           <a class="oem-back-btn" data-nav-params="level=oems">
             <i class="fa-solid fa-arrow-left"></i>
             <span>All Companies</span>
@@ -421,7 +461,7 @@ function renderProductsLevel() {
       <div class="cpl-left">
         <div class="cpl-oem-badge-row">
           <div class="cpl-logo-inline">
-            ${oem.logoSvg}
+            ${oem.logoImg ? `<img src="${oem.logoImg}" alt="${oem.name}" class="cpl-inline-logo-img" />` : oem.logoSvg}
           </div>
           <span class="cpl-divider">/</span>
           <span class="cpl-cat-tag">${cat.name}</span>
@@ -627,11 +667,33 @@ function attachCatalogEvents() {
       return;
     }
 
-    // Domain filter pills
-    const domainPill = e.target.closest('.domain-filter-pill');
-    if (domainPill) {
-      const domain = domainPill.getAttribute('data-domain');
-      filterOEMsByDomain(domain);
+    // Specialty filter pills
+    const specialtyPill = e.target.closest('.domain-filter-pill');
+    if (specialtyPill) {
+      const specialty = specialtyPill.getAttribute('data-specialty');
+      filterOEMsBySpecialty(specialty);
+      return;
+    }
+
+    // Reset filters button
+    const resetBtn = e.target.closest('#catalog-reset-filters-btn');
+    if (resetBtn) {
+      resetAllFilters();
+      return;
+    }
+
+    // Horizontal Chips Track Scroll Buttons
+    const prevBtn = e.target.closest('#chips-scroll-prev');
+    if (prevBtn) {
+      const track = document.getElementById('catalog-chips-track');
+      if (track) track.scrollBy({ left: -260, behavior: 'smooth' });
+      return;
+    }
+
+    const nextBtn = e.target.closest('#chips-scroll-next');
+    if (nextBtn) {
+      const track = document.getElementById('catalog-chips-track');
+      if (track) track.scrollBy({ left: 260, behavior: 'smooth' });
       return;
     }
 
@@ -661,6 +723,13 @@ function attachCatalogEvents() {
     }
   });
 
+  // Delegated change listener for Specialty Select
+  page.addEventListener('change', (e) => {
+    if (e.target && e.target.id === 'oem-specialty-select') {
+      filterOEMsBySpecialty(e.target.value);
+    }
+  });
+
   // Search input typing
   const searchInput = document.getElementById('oem-search-input');
   if (searchInput) {
@@ -672,14 +741,47 @@ function attachCatalogEvents() {
   }
 }
 
-function filterOEMsByDomain(domain) {
-  navState.activeFilter = domain;
+function filterOEMsBySpecialty(specialty) {
+  navState.activeFilter = specialty;
 
-  // Update pill active classes
+  // Sync Select Dropdown
+  const select = document.getElementById('oem-specialty-select');
+  if (select && select.value !== specialty) {
+    select.value = specialty;
+  }
+
+  // Update pill active classes & center active pill
   const pills = document.querySelectorAll('.domain-filter-pill');
   pills.forEach(p => {
-    if (p.getAttribute('data-domain') === domain) p.classList.add('active');
-    else p.classList.remove('active');
+    if (p.getAttribute('data-specialty') === specialty) {
+      p.classList.add('active');
+      p.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    } else {
+      p.classList.remove('active');
+    }
+  });
+
+  applyFilters();
+}
+
+function resetAllFilters() {
+  navState.activeFilter = 'all';
+  navState.searchQuery = '';
+
+  const searchInput = document.getElementById('oem-search-input');
+  if (searchInput) searchInput.value = '';
+
+  const select = document.getElementById('oem-specialty-select');
+  if (select) select.value = 'all';
+
+  const pills = document.querySelectorAll('.domain-filter-pill');
+  pills.forEach(p => {
+    if (p.getAttribute('data-specialty') === 'all') {
+      p.classList.add('active');
+      p.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    } else {
+      p.classList.remove('active');
+    }
   });
 
   applyFilters();
@@ -693,25 +795,34 @@ function applyFilters() {
   const cards = document.querySelectorAll('.oem-card');
   let visibleCount = 0;
   const query = (navState.searchQuery || '').toLowerCase();
-  const domain = navState.activeFilter || 'all';
+  const filter = navState.activeFilter || 'all';
 
   cards.forEach(card => {
-    const cardDomain = card.getAttribute('data-domain') || 'components';
+    const cardSpecialty = card.getAttribute('data-specialty') || '';
     const text = card.textContent.toLowerCase();
 
-    const matchesDomain = (domain === 'all') || (cardDomain === domain);
+    const matchesSpecialty = (filter === 'all') || (cardSpecialty === filter);
     const matchesQuery = (!query) || text.includes(query);
 
-    if (matchesDomain && matchesQuery) {
-      card.style.display = 'flex';
+    if (matchesSpecialty && matchesQuery) {
+      card.classList.remove('is-hidden');
+      card.style.setProperty('display', 'flex', 'important');
       visibleCount++;
     } else {
-      card.style.display = 'none';
+      card.classList.add('is-hidden');
+      card.style.setProperty('display', 'none', 'important');
     }
   });
 
   const counter = document.getElementById('visible-oem-count');
   if (counter) counter.textContent = visibleCount;
+
+  // Toggle Reset Button Visibility
+  const resetBtn = document.getElementById('catalog-reset-filters-btn');
+  if (resetBtn) {
+    const isFiltered = (filter !== 'all') || Boolean(query);
+    resetBtn.style.display = isFiltered ? 'inline-flex' : 'none';
+  }
 }
 
 function refreshProductsView() {

@@ -29,35 +29,58 @@ function renderAllOemsBlogView() {
   const allVideos = getAllVideos();
 
   return `
-    <div class="blogs-page-wrap">
-      <div class="container">
-        <!-- Breadcrumb -->
-        <nav class="breadcrumb-dark">
-          <a data-route="/">Home</a>
-          <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i></span>
-          <span style="color:var(--text-white);font-weight:600;">OEM Technical Blogs &amp; Releases</span>
-        </nav>
+    <div class="blogs-page-wrap" style="min-height:100vh;">
+      <!-- Unified Page Hero Banner (Blue in light theme) -->
+      <section class="page-hero-banner">
+        <div class="container">
+          <!-- Breadcrumb -->
+          <nav class="breadcrumb-dark">
+            <a data-route="/">Home</a>
+            <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i></span>
+            <span class="crumb-current" style="color:var(--text-white);font-weight:600;">OEM Technical Blogs &amp; Releases</span>
+          </nav>
 
-        <!-- Page Header -->
-        <div class="page-header-unified blogs-hero">
-          <div class="page-eyebrow-pill">
-            <span class="hub-dot-pulse"></span>
-            <span>MANUFACTURER RELEASES &amp; TECH INSIGHTS</span>
+          <!-- Page Header -->
+          <div class="page-header-unified blogs-hero" style="margin-bottom:0;">
+            <h1 class="page-title-unified">
+              OEM Technical News, Video Demos &amp; Insights
+            </h1>
+            <p class="page-lead-unified">
+              Direct technical bulletins, video demonstrations, application whitepapers, and product release updates 
+              from ICON Electromatic's 15 global manufacturing partners.
+            </p>
           </div>
-          <h1 class="page-title-unified">
-            OEM Technical News, Video Demos &amp; Insights
-          </h1>
-          <p class="page-lead-unified">
-            Direct technical bulletins, video demonstrations, application whitepapers, and product release updates 
-            from ICON Electromatic's 15 global manufacturing partners.
-          </p>
-        </div>
 
-        <!-- Quick Filter Chips by OEM -->
-        <div class="blogs-oem-selector-bar">
-          <button class="blogs-oem-chip active" data-filter="all">
-            <i class="fa-solid fa-layer-group"></i> All 15 OEMs
-          </button>
+          <!-- Trust & Insights Highlights Strip (Matching Partners & Services 1:1) -->
+          <div class="services-trust-strip blogs-trust-strip" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:24px;margin-bottom:0;padding-bottom:0;border-bottom:none;">
+            <div style="background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.25);border-radius:10px;padding:10px 18px;font-size:0.85rem;color:#93C5FD;display:flex;align-items:center;gap:8px;">
+              <i class="fa-solid fa-building-columns" style="color:var(--logo-blue-light);"></i>
+              <span><strong>15</strong> Authorized Principals</span>
+            </div>
+            <div style="background:rgba(225,29,72,0.08);border:1px solid rgba(225,29,72,0.25);border-radius:10px;padding:10px 18px;font-size:0.85rem;color:#FDA4AF;display:flex;align-items:center;gap:8px;">
+              <i class="fa-solid fa-file-waveform" style="color:var(--logo-red-light);"></i>
+              <span>Application Whitepapers &amp; Notes</span>
+            </div>
+            <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:10px 18px;font-size:0.85rem;color:#FCD34D;display:flex;align-items:center;gap:8px;">
+              <i class="fa-solid fa-circle-play" style="color:#F59E0B;"></i>
+              <span>Video Demos &amp; Technical Webinars</span>
+            </div>
+            <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:10px;padding:10px 18px;font-size:0.85rem;color:#6EE7B7;display:flex;align-items:center;gap:8px;">
+              <i class="fa-solid fa-newspaper" style="color:#10B981;"></i>
+              <span>Direct Manufacturer Bulletins</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Content Area -->
+      <div class="page-main-body" style="padding-top:var(--space-8);padding-bottom:var(--space-20);">
+        <div class="container">
+          <!-- Quick Filter Chips by OEM -->
+          <div class="blogs-oem-selector-bar">
+            <button class="blogs-oem-chip active" data-filter="all">
+              <i class="fa-solid fa-layer-group"></i> All 15 OEMs
+            </button>
           ${CATALOG.map(oem => `
             <button class="blogs-oem-chip" data-oem-select="${oem.id}">
               <span style="width:8px;height:8px;border-radius:50%;background:${oem.accentColor};display:inline-block;"></span>
@@ -73,7 +96,7 @@ function renderAllOemsBlogView() {
               Select an OEM to Explore Direct Releases
             </h3>
             <p style="font-size:0.85rem;color:var(--text-gray-400);margin:0;">
-              Click any manufacturer card to view their technical articles, lab videos, whitepapers, and official portals:
+              Click any manufacturer card to view their technical articles, lab videos, and application whitepapers:
             </p>
           </div>
           <span style="font-size:0.8rem;color:var(--text-gray-400);background:rgba(255,255,255,0.05);padding:6px 14px;border-radius:var(--radius-full);border:1px solid var(--border-card);">
@@ -100,7 +123,7 @@ function renderAllOemsBlogView() {
                 <!-- Centered Prominent OEM Logo Showcase -->
                 <div class="blogs-oem-card-logo-showcase">
                   <div class="oem-logo-badge-pod" style="--oem-accent:${oem.accentColor};">
-                    ${oem.logoSvg}
+                    ${oem.logoImg ? `<img src="${oem.logoImg}" alt="${oem.name} Official Logo" class="oem-logo-img" loading="eager" />` : oem.logoSvg}
                   </div>
                 </div>
 
@@ -123,7 +146,6 @@ function renderAllOemsBlogView() {
         <div style="margin-top:var(--space-12);padding-top:var(--space-8);border-top:1px solid var(--border-card);">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-6);flex-wrap:wrap;gap:12px;">
             <div>
-              <span class="page-eyebrow-pill" style="margin-bottom:6px;">LATEST OEM BULLETINS</span>
               <h2 style="font-size:1.45rem;font-weight:800;color:var(--text-white);margin:0;">
                 Recent Technical News &amp; Product Announcements
               </h2>
@@ -166,9 +188,6 @@ function renderAllOemsBlogView() {
         <div style="margin-top:var(--space-8);">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-6);flex-wrap:wrap;gap:12px;">
             <div>
-              <span class="page-eyebrow-pill" style="margin-bottom:6px;background:rgba(225,29,72,0.12);border-color:rgba(225,29,72,0.3);color:var(--logo-red-light);">
-                <i class="fa-solid fa-circle-play" style="margin-right:4px;"></i> LAB DEMONSTRATIONS &amp; WEBINARS
-              </span>
               <h2 style="font-size:1.45rem;font-weight:800;color:var(--text-white);margin:0;">
                 Featured Engineering Video Releases
               </h2>
@@ -206,6 +225,7 @@ function renderAllOemsBlogView() {
           </div>
         </div>
 
+        </div>
       </div>
     </div>
 
@@ -256,54 +276,58 @@ function renderAllOemsBlogView() {
 }
 
 function renderSingleOemBlogView(oem, blog, activeTab) {
-  const counts = getOemContentCount(oem.id);
   const articles = blog.articles || [];
   const videos = blog.videos || [];
   const whitepapers = blog.whitepapers || [];
-  const links = blog.officialLinks || [];
+  const totalContent = articles.length + videos.length + whitepapers.length;
 
   return `
-    <div class="blogs-page-wrap">
-      <div class="container">
-        <!-- Breadcrumb -->
-        <nav class="breadcrumb-dark">
-          <a data-route="/">Home</a>
-          <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i></span>
-          <a data-route="/blogs">OEM Blogs &amp; Tech Hub</a>
-          <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i></span>
-          <span style="color:var(--text-white);font-weight:600;">${oem.name}</span>
-        </nav>
+    <div class="blogs-page-wrap" style="min-height:100vh;">
+      <!-- Unified Page Hero Banner (Blue in light theme) -->
+      <section class="page-hero-banner">
+        <div class="container">
+          <!-- Breadcrumb -->
+          <nav class="breadcrumb-dark">
+            <a data-route="/">Home</a>
+            <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i></span>
+            <a data-route="/blogs">OEM Blogs &amp; Tech Hub</a>
+            <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i></span>
+            <span class="crumb-current" style="color:var(--text-white);font-weight:600;">${oem.name}</span>
+          </nav>
 
-        <!-- Selected OEM Banner -->
-        <div class="blogs-selected-header" style="border-top:3px solid ${oem.accentColor};">
-          <div class="blogs-selected-info">
-            <div class="blogs-selected-logo-wrap">
-              ${oem.logoSvg}
+          <!-- Selected OEM Banner -->
+          <div class="blogs-selected-header" style="border-top:3px solid ${oem.accentColor};margin-bottom:0;">
+            <div class="blogs-selected-info">
+              <div class="blogs-selected-logo-wrap">
+                ${oem.logoImg ? `<img src="${oem.logoImg}" alt="${oem.name} Official Logo" class="oem-logo-img" loading="eager" />` : oem.logoSvg}
+              </div>
+              <div class="blogs-selected-text">
+                <h2>${oem.name}</h2>
+                <p>${blog.headline || oem.description}</p>
+              </div>
             </div>
-            <div class="blogs-selected-text">
-              <h2>${oem.name}</h2>
-              <p>${blog.headline || oem.description}</p>
-            </div>
-          </div>
 
-          <div class="blogs-selected-actions">
-            <button class="btn-relay-dark" id="back-to-all-oems-btn">
-              <i class="fa-solid fa-arrow-left"></i> All OEMs
-            </button>
-            <a href="${blog.officialWebsite}" target="_blank" rel="noopener noreferrer" class="btn-relay-border" title="Open official website in new window">
-              <i class="fa-solid fa-arrow-up-right-from-square"></i> Official Portal
-            </a>
-            <a class="btn-relay-blue" href="#/contact?subject=technical&oem=${encodeURIComponent(oem.name)}">
-              <i class="fa-solid fa-paper-plane"></i> Technical Inquiry
-            </a>
+            <div class="blogs-selected-actions">
+              <button class="btn-relay-dark" id="back-to-all-oems-btn">
+                <i class="fa-solid fa-arrow-left"></i> All OEMs
+              </button>
+              <a class="btn-relay-blue" href="#/contact?subject=technical&oem=${encodeURIComponent(oem.name)}">
+                <i class="fa-solid fa-paper-plane"></i> Technical Inquiry
+              </a>
+            </div>
           </div>
         </div>
+      </section>
 
-        <!-- Content Type Filter Tabs -->
+      <!-- Main Content Area -->
+      <div class="page-main-body" style="padding-top:var(--space-8);padding-bottom:var(--space-20);">
+        <div class="container">
+
+          <!-- Content Type Filter Tabs -->
         <div class="blogs-content-tabs">
           <button class="blogs-tab-btn ${activeTab === 'all' ? 'active' : ''}" data-tab="all">
             <i class="fa-solid fa-border-all"></i> All Updates
-            <span class="blogs-tab-badge">${counts.total}</span>
+            <span class="blogs-tab-badge">${totalContent}</span>
           </button>
           <button class="blogs-tab-btn ${activeTab === 'articles' ? 'active' : ''}" data-tab="articles">
             <i class="fa-solid fa-newspaper"></i> Technical News
@@ -317,17 +341,12 @@ function renderSingleOemBlogView(oem, blog, activeTab) {
             <i class="fa-solid fa-file-pdf"></i> Whitepapers &amp; Notes
             <span class="blogs-tab-badge">${whitepapers.length}</span>
           </button>
-          <button class="blogs-tab-btn ${activeTab === 'links' ? 'active' : ''}" data-tab="links">
-            <i class="fa-solid fa-link"></i> Official Portals
-            <span class="blogs-tab-badge">${links.length}</span>
-          </button>
         </div>
 
         <!-- 1. Technical News Section -->
         ${(activeTab === 'all' || activeTab === 'articles') && articles.length > 0 ? `
           <div style="margin-bottom:var(--space-10);">
             <div style="margin-bottom:var(--space-4);display:flex;align-items:center;gap:10px;">
-              <span class="hub-dot-pulse" style="background:${oem.accentColor};"></span>
               <h3 style="font-size:1.25rem;font-weight:800;color:var(--text-white);margin:0;">
                 Technical News &amp; Product Releases from ${oem.shortName}
               </h3>
@@ -443,30 +462,7 @@ function renderSingleOemBlogView(oem, blog, activeTab) {
           </div>
         ` : ''}
 
-        <!-- 4. Official Links & Portals Section -->
-        ${(activeTab === 'all' || activeTab === 'links') && links.length > 0 ? `
-          <div style="margin-bottom:var(--space-10);">
-            <div style="margin-bottom:var(--space-4);display:flex;align-items:center;gap:10px;">
-              <i class="fa-solid fa-globe" style="color:var(--text-white);font-size:1.1rem;"></i>
-              <h3 style="font-size:1.25rem;font-weight:800;color:var(--text-white);margin:0;">
-                Official Portals &amp; Engineering Tools
-              </h3>
-            </div>
-            <div class="blogs-links-grid">
-              ${links.map(lk => `
-                <a href="${lk.url}" target="_blank" rel="noopener noreferrer" class="blog-link-card">
-                  <div class="blog-link-card-info">
-                    <h4>${lk.title}</h4>
-                    <p>${lk.description}</p>
-                  </div>
-                  <div class="blog-link-card-icon">
-                    <i class="fa-solid ${lk.icon || 'fa-arrow-up-right-from-square'}"></i>
-                  </div>
-                </a>
-              `).join('')}
-            </div>
-          </div>
-        ` : ''}
+
 
         <!-- Bottom OEM RFQ Box -->
         <div class="blogs-oem-rfq-box" style="background:rgba(255,255,255,0.02);border:1px solid var(--border-card);border-radius:var(--radius-xl);padding:24px 30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
@@ -488,6 +484,7 @@ function renderSingleOemBlogView(oem, blog, activeTab) {
           </div>
         </div>
 
+        </div>
       </div>
     </div>
 

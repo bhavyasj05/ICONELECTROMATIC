@@ -2,7 +2,7 @@
  * Main Entry Point — ICON ELECTROMATIC
  */
 import { registerRoute, initRouter, getCurrentPath } from './router.js';
-import { renderHeader, renderHeaderInner, initHeader } from './components/Header.js';
+import { renderHeader, renderHeaderInner, initHeader, closeSidebarDrawer, updateDrawerActiveState } from './components/Header.js';
 import { renderFooter } from './components/Footer.js';
 import { renderHomePage, initHomePage } from './pages/Home.js';
 import { renderProductsPage, initProductsPage } from './pages/Products.js';
@@ -14,15 +14,9 @@ import { renderBlogsPage, initBlogsPage } from './pages/Blogs.js';
 import { renderContactPage, initContactPage } from './pages/Contact.js';
 import { renderChatbot, initChatbot } from './components/Chatbot.js';
 import { initCustomCursor } from './components/CustomCursor.js';
+import { renderAdminPage, initAdminPage } from './admin/Admin.js';
 
 const app = document.getElementById('app');
-
-app.innerHTML = `
-  <div class="loading-overlay" id="loading-overlay">
-    <div class="loading-spinner"></div>
-    <p>Loading ICON ELECTROMATIC...</p>
-  </div>
-`;
 
 function renderPage(content, initFn) {
   const currentPath = getCurrentPath();
@@ -34,15 +28,28 @@ function renderPage(content, initFn) {
     header.id = 'site-header';
     document.body.insertBefore(header, app);
   }
+  header.style.display = 'block';
 
   if (!header.innerHTML.trim()) {
     header.innerHTML = renderHeaderInner(currentPath);
     initHeader();
   } else {
     header.querySelectorAll('.nav-link').forEach(link => {
-      link.classList.toggle('active', link.getAttribute('data-route') === currentPath);
+      const linkRoute = link.getAttribute('data-route') || link.getAttribute('href')?.replace(/^#/, '');
+      link.classList.toggle('active', linkRoute === currentPath);
     });
+    updateDrawerActiveState(currentPath);
   }
+
+  // Always close mobile navigation drawer and sidebar drawer when a route loads
+  const mainNav = document.getElementById('main-nav');
+  const mobileToggle = document.getElementById('mobile-toggle');
+  if (mainNav) mainNav.classList.remove('mobile-active');
+  if (mobileToggle) {
+    mobileToggle.classList.remove('active');
+    mobileToggle.setAttribute('aria-expanded', 'false');
+  }
+  closeSidebarDrawer();
 
   app.innerHTML = content + renderFooter() + renderBackToTop() + renderChatbot();
   initChatbot();
@@ -73,13 +80,15 @@ registerRoute('/partners', () => renderPage(renderPartnersPage(), initPartnersPa
 registerRoute('/blogs', (params) => renderPage(renderBlogsPage(params), () => initBlogsPage(params)));
 registerRoute('/blog', (params) => renderPage(renderBlogsPage(params), () => initBlogsPage(params)));
 registerRoute('/contact', () => renderPage(renderContactPage(), initContactPage));
+registerRoute('/admin', () => {
+  closeSidebarDrawer();
+  const header = document.getElementById('site-header');
+  if (header) header.style.display = 'none';
+  const app = document.getElementById('app');
+  app.innerHTML = renderAdminPage();
+  initAdminPage();
+});
 
-setTimeout(() => {
-  initRouter();
-  initCustomCursor();
-  const overlay = document.getElementById('loading-overlay');
-  if (overlay) {
-    overlay.classList.add('hidden');
-    setTimeout(() => overlay.remove(), 500);
-  }
-}, 600);
+// Initialize router and components immediately
+initRouter();
+initCustomCursor();

@@ -4,9 +4,11 @@
  */
 import { getPopularProducts } from '../data/catalogData.js';
 import { renderProductCard } from '../components/ProductCard.js';
+import { ContentService } from '../data/ContentService.js';
 
 export function renderHomePage() {
   const popular = getPopularProducts();
+  const data = ContentService.getData('home');
 
   return `
     <!-- RELAY CINEMATIC HERO -->
@@ -19,32 +21,25 @@ export function renderHomePage() {
 
       <div class="container" style="position:relative;z-index:3;width:100%;">
         <div class="hero-relay-content">
-          <div class="hero-eyebrow-tag" style="margin-bottom: var(--space-6);">
-            <span class="hero-eyebrow-line" style="display:inline-block; width:24px; height:2px; background:var(--logo-red);"></span> 
-            <span><span class="slash"></span> ICON ELECTROMATIC</span>
-          </div>
-
           <h1 class="hero-title-giant" style="font-size: clamp(2.2rem, 4.5vw, 4.2rem);">
-            ICON ELECTROMATIC turns 
-            complex high-frequency requirements into <span class="accent-red" style="color: var(--logo-red);">mission-ready hardware.</span>
+            ${data.heroTitle || 'ICON ELECTROMATIC turns complex high-frequency requirements into <span class="accent-red" style="color: var(--logo-red);">mission-ready hardware.</span>'}
           </h1>
 
           <p class="hero-description-clean">
-            Delivering precision RF, microwave, and electronic components for 
-            defense, aerospace, SATCOM, and telecommunications.
+            ${data.heroSubtitle || 'Delivering precision RF, microwave, and electronic components for defense, aerospace, SATCOM, and telecommunications.'}
           </p>
 
           <div class="hero-actions-row">
-            <a class="btn-relay-red" data-route="/products">
-              Explore Products <i class="fa-solid fa-arrow-right"></i>
+            <a href="#/products" class="btn-relay-red" data-route="/products">
+              ${data.ctaText || 'Explore Products'} <i class="fa-solid fa-arrow-right"></i>
             </a>
-            <a class="btn-relay-dark" style="background:#ffffff; color:#000000;" data-route="/contact">
+            <a href="#/contact" class="btn-relay-dark" style="background:#ffffff; color:#000000;" data-route="/contact">
               Request a Quote
             </a>
           </div>
 
           <!-- Integrated Stats -->
-          <div class="hero-inline-stats" style="margin-top: 60px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: space-between; align-items: center; max-width: 900px; gap: 20px;">
+          <div class="hero-inline-stats" style="margin-top: 60px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: space-between; align-items: center; max-width: 760px; gap: 20px;">
             <div class="hero-stat-item" style="flex-direction: column; align-items: flex-start; gap: 4px;">
               <span class="hero-stat-number" style="color: var(--logo-red);">4,000<span class="hero-stat-suffix" style="color: var(--logo-red);">+</span></span>
               <span class="hero-stat-label" style="color: #cbd5e1;">PRODUCTS AVAILABLE</span>
@@ -53,11 +48,6 @@ export function renderHomePage() {
             <div class="hero-stat-item" style="flex-direction: column; align-items: flex-start; gap: 4px;">
               <span class="hero-stat-number" style="color: var(--logo-red);">24<span class="hero-stat-suffix" style="color: var(--logo-red);">+</span></span>
               <span class="hero-stat-label" style="color: #cbd5e1;">COMPONENT LINES</span>
-            </div>
-
-            <div class="hero-stat-item" style="flex-direction: column; align-items: flex-start; gap: 4px;">
-              <span class="hero-stat-number" style="color: var(--logo-red);">86 <span class="hero-stat-suffix" style="color: var(--logo-red);">GHz</span></span>
-              <span class="hero-stat-label" style="color: #cbd5e1;">MAX FREQUENCY</span>
             </div>
 
             <div class="hero-stat-item" style="flex-direction: column; align-items: flex-start; gap: 4px;">
@@ -128,7 +118,7 @@ export function renderHomePage() {
           </div>
           <div>
             <a class="btn-relay-dark" data-route="/products">
-              Explore Full Catalog (15 OEMs) &rarr;
+              Explore Full Catalog (OEMs) &rarr;
             </a>
           </div>
         </div>
@@ -280,31 +270,31 @@ export function renderHomePage() {
             <div class="contact-relay-card">
               <h3>Direct Engineering Reach</h3>
               <p>
-                Founded in 2009 in Bengaluru with expanded presence across Singapore, Israel, and the United States.
+                Founded in 2009 with corporate headquarters in Bengaluru and established international offices in Singapore and the United States.
               </p>
 
               <div class="contact-meta-list">
-                <div class="contact-meta-row">
-                  <div class="contact-meta-icon"><i class="fa-solid fa-location-dot"></i></div>
+                <div class="contact-meta-row" style="align-items:flex-start;">
+                  <div class="contact-meta-icon" style="margin-top:2px;"><i class="fa-solid fa-location-dot"></i></div>
                   <div class="contact-meta-text">
-                    <h5>Registered Headquarters</h5>
-                    <p>Bengaluru, Karnataka 560001, India</p>
+                    <h5>Registered Headquarters (India)</h5>
+                    <p>#303/2, 5th ‘A’ Cross, HRBR Layout, III Block,<br/>Kalyan Nagar, Bengaluru – 560043</p>
                   </div>
                 </div>
 
-                <div class="contact-meta-row">
-                  <div class="contact-meta-icon"><i class="fa-solid fa-phone"></i></div>
+                <div class="contact-meta-row" style="align-items:flex-start;">
+                  <div class="contact-meta-icon" style="margin-top:2px;"><i class="fa-solid fa-phone"></i></div>
                   <div class="contact-meta-text">
-                    <h5>Telephone</h5>
-                    <p>+91 80 4123 4567 / +91 98450 12345</p>
+                    <h5>Direct Telephone Reach</h5>
+                    <p><a href="tel:+918025429452">+91 80 2542 9452</a> (India) · <a href="tel:+14055935176">+1 405 593 5176</a> (USA)</p>
                   </div>
                 </div>
 
-                <div class="contact-meta-row">
-                  <div class="contact-meta-icon"><i class="fa-solid fa-envelope"></i></div>
+                <div class="contact-meta-row" style="align-items:flex-start;">
+                  <div class="contact-meta-icon" style="margin-top:2px;"><i class="fa-solid fa-envelope"></i></div>
                   <div class="contact-meta-text">
-                    <h5>Official Communications</h5>
-                    <p>sales@iconelectromatic.com · support@iconelectromatic.com</p>
+                    <h5>Official Regional Communications</h5>
+                    <p><a href="mailto:salesiepl@iconelectromatic.com" style="color:var(--logo-red-light);">salesiepl@iconelectromatic.com</a> (India)<br/><a href="mailto:IESing@iconelectromatic.com" style="color:var(--logo-red-light);">IESing@iconelectromatic.com</a> (Singapore)<br/><a href="mailto:salesiellc@iconelectromatic.com" style="color:var(--logo-red-light);">salesiellc@iconelectromatic.com</a> (USA)</p>
                   </div>
                 </div>
               </div>

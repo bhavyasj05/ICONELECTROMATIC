@@ -7,58 +7,73 @@
 
 export function renderAboutPage() {
   return `
-    <div class="page-content" style="padding-top:calc(var(--header-height) + 24px);padding-bottom:var(--space-20);background:var(--bg-dark);position:relative;overflow:hidden;min-height:100vh;">
-      
-      <!-- Ambient Lighting Effects -->
-      <div style="position:absolute;top:0;left:10%;width:500px;height:500px;background:radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 70%);border-radius:50%;pointer-events:none;"></div>
-      <div style="position:absolute;top:300px;right:5%;width:600px;height:600px;background:radial-gradient(circle, rgba(225,29,72,0.08) 0%, transparent 70%);border-radius:50%;pointer-events:none;"></div>
+    <div class="page-content about-page" style="min-height:100vh;">
+      <!-- Unified Page Hero Banner (Blue in light theme) -->
+      <section class="page-hero-banner" style="position:relative;overflow:hidden;">
+        <!-- Ambient Lighting Effects -->
+        <div class="about-ambient-orb about-ambient-orb-1" style="position:absolute;top:0;left:10%;width:500px;height:500px;background:radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 70%);border-radius:50%;pointer-events:none;"></div>
+        <div class="about-ambient-orb about-ambient-orb-2" style="position:absolute;top:300px;right:5%;width:600px;height:600px;background:radial-gradient(circle, rgba(225,29,72,0.08) 0%, transparent 70%);border-radius:50%;pointer-events:none;"></div>
 
-      <div class="container" style="position:relative;z-index:2;">
-        
-        <!-- Breadcrumb -->
-        <nav class="breadcrumb-dark">
-          <a data-route="/">Home</a>
-          <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i></span>
-          <span style="color:var(--text-white);font-weight:600;">About Us</span>
-        </nav>
+        <div class="container" style="position:relative;z-index:2;">
+          <!-- Breadcrumb -->
+          <nav class="breadcrumb-dark">
+            <a href="#/" data-route="/">Home</a>
+            <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i></span>
+            <span class="crumb-current" style="color:var(--text-white);font-weight:600;">About Us</span>
+          </nav>
 
-        <!-- Section 1: Hero Header with Animated Ambient Radar -->
-        <div class="page-header-unified" style="display:flex;align-items:center;padding:10px 0;">
-          
-          <!-- Animated Radar Wave Component -->
-          <div class="rf-radar-ambient" aria-hidden="true">
-            <div class="rf-radar-ring"></div>
-            <div class="rf-radar-ring"></div>
-            <div class="rf-radar-ring"></div>
-            <div class="rf-radar-ring"></div>
-            <div class="rf-radar-sweep"></div>
+          <!-- Section 1: Hero Header with Animated Ambient Radar -->
+          <div class="page-header-unified" style="display:flex;align-items:center;padding:10px 0;margin-bottom:0;">
+            <!-- Animated Radar Wave Component -->
+            <div class="rf-radar-ambient" aria-hidden="true">
+              <div class="rf-radar-ring"></div>
+              <div class="rf-radar-ring"></div>
+              <div class="rf-radar-ring"></div>
+              <div class="rf-radar-ring"></div>
+              <div class="rf-radar-sweep"></div>
+            </div>
+
+            <div style="position:relative;z-index:3;">
+              <h1 class="page-title-unified">
+                About Us
+              </h1>
+              
+              <p class="page-lead-unified">
+                Driven by decades of engineering expertise and global collaborations, Icon Electromatic Private Limited delivers advanced components and tailored solutions that transform design ambitions into reality.
+              </p>
+            </div>
           </div>
 
-          <div style="position:relative;z-index:3;">
-            <div class="page-eyebrow-pill">
-              <span class="hub-dot-pulse"></span>
-              <span>ABOUT ICON ELECTROMATIC</span>
+          <!-- Highlights Strip (Matching Partners, Services, Blogs 1:1) -->
+          <div class="services-trust-strip about-trust-strip" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:24px;margin-bottom:0;padding-bottom:0;border-bottom:none;">
+            <div style="background:rgba(225,29,72,0.08);border:1px solid rgba(225,29,72,0.25);border-radius:10px;padding:10px 18px;font-size:0.85rem;color:#FDA4AF;display:flex;align-items:center;gap:8px;">
+              <i class="fa-solid fa-award" style="color:var(--logo-red-light);"></i>
+              <span>Multi-Decade Pedigree</span>
             </div>
-            
-            <h1 class="page-title-unified">
-              About Us
-            </h1>
-            
-            <p class="page-lead-unified">
-              Driven by decades of engineering expertise and global collaborations, Icon Electromatic Private Limited delivers advanced components and tailored solutions that transform design ambitions into reality.
-            </p>
+            <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:10px 18px;font-size:0.85rem;color:#FCD34D;display:flex;align-items:center;gap:8px;">
+              <i class="fa-solid fa-satellite" style="color:#F59E0B;"></i>
+              <span>Defense &amp; Telecom Solutions</span>
+            </div>
+            <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:10px;padding:10px 18px;font-size:0.85rem;color:#6EE7B7;display:flex;align-items:center;gap:8px;">
+              <i class="fa-solid fa-globe" style="color:#10B981;"></i>
+              <span>Global OEM Representation</span>
+            </div>
           </div>
         </div>
+      </section>
 
-        <!-- Section 2: Fulfillment Partners & Origin (with Interactive Feature Badges & Downloads) -->
-        <div style="display:grid;grid-template-columns:1.15fr 0.85fr;gap:40px;align-items:center;border-radius:24px;padding:44px 36px;margin-bottom:var(--space-16);" class="about-hero-feature-card about-interactive-card about-animate-fadeup">
+      <!-- Main Content Area -->
+      <div class="page-main-body" style="padding-top:var(--space-12);padding-bottom:var(--space-20);">
+        <div class="container">
+          <!-- Section 2: Fulfillment Partners & Origin (with Interactive Feature Badges & Downloads) -->
+          <div style="display:grid;grid-template-columns:1.15fr 0.85fr;gap:40px;align-items:center;border-radius:24px;padding:44px 36px;margin-bottom:var(--space-16);" class="about-hero-feature-card about-interactive-card about-animate-fadeup">
           <div>
-            <span style="font-size:0.75rem;font-weight:700;color:var(--logo-red-light);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;display:inline-block;">
-              CORE CAPABILITIES
-            </span>
-            <h2 style="font-family:var(--font-display);font-size:clamp(1.7rem, 2.6vw, 2.2rem);font-weight:800;line-height:1.25;margin-bottom:18px;">
-              Fulfillment partners for your electronic ambitions
+            <h2 style="font-family:var(--font-display);font-size:clamp(1.85rem, 2.8vw, 2.35rem);font-weight:800;line-height:1.2;margin-bottom:10px;" class="about-hero-main-title">
+              Core Capabilities
             </h2>
+            <div style="font-family:var(--font-display);font-size:clamp(1.15rem, 1.6vw, 1.35rem);font-weight:700;color:var(--logo-red-light);line-height:1.35;margin-bottom:18px;" class="about-hero-sub-title">
+              Fulfillment partners for your electronic ambitions
+            </div>
             <p style="font-size:0.95rem;line-height:1.75;margin-bottom:14px;">
               Icon Electromatic was founded in 2009 in Bengaluru by engineers with decades of expertise in RF, Microwave, Semiconductors, and allied service industries. In 2020, the company transitioned into <strong>Icon Electromatic Private Limited</strong> and expanded its presence across India, Israel, Singapore, and the USA.
             </p>
@@ -68,10 +83,10 @@ export function renderAboutPage() {
 
             <!-- Authentic Action Downloads from the original page -->
             <div style="display:flex;flex-wrap:wrap;gap:14px;">
-              <a href="https://iconelectromatic2.lbimedia.in/wp-content/uploads/2026/02/ICON-Corporate-Presentation-MAPCON23.pptx" target="_blank" class="btn-relay btn-relay-primary" style="padding:11px 22px;font-size:0.85rem;">
+              <a href="/downloads/ICON_Corporate_Presentation_20Aug26.pptx" download="ICON Corporate  Presentation_20Aug26.pptx" class="btn-relay btn-relay-primary" style="padding:11px 22px;font-size:0.85rem;">
                 <i class="fa-solid fa-file-powerpoint" style="margin-right:6px;"></i>Corporate Presentation &darr;
               </a>
-              <a href="https://iconelectromatic2.lbimedia.in/wp-content/uploads/2026/01/ICON-ELECTROMATICv3-5-1.pdf" target="_blank" class="btn-relay btn-relay-secondary" style="padding:11px 22px;font-size:0.85rem;">
+              <a href="/downloads/ICON_ELECTROMATIC_FLYER.pdf" download="ICON ELECTROMATCI FLYER.pdf" class="btn-relay btn-relay-secondary" style="padding:11px 22px;font-size:0.85rem;">
                 <i class="fa-solid fa-file-pdf" style="color:var(--logo-red-light);margin-right:6px;"></i>Company Flyer &darr;
               </a>
             </div>
@@ -111,51 +126,50 @@ export function renderAboutPage() {
 
         <!-- Section 3: Some Quick Facts / The Numbers That Define Us (Animated Counters) -->
         <div class="about-stats-banner" id="about-stats-container">
-          <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg, transparent, var(--logo-blue), var(--logo-red), transparent);"></div>
+          <div class="about-stats-banner-accent"></div>
           
-          <div style="text-align:center;max-width:650px;margin:0 auto var(--space-10);">
-            <div style="display:inline-flex;align-items:center;gap:6px;font-size:0.75rem;font-weight:700;color:var(--logo-red-light);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">
-              <i class="fa-solid fa-chart-simple"></i>
+          <div style="text-align:center;max-width:650px;margin:0 auto var(--space-8);">
+            <h2 class="about-stats-h2" style="font-family:var(--font-display);font-size:clamp(1.85rem, 2.8vw, 2.4rem);font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;">
               Some Quick Facts
-            </div>
-            <h2 class="about-stats-h2" style="font-family:var(--font-display);font-size:clamp(1.8rem, 2.8vw, 2.4rem);font-weight:800;letter-spacing:-0.02em;">
-              The Numbers That Define Us
             </h2>
+            <div class="about-section-sub-title" style="font-family:var(--font-display);font-size:clamp(1.15rem, 1.6vw, 1.35rem);font-weight:700;color:var(--logo-red-light);line-height:1.35;margin-bottom:12px;">
+              The Numbers That Define Us
+            </div>
           </div>
 
           <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:28px;text-align:center;" id="stats-grid-wrapper">
             
             <!-- Stat 1 -->
-            <div class="about-interactive-card red-glow about-animate-fadeup" style="padding:32px 24px;">
-              <div class="about-card-icon" style="font-size:2rem;color:var(--logo-red-light);margin-bottom:12px;display:inline-block;">
+            <div class="about-interactive-card red-glow about-animate-fadeup" style="padding:36px 24px;">
+              <div class="about-stats-icon-box about-stats-icon-red">
                 <i class="fa-solid fa-boxes-stacked"></i>
               </div>
-              <div style="font-family:var(--font-display);font-size:clamp(2.8rem, 4vw, 3.8rem);font-weight:900;color:var(--logo-red);line-height:1;margin-bottom:10px;">
-                <span class="stat-counter" data-target="1200">0</span><span>+</span>
+              <div class="stat-num-red" style="font-family:var(--font-display);font-size:clamp(2.6rem, 3.8vw, 3.5rem);font-weight:900;color:var(--logo-red);line-height:1;margin-bottom:10px;">
+                <span class="stat-counter" data-target="1500">0</span><span>+</span>
               </div>
-              <div class="about-stat-label" style="font-size:1.1rem;font-weight:700;letter-spacing:-0.01em;">Products</div>
+              <div class="about-stat-label" style="font-size:1.05rem;font-weight:700;letter-spacing:-0.01em;">Products</div>
             </div>
 
             <!-- Stat 2 -->
-            <div class="about-interactive-card about-animate-fadeup" style="padding:32px 24px;">
-              <div class="about-card-icon" style="font-size:2rem;color:var(--logo-blue-light);margin-bottom:12px;display:inline-block;">
+            <div class="about-interactive-card blue-glow about-animate-fadeup" style="padding:36px 24px;">
+              <div class="about-stats-icon-box about-stats-icon-blue">
                 <i class="fa-solid fa-calendar-check"></i>
               </div>
-              <div style="font-family:var(--font-display);font-size:clamp(2.8rem, 4vw, 3.8rem);font-weight:900;color:var(--logo-blue-light);line-height:1;margin-bottom:10px;">
-                <span class="stat-counter" data-target="120">0</span><span>+</span>
+              <div class="stat-num-blue" style="font-family:var(--font-display);font-size:clamp(2.6rem, 3.8vw, 3.5rem);font-weight:900;color:var(--logo-blue-light);line-height:1;margin-bottom:10px;">
+                <span class="stat-counter" data-target="150">0</span><span>+</span>
               </div>
-              <div class="about-stat-label" style="font-size:1.1rem;font-weight:700;letter-spacing:-0.01em;">Years of combined experience</div>
+              <div class="about-stat-label" style="font-size:1.05rem;font-weight:700;letter-spacing:-0.01em;">Years of combined experience</div>
             </div>
 
             <!-- Stat 3 -->
-            <div class="about-interactive-card red-glow about-animate-fadeup" style="padding:32px 24px;">
-              <div class="about-card-icon" style="font-size:2rem;color:var(--logo-red-light);margin-bottom:12px;display:inline-block;">
+            <div class="about-interactive-card red-glow about-animate-fadeup" style="padding:36px 24px;">
+              <div class="about-stats-icon-box about-stats-icon-red">
                 <i class="fa-solid fa-handshake-angle"></i>
               </div>
-              <div style="font-family:var(--font-display);font-size:clamp(2.8rem, 4vw, 3.8rem);font-weight:900;color:var(--logo-red);line-height:1;margin-bottom:10px;">
-                <span class="stat-counter" data-target="12">0</span><span>+</span>
+              <div class="stat-num-red" style="font-family:var(--font-display);font-size:clamp(2.6rem, 3.8vw, 3.5rem);font-weight:900;color:var(--logo-red);line-height:1;margin-bottom:10px;">
+                <span class="stat-counter" data-target="15">0</span><span>+</span>
               </div>
-              <div class="about-stat-label" style="font-size:1.1rem;font-weight:700;letter-spacing:-0.01em;">Partners</div>
+              <div class="about-stat-label" style="font-size:1.05rem;font-weight:700;letter-spacing:-0.01em;">Partners</div>
             </div>
 
           </div>
@@ -195,87 +209,369 @@ export function renderAboutPage() {
 
         </div>
 
-        <!-- Section 5: Our Journey (Chronological Timeline Format) -->
+        <!-- Section 5: Our Journey (Chronological Timeline Format with 4 Milestones & Pillars) -->
         <div style="margin-bottom:var(--space-16);">
-          <div style="text-align:center;max-width:600px;margin:0 auto var(--space-8);">
-            <div style="display:inline-flex;align-items:center;gap:6px;font-size:0.75rem;font-weight:700;color:var(--logo-blue-light);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">
-              <i class="fa-solid fa-timeline"></i>
-              CHRONOLOGY
-            </div>
-            <h2 style="font-family:var(--font-display);font-size:clamp(1.8rem, 2.8vw, 2.4rem);font-weight:800;letter-spacing:-0.02em;">
-              Our Journey
+          <div style="text-align:center;max-width:720px;margin:0 auto var(--space-8);">
+            <h2 style="font-family:var(--font-display);font-size:clamp(1.85rem, 2.8vw, 2.4rem);font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;">
+              Chronology
             </h2>
+            <div class="about-section-sub-title" style="font-family:var(--font-display);font-size:clamp(1.15rem, 1.6vw, 1.35rem);font-weight:700;color:var(--logo-red-light);line-height:1.35;margin-bottom:14px;">
+              Our Journey
+            </div>
+            <p style="font-size:0.95rem;line-height:1.7;color:var(--text-muted);margin:0 auto 16px;">
+              From our founding in Bengaluru in 2009 as RF &amp; Microwave specialists to global operations spanning Singapore, the USA, and India — empowering mission-critical Aerospace, Defence, Space, and SATCOM programs.
+            </p>
+            <div style="display:flex;justify-content:center;gap:12px;">
+              <button type="button" id="btn-view-infographic" class="btn-relay btn-relay-secondary" style="padding:9px 20px;font-size:0.82rem;display:inline-flex;align-items:center;gap:8px;cursor:pointer;">
+                <i class="fa-solid fa-expand"></i> View Slide Graphic
+              </button>
+            </div>
           </div>
 
           <div class="relay-timeline-wrapper">
-            <!-- Timeline Connecting Rail on Desktop -->
-            <div class="relay-timeline-rail">
-              <div class="relay-timeline-rail-line"></div>
+            <!-- 4-Node Timeline Connecting Rail with Passing Neon Wave -->
+            <div class="relay-timeline-rail-4">
+              <!-- High-Tech Rail Track with Neon Wave Plasma -->
+              <div class="relay-timeline-rail-track">
+                <div class="relay-timeline-rail-plasma"></div>
+                <div class="relay-timeline-rail-ticks"></div>
+                <!-- Dynamic Neon Wave Passing across the Timeline -->
+                <div class="relay-neon-wave-beam"></div>
+                <div class="relay-neon-wave-droplet"></div>
+              </div>
               
-              <!-- Node 1: 2009 -->
-              <div class="relay-timeline-node">
-                <div class="timeline-node-circle">
-                  <i class="fa-solid fa-flag"></i>
+              <!-- Node 1: 2009 (RF & Microwave Genesis) -->
+              <div class="relay-timeline-node node-step-1" data-milestone="2009">
+                <div class="node-radar-wave-ring"></div>
+                <div class="node-radar-wave-ring delay"></div>
+                <div class="node-tech-reticle"></div>
+                <div class="timeline-node-circle cyan-node">
+                  <svg class="node-tech-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor">
+                    <path d="M16 8v15M13 23h6M12 17h8M14 12h4" stroke-width="1.8" stroke-linecap="round"/>
+                    <circle cx="16" cy="7" r="2.5" fill="currentColor"/>
+                    <path d="M11 4.5A7 7 0 0 0 11 9.5" stroke-width="1.8" stroke-linecap="round" class="svg-wave-left-1"/>
+                    <path d="M7.5 2.5A12 12 0 0 0 7.5 11.5" stroke-width="1.6" stroke-linecap="round" class="svg-wave-left-2"/>
+                    <path d="M21 4.5A7 7 0 0 1 21 9.5" stroke-width="1.8" stroke-linecap="round" class="svg-wave-right-1"/>
+                    <path d="M24.5 2.5A12 12 0 0 1 24.5 11.5" stroke-width="1.6" stroke-linecap="round" class="svg-wave-right-2"/>
+                    <path d="M10 27l6-3 6 3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
                 </div>
-                <div class="timeline-node-year">2009</div>
-                <div class="timeline-stem-connector"></div>
+                <div class="timeline-node-year-pill cyan-pill">
+                  <span class="node-year-text">2009</span>
+                  <span class="node-live-dot"></span>
+                </div>
+                <div class="timeline-stem-connector cyan-stem">
+                  <div class="stem-photon-drop"></div>
+                </div>
               </div>
 
-              <!-- Node 2: 2020 -->
-              <div class="relay-timeline-node">
-                <div class="timeline-node-circle blue-node">
-                  <i class="fa-solid fa-building-circle-check"></i>
+              <!-- Node 2: 2018 (Singapore APAC Gateway) -->
+              <div class="relay-timeline-node node-step-2" data-milestone="2018">
+                <div class="node-radar-wave-ring red-ring"></div>
+                <div class="node-radar-wave-ring red-ring delay"></div>
+                <div class="node-tech-reticle"></div>
+                <div class="timeline-node-circle red-node">
+                  <svg class="node-tech-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor">
+                    <circle cx="16" cy="16" r="11" stroke-width="1.8"/>
+                    <ellipse cx="16" cy="16" rx="5" ry="11" stroke-width="1.4"/>
+                    <path d="M5.5 16h21M7.5 10.5h17M7.5 21.5h17" stroke-width="1.2" stroke-linecap="round"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="4.5" stroke-width="1.6" stroke-dasharray="3 2" transform="rotate(-25 16 16)" class="svg-orbit-ring"/>
+                    <circle cx="26" cy="11" r="2" fill="currentColor"/>
+                    <circle cx="16" cy="16" r="2.5" fill="currentColor"/>
+                  </svg>
                 </div>
-                <div class="timeline-node-year blue-text">2020</div>
-                <div class="timeline-stem-connector blue-stem"></div>
+                <div class="timeline-node-year-pill red-pill">
+                  <span class="node-year-text">2018</span>
+                  <span class="node-live-dot"></span>
+                </div>
+                <div class="timeline-stem-connector red-stem">
+                  <div class="stem-photon-drop"></div>
+                </div>
+              </div>
+
+              <!-- Node 3: May 2020 (USA Transatlantic Corridor) -->
+              <div class="relay-timeline-node node-step-3" data-milestone="May 2020">
+                <div class="node-radar-wave-ring navy-ring"></div>
+                <div class="node-radar-wave-ring navy-ring delay"></div>
+                <div class="node-tech-reticle"></div>
+                <div class="timeline-node-circle navy-node">
+                  <svg class="node-tech-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor">
+                    <circle cx="16" cy="16" r="11.5" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.6"/>
+                    <path d="M25 7l-6 13-3-3-5 3 2-6-3-3 15-4z" stroke-width="1.8" stroke-linejoin="round" fill="rgba(59,130,246,0.25)"/>
+                    <path d="M10 23l-4 4M13 22l-5 5M12 25l-4 4" stroke-width="1.5" stroke-linecap="round" class="svg-thrust-trail"/>
+                    <path d="M16 2v3M16 27v3M2 16h3M27 16h3" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="timeline-node-year-pill navy-pill">
+                  <span class="node-year-text">May 2020</span>
+                  <span class="node-live-dot"></span>
+                </div>
+                <div class="timeline-stem-connector navy-stem">
+                  <div class="stem-photon-drop"></div>
+                </div>
+              </div>
+
+              <!-- Node 4: Nov 2020 (India Incorporation & Enterprise Crest) -->
+              <div class="relay-timeline-node node-step-4" data-milestone="Nov 2020">
+                <div class="node-radar-wave-ring amber-ring"></div>
+                <div class="node-radar-wave-ring amber-ring delay"></div>
+                <div class="node-tech-reticle"></div>
+                <div class="timeline-node-circle amber-node">
+                  <svg class="node-tech-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor">
+                    <path d="M16 3l10 4v8c0 7-5 12-10 14C11 27 6 22 6 15V7l10-4z" stroke-width="1.8" stroke-linejoin="round" fill="rgba(245,158,11,0.2)"/>
+                    <path d="M16 9l2 4.5 4.5 1-3.5 3 1 4.5-4-2.5-4 2.5 1-4.5-3.5-3 4.5-1L16 9z" fill="currentColor" stroke-width="1" stroke-linejoin="round"/>
+                    <path d="M10 29h12" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="timeline-node-year-pill amber-pill">
+                  <span class="node-year-text">Nov 2020</span>
+                  <span class="node-live-dot"></span>
+                </div>
+                <div class="timeline-stem-connector amber-stem">
+                  <div class="stem-photon-drop"></div>
+                </div>
               </div>
             </div>
 
-            <!-- Milestone Cards Connected Along the Timeline -->
-            <div class="journey-grid-two">
+            <!-- 4 Chronological Milestone Cards -->
+            <div class="journey-grid-four">
               
-              <!-- 2009 Milestone Card -->
-              <div class="journey-step-card red-step about-interactive-card red-glow about-animate-fadeup" style="border-top:3px solid var(--logo-red);">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-                  <span class="timeline-badge red" style="font-size:0.95rem;padding:6px 16px;">2009 • THE INCEPTION</span>
-                  <span class="hub-dot-pulse red"></span>
+              <!-- Milestone 1: 2009 -->
+              <div class="journey-milestone-card about-interactive-card blue-glow about-animate-fadeup" style="border-top:3.5px solid var(--logo-blue);">
+                <div class="journey-arch-badge-wrapper">
+                  <div class="journey-arch-badge blue">
+                    <span class="badge-dot-glow"></span>2009
+                  </div>
                 </div>
-                <h3 style="font-family:var(--font-display);font-size:1.35rem;font-weight:800;margin-bottom:10px;line-height:1.3;">
+                <h3 class="journey-milestone-headline">
                   Founded in Bengaluru, India
                 </h3>
-                <p style="font-size:0.9rem;line-height:1.7;margin:0;">
-                  Established by veteran engineers with decades of expertise in RF, Microwave, Semiconductors, and allied service industries.
+                <div class="journey-photo-frame">
+                  <img src="/images/timeline/timeline-2009-bengaluru.jpg" alt="Icon Electromatic founded in Bengaluru 2009" loading="lazy" />
+                  <div class="journey-photo-caption">
+                    <i class="fa-solid fa-satellite-dish" style="color:#00E5FF;margin-right:6px;"></i>
+                    <span>RF &amp; Microwave Specialists</span>
+                  </div>
+                </div>
+                <p class="journey-milestone-desc">
+                  Established by veteran engineers with decades of combined expertise in RF, Microwave, Semiconductors, and allied high-frequency electronic systems.
                 </p>
               </div>
 
-              <!-- 2020 Milestone Card -->
-              <div class="journey-step-card blue-step about-interactive-card about-animate-fadeup" style="border-top:3px solid var(--logo-blue);">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-                  <span class="timeline-badge blue" style="font-size:0.95rem;padding:6px 16px;">2020 • GLOBAL TRANSFORMATION</span>
-                  <span class="hub-dot-pulse"></span>
+              <!-- Milestone 2: 2018 -->
+              <div class="journey-milestone-card card-accent-red about-interactive-card red-glow about-animate-fadeup" style="border-top:3.5px solid var(--logo-red);">
+                <div class="journey-arch-badge-wrapper">
+                  <div class="journey-arch-badge red">
+                    <span class="badge-dot-glow red"></span>2018
+                  </div>
                 </div>
-                <h3 style="font-family:var(--font-display);font-size:1.35rem;font-weight:800;margin-bottom:10px;line-height:1.3;">
-                  ICON Electromatic transitions into Icon Electromatic Private Limited
+                <h3 class="journey-milestone-headline">
+                  Expansion to Singapore
                 </h3>
-                <p style="font-size:0.9rem;line-height:1.7;margin:0;">
-                  Expanded international footprint and global technology partnership operations across India, Israel, Singapore, and the USA.
+                <div class="journey-photo-frame">
+                  <img src="/images/timeline/timeline-2018-singapore.jpg" alt="Icon Electromatic expansion to Singapore 2018" loading="lazy" />
+                  <div class="journey-photo-caption">
+                    <i class="fa-solid fa-earth-asia" style="color:#FB7185;margin-right:6px;"></i>
+                    <span>Expansion to Singapore</span>
+                  </div>
+                </div>
+                <p class="journey-milestone-desc">
+                  Expanded international operations to Singapore, establishing a vital APAC supply gateway and strategic ties with leading semiconductor manufacturers.
+                </p>
+              </div>
+
+              <!-- Milestone 3: May 2020 -->
+              <div class="journey-milestone-card card-accent-navy about-interactive-card blue-glow about-animate-fadeup" style="border-top:3.5px solid #1e40af;">
+                <div class="journey-arch-badge-wrapper">
+                  <div class="journey-arch-badge navy-flag">
+                    <span class="badge-dot-glow navy"></span>May 2020
+                  </div>
+                </div>
+                <h3 class="journey-milestone-headline">
+                  Expansion to United States
+                </h3>
+                <div class="journey-photo-frame">
+                  <img src="/images/timeline/timeline-2020-usa.jpg" alt="Icon Electromatic expansion to United States May 2020" loading="lazy" />
+                  <div class="journey-photo-caption">
+                    <i class="fa-solid fa-plane-up" style="color:#60A5FA;margin-right:6px;"></i>
+                    <span>Expansion to United States</span>
+                  </div>
+                </div>
+                <p class="journey-milestone-desc">
+                  Expanded transatlantic footprint to the United States to collaborate directly with premier American microwave OEMs, ITAR suppliers, and global innovators.
+                </p>
+              </div>
+
+              <!-- Milestone 4: Nov 2020 -->
+              <div class="journey-milestone-card card-accent-amber about-interactive-card about-animate-fadeup" style="border-top:3.5px solid #d97706;">
+                <div class="journey-arch-badge-wrapper">
+                  <div class="journey-arch-badge amber">
+                    <span class="badge-dot-glow amber"></span>Nov 2020
+                  </div>
+                </div>
+                <h3 class="journey-milestone-headline">
+                  Incorporation in India
+                </h3>
+                <div class="journey-photo-frame">
+                  <img src="/images/timeline/timeline-2020-india.jpg" alt="Icon Electromatic incorporation in India Nov 2020" loading="lazy" />
+                  <div class="journey-photo-caption">
+                    <i class="fa-solid fa-shield-halved" style="color:#FBBF24;margin-right:6px;"></i>
+                    <span>Incorporation in India</span>
+                  </div>
+                </div>
+                <p class="journey-milestone-desc">
+                  Transitioned and formally incorporated as <strong>Icon Electromatic Private Limited</strong>, scaling nationwide operations and advancing “Make in India” initiatives.
                 </p>
               </div>
 
             </div>
+
+            <!-- Central Junction Connector to Strategic Sectors -->
+            <div class="timeline-central-junction about-animate-fadeup">
+              <div class="timeline-junction-divider">
+                <div class="timeline-junction-orb">
+                  <i class="fa-solid fa-satellite-dish"></i>
+                </div>
+              </div>
+              <h3 style="font-family:var(--font-display);font-size:clamp(1.65rem, 2.4vw, 2.05rem);font-weight:800;letter-spacing:-0.01em;margin-bottom:8px;">
+                Strategic Application Domains
+              </h3>
+              <div class="about-section-sub-title" style="font-family:var(--font-display);font-size:clamp(1.1rem, 1.5vw, 1.3rem);font-weight:700;color:var(--logo-red-light);line-height:1.35;margin-bottom:14px;">
+                Where Our Technology Operates
+              </div>
+              <p style="font-size:0.9rem;line-height:1.6;color:var(--text-muted);max-width:620px;margin:0 auto 28px;">
+                Delivering mission-critical electronic components, high-reliability assemblies, and custom microwave engineering across four strategic arenas.
+              </p>
+            </div>
+
+            <!-- 4 Domain Sector Cards -->
+            <div class="journey-domains-grid">
+              
+              <!-- Sector 1: Aerospace & Defence -->
+              <div class="domain-sector-card about-interactive-card blue-glow about-animate-fadeup">
+                <div class="domain-photo-frame">
+                  <img src="/images/timeline/domain-aerospace-defence.jpg" alt="Aerospace and Defence applications" loading="lazy" />
+                  <div class="domain-photo-badge">
+                    Aerospace &amp; Defence
+                  </div>
+                </div>
+                <p class="domain-sector-desc">
+                  High-power GaN amplifiers, RF filters, waveguides, and radar subsystems for tactical airborne, naval, and ground-based defense platforms.
+                </p>
+                <span class="domain-tag-pill">
+                  <i class="fa-solid fa-jet-fighter" style="margin-right:4px;"></i>Radar &amp; EW Systems
+                </span>
+              </div>
+
+              <!-- Sector 2: Hi-Rel Space -->
+              <div class="domain-sector-card about-interactive-card blue-glow about-animate-fadeup">
+                <div class="domain-photo-frame">
+                  <img src="/images/timeline/domain-hirel-space.jpg" alt="Hi-Rel Space electronic solutions" loading="lazy" />
+                  <div class="domain-photo-badge">
+                    Hi-Rel Space
+                  </div>
+                </div>
+                <p class="domain-sector-desc">
+                  Spaceflight-qualified, radiation-tolerant microwave components and low-loss substrates engineered for orbital payloads and satellites.
+                </p>
+                <span class="domain-tag-pill">
+                  <i class="fa-solid fa-satellite" style="margin-right:4px;"></i>Space-Grade Qualified
+                </span>
+              </div>
+
+              <!-- Sector 3: 5G & SATCOM -->
+              <div class="domain-sector-card about-interactive-card red-glow about-animate-fadeup">
+                <div class="domain-photo-frame">
+                  <img src="/images/timeline/domain-5g-satcom.jpg" alt="5G and SATCOM communications" loading="lazy" />
+                  <div class="domain-photo-badge">
+                    5G &amp; SATCOM
+                  </div>
+                </div>
+                <p class="domain-sector-desc">
+                  Ultra-wideband mmWave components, parabolic antenna feed networks, beamformers, and ground station transceivers.
+                </p>
+                <span class="domain-tag-pill" style="color:var(--logo-red-light);background:rgba(225,29,72,0.1);border-color:rgba(225,29,72,0.25);">
+                  <i class="fa-solid fa-tower-cell" style="margin-right:4px;"></i>Next-Gen Telecom
+                </span>
+              </div>
+
+              <!-- Sector 4: Homeland Security & Smart City -->
+              <div class="domain-sector-card about-interactive-card blue-glow about-animate-fadeup">
+                <div class="domain-photo-frame">
+                  <img src="/images/timeline/domain-homeland-security.jpg" alt="Homeland Security and Smart City infrastructure" loading="lazy" />
+                  <div class="domain-photo-badge">
+                    Homeland Security &amp; Smart City
+                  </div>
+                </div>
+                <p class="domain-sector-desc">
+                  Perimeter intrusion detection systems (PIDS), tactical perimeter radar sensors, and smart city surveillance electronics.
+                </p>
+                <span class="domain-tag-pill">
+                  <i class="fa-solid fa-shield-halved" style="margin-right:4px;"></i>Intrusion &amp; Radar
+                </span>
+              </div>
+
+            </div>
+
+            <!-- 2 Foundational Strategic Pillars -->
+            <div class="journey-pillars-grid">
+              
+              <!-- Pillar 1: Global Partnerships -->
+              <div class="pillar-foundation-card blue-pillar about-interactive-card blue-glow about-animate-fadeup" style="border-left:4px solid var(--logo-blue);">
+                <div class="pillar-photo-frame">
+                  <img src="/images/timeline/pillar-global-partnerships.jpg" alt="Global Partnerships - Advanced Technologies" loading="lazy" />
+                </div>
+                <div>
+                  <div style="font-size:0.75rem;font-weight:700;color:var(--logo-blue-light);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">
+                    GLOBAL ALLIANCES
+                  </div>
+                  <h3 class="pillar-content-title">
+                    Global Partnerships
+                  </h3>
+                  <div class="pillar-content-sub">
+                    Advanced Technologies
+                  </div>
+                  <p class="pillar-content-text">
+                    Direct OEM partnerships with premier global innovators (Qorvo, Rogers, Tecdia, Mini-Circuits, and more), delivering verified authentic high-performance components to Indian industries.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Pillar 2: Bespoke Solutions -->
+              <div class="pillar-foundation-card red-pillar about-interactive-card red-glow about-animate-fadeup" style="border-left:4px solid var(--logo-red);">
+                <div class="pillar-photo-frame">
+                  <img src="/images/timeline/pillar-bespoke-solutions.jpg" alt="Bespoke Solutions - RF and Design Services" loading="lazy" />
+                </div>
+                <div>
+                  <div style="font-size:0.75rem;font-weight:700;color:var(--logo-red-light);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">
+                    ENGINEERING EXPERTISE
+                  </div>
+                  <h3 class="pillar-content-title">
+                    Bespoke Solutions
+                  </h3>
+                  <div class="pillar-content-sub">
+                    RF &amp; Design Services
+                  </div>
+                  <p class="pillar-content-text">
+                    End-to-end design-in consultancy, specialized microwave simulation, prototyping, and custom RF assembly integration tailored precisely to mission specifications.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
           </div>
         </div>
 
         <!-- Section 6: Why Us (Exact 5 Points from Original Site with Interactive 3D Glow Cards) -->
         <div style="margin-bottom:var(--space-12);">
           <div style="text-align:center;max-width:600px;margin:0 auto var(--space-10);">
-            <div style="display:inline-flex;align-items:center;gap:6px;font-size:0.75rem;font-weight:700;color:var(--logo-red-light);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">
-              <i class="fa-solid fa-award"></i>
-              OUR ADVANTAGE
-            </div>
-            <h2 style="font-family:var(--font-display);font-size:clamp(1.8rem, 2.8vw, 2.4rem);font-weight:800;letter-spacing:-0.02em;">
-              Why Us
+            <h2 style="font-family:var(--font-display);font-size:clamp(1.85rem, 2.8vw, 2.4rem);font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;">
+              Our Advantage
             </h2>
+            <div class="about-section-sub-title" style="font-family:var(--font-display);font-size:clamp(1.15rem, 1.6vw, 1.35rem);font-weight:700;color:var(--logo-red-light);line-height:1.35;margin-bottom:14px;">
+              Why Us
+            </div>
           </div>
 
           <div class="why-us-grid-dark">
@@ -336,39 +632,53 @@ export function renderAboutPage() {
               </p>
             </div>
 
-            <!-- Why Us Card 5 -->
-            <div class="why-us-card about-interactive-card red-accent red-glow about-animate-fadeup" style="border-top:3px solid var(--logo-red);grid-column:1/-1;max-width:680px;margin:0 auto;width:100%;">
-              <span class="why-card-number">05</span>
-              <div class="about-card-icon" style="width:48px;height:48px;border-radius:12px;background:rgba(225,29,72,0.12);border:1px solid rgba(225,29,72,0.3);color:var(--logo-red-light);display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:20px;">
-                <i class="fa-solid fa-headset"></i>
-              </div>
-              <h3 style="font-family:var(--font-display);font-size:1.25rem;font-weight:800;margin-bottom:12px;line-height:1.35;">
-                Dedicated Support
-              </h3>
-              <p style="font-size:0.9rem;line-height:1.7;margin:0;">
-                Our team is always available to help you with technical queries, product guidance, and project requirements—whenever you need us.
-              </p>
-            </div>
-            </div>
-
           </div>
         </div>
 
+        </div>
+      </div>
+
+      <!-- Infographic Lightbox Modal -->
+      <div id="timeline-infographic-modal" class="timeline-modal-backdrop" aria-hidden="true">
+        <div class="timeline-modal-content">
+          <div class="timeline-modal-header">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span class="domain-tag-pill" style="font-size:0.72rem;">OFFICIAL PRESENTATION SLIDE</span>
+              <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:800;margin:0;">Icon Electromatic — Chronology &amp; Core Focus</h3>
+            </div>
+            <button type="button" id="close-timeline-modal-btn" class="timeline-modal-close" aria-label="Close modal">&times;</button>
+          </div>
+          <div class="timeline-modal-body">
+            <img src="/images/timeline/icon-journey-infographic-full.png" alt="Official Icon Electromatic Chronology and Core Focus Infographic" style="width:100%;height:auto;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.5);display:block;" />
+          </div>
+        </div>
       </div>
     </div>
   `;
 }
 
 export function initAboutPage() {
-  // 1. Mouse Spotlight Glow Effect on Cards
+  // 1. Mouse Spotlight Glow & Interactive 3D Subtle Tilt on Cards
   const cards = document.querySelectorAll('.about-interactive-card');
   cards.forEach(card => {
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
+
       card.style.setProperty('--mouse-x', `${x}px`);
       card.style.setProperty('--mouse-y', `${y}px`);
+
+      // Dynamic subtle 3D tilt physics
+      const tiltX = ((y / rect.height) - 0.5) * -5;
+      const tiltY = ((x / rect.width) - 0.5) * 5;
+      card.style.transform = `perspective(1000px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) translateY(-6px)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+      card.style.removeProperty('--mouse-x');
+      card.style.removeProperty('--mouse-y');
     });
   });
 
@@ -427,4 +737,42 @@ export function initAboutPage() {
 
     animatedCards.forEach(c => cardObserver.observe(c));
   }
+
+  // 4. Official Infographic Modal Lightbox
+  const openModalBtn = document.getElementById('btn-view-infographic');
+  const modal = document.getElementById('timeline-infographic-modal');
+  const closeModalBtn = document.getElementById('close-timeline-modal-btn');
+
+  if (openModalBtn && modal) {
+    const openModal = () => {
+      modal.classList.add('is-active');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    };
+
+    const closeModal = () => {
+      modal.classList.remove('is-active');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+
+    openModalBtn.addEventListener('click', openModal);
+
+    if (closeModalBtn) {
+      closeModalBtn.addEventListener('click', closeModal);
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('is-active')) {
+        closeModal();
+      }
+    });
+  }
 }
+

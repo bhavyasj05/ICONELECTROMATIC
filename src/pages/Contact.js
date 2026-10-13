@@ -63,37 +63,60 @@ export function renderContactPage() {
   const isRecruiting = activeTab === 'recruiting';
 
   return `
-    <div class="page-content" style="padding-top:calc(var(--header-height) + 24px);padding-bottom:var(--space-20);background:var(--bg-dark);min-height:100vh;">
-      <div class="container">
-        <!-- Breadcrumb -->
-        <nav class="breadcrumb-dark">
-          <a data-route="/">Home</a>
-          <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i></span>
-          <span style="color:var(--text-white);font-weight:600;" id="contact-breadcrumb-active">
-            ${isRecruiting ? 'Careers &amp; Recruiting' : 'Contact &amp; RFQ'}
-          </span>
-        </nav>
+    <div class="page-content contact-page" style="min-height:100vh;">
+      <!-- Unified Page Hero Banner (Blue in light theme) -->
+      <section class="page-hero-banner">
+        <div class="container">
+          <!-- Breadcrumb -->
+          <nav class="breadcrumb-dark">
+            <a data-route="/">Home</a>
+            <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i></span>
+            <span class="crumb-current" style="color:var(--text-white);font-weight:600;" id="contact-breadcrumb-active">
+              ${isRecruiting ? 'Careers &amp; Recruiting' : 'Contact &amp; RFQ'}
+            </span>
+          </nav>
 
-        <!-- Unified Page Header -->
-        <div class="page-header-unified">
-          <div class="page-eyebrow-pill" id="contact-eyebrow-pill">
-            <span class="hub-dot-pulse"></span>
-            <span id="contact-eyebrow-text">${isRecruiting ? 'ICON TALENT ACQUISITION' : 'CONNECT WITH ENGINEERING'}</span>
+          <!-- Unified Page Header -->
+          <div class="page-header-unified" style="margin-bottom:0;">
+            <h1 class="page-title-unified" id="contact-page-title">
+              ${isRecruiting 
+                ? 'Join India’s Foremost RF &amp; Microwave Engineering Hub' 
+                : 'Send Us a Message &amp; Request Fast Quotes'}
+            </h1>
+            <p class="page-lead-unified" id="contact-page-lead">
+              ${isRecruiting 
+                ? 'Accelerate your career in millimeter-wave technology, defense electronics, and satellite communications. Explore engineering opportunities at ICON Electromatic.' 
+                : 'Whether you require component data sheets, custom waveguide machining, or volume pricing, our application engineering team in Bengaluru is ready to assist.'}
+            </p>
           </div>
-          <h1 class="page-title-unified" id="contact-page-title">
-            ${isRecruiting 
-              ? 'Join India’s Foremost RF &amp; Microwave Engineering Hub' 
-              : 'Send Us a Message &amp; Request Fast Quotes'}
-          </h1>
-          <p class="page-lead-unified" id="contact-page-lead">
-            ${isRecruiting 
-              ? 'Accelerate your career in millimeter-wave technology, defense electronics, and satellite communications. Explore engineering opportunities at ICON Electromatic.' 
-              : 'Whether you require component data sheets, custom waveguide machining, or volume pricing, our application engineering team in Bengaluru is ready to assist.'}
-          </p>
-        </div>
 
-        <!-- Form Switcher Tabs -->
-        <div class="contact-tabs-wrapper">
+          <!-- Highlights Strip (Matching Partners, Services, Blogs 1:1) -->
+          <div class="services-trust-strip contact-trust-strip" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;margin-bottom:0;padding-bottom:0;border-bottom:none;">
+            <div style="background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.25);border-radius:8px;padding:7px 14px;font-size:0.82rem;color:#93C5FD;display:flex;align-items:center;gap:7px;">
+              <i class="fa-solid fa-bolt" style="color:var(--logo-blue-light);"></i>
+              <span>24-Hour RFQ Turnaround</span>
+            </div>
+            <div style="background:rgba(225,29,72,0.08);border:1px solid rgba(225,29,72,0.25);border-radius:8px;padding:7px 14px;font-size:0.82rem;color:#FDA4AF;display:flex;align-items:center;gap:7px;">
+              <i class="fa-solid fa-users-gear" style="color:var(--logo-red-light);"></i>
+              <span>Bengaluru Engineering Hub</span>
+            </div>
+            <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;padding:7px 14px;font-size:0.82rem;color:#FCD34D;display:flex;align-items:center;gap:7px;">
+              <i class="fa-solid fa-dolly" style="color:#F59E0B;"></i>
+              <span>Global Sourcing &amp; Logistics</span>
+            </div>
+            <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:8px;padding:7px 14px;font-size:0.82rem;color:#6EE7B7;display:flex;align-items:center;gap:7px;">
+              <i class="fa-solid fa-shield-halved" style="color:#10B981;"></i>
+              <span>Defense &amp; Commercial Pricing</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Content Area -->
+      <div class="page-main-body" style="padding-top:var(--space-4);padding-bottom:var(--space-16);">
+        <div class="container">
+          <!-- Form Switcher Tabs -->
+        <div class="contact-tabs-wrapper" style="margin-bottom:var(--space-4);">
           <div class="contact-form-tabs" role="tablist">
             <button 
               class="contact-tab-btn ${!isRecruiting ? 'active' : ''}" 
@@ -126,42 +149,51 @@ export function renderContactPage() {
             <!-- 1A. INQUIRY INFO CARDS (Default) -->
             <div id="inquiry-info-column" style="${isRecruiting ? 'display:none;' : 'display:block;'}">
               <div class="contact-relay-card">
-                <h3>Corporate Headquarters</h3>
+                <h3>Office Addresses</h3>
                 <p>
-                  ICON ELECTROMATIC PRIVATE LIMITED is headquartered in Bengaluru, India with established 
-                  representation and technical partners across Singapore, Israel, and the United States.
+                  Direct access to our corporate headquarters in India and international liaison offices in Singapore and the United States.
                 </p>
 
                 <div class="contact-meta-list">
-                  <div class="contact-meta-row">
-                    <div class="contact-meta-icon"><i class="fa-solid fa-location-dot"></i></div>
+                  <!-- India Office -->
+                  <div class="contact-meta-row" style="align-items:flex-start;">
+                    <div class="contact-meta-icon" style="margin-top:2px;"><i class="fa-solid fa-location-dot"></i></div>
                     <div class="contact-meta-text">
-                      <h5>Registered Office</h5>
-                      <p>Bengaluru, Karnataka 560001, India</p>
+                      <h5>Icon Electromatic Pvt. Ltd (India)</h5>
+                      <p style="margin-bottom:4px;">#303/2, 5th ‘A’ Cross, HRBR Layout, III Block,<br/>Kalyan Nagar, Bengaluru – 560043</p>
+                      <p style="font-size:0.84rem;margin-bottom:2px;"><i class="fa-solid fa-phone" style="color:var(--logo-red);width:14px;margin-right:4px;"></i> Tel: <a href="tel:+918025429452">+91 80 2542 9452</a></p>
+                      <p style="font-size:0.84rem;"><i class="fa-solid fa-envelope" style="color:var(--logo-red);width:14px;margin-right:4px;"></i> Email: <a href="mailto:salesiepl@iconelectromatic.com" style="color:var(--logo-red-light);">salesiepl@iconelectromatic.com</a></p>
                     </div>
                   </div>
 
-                  <div class="contact-meta-row">
-                    <div class="contact-meta-icon"><i class="fa-solid fa-phone"></i></div>
+                  <!-- Singapore Office -->
+                  <div class="contact-meta-row" style="align-items:flex-start;margin-top:var(--space-4);padding-top:var(--space-4);border-top:1px solid var(--border-subtle);">
+                    <div class="contact-meta-icon" style="margin-top:2px;"><i class="fa-solid fa-globe"></i></div>
                     <div class="contact-meta-text">
-                      <h5>Telephone &amp; Fast Support</h5>
-                      <p>Sales: +91 80 4123 4567<br/>Technical Support: +91 98450 12345</p>
+                      <h5>Icon Electromatic Singapore Pte Ltd</h5>
+                      <p style="margin-bottom:4px;">204D Compassvale Drive #08-409<br/>Singapore 544204</p>
+                      <p style="font-size:0.84rem;"><i class="fa-solid fa-envelope" style="color:var(--logo-red);width:14px;margin-right:4px;"></i> Email: <a href="mailto:IESing@iconelectromatic.com" style="color:var(--logo-red-light);">IESing@iconelectromatic.com</a></p>
                     </div>
                   </div>
 
-                  <div class="contact-meta-row">
-                    <div class="contact-meta-icon"><i class="fa-solid fa-envelope"></i></div>
+                  <!-- USA Office -->
+                  <div class="contact-meta-row" style="align-items:flex-start;margin-top:var(--space-4);padding-top:var(--space-4);border-top:1px solid var(--border-subtle);">
+                    <div class="contact-meta-icon" style="margin-top:2px;"><i class="fa-solid fa-building"></i></div>
                     <div class="contact-meta-text">
-                      <h5>Electronic Mail</h5>
-                      <p>sales@iconelectromatic.com · info@iconelectromatic.com</p>
+                      <h5>Icon Electromatic LLC (USA)</h5>
+                      <p style="margin-bottom:4px;">15412 Meadow Vista Dr, Edmond,<br/>Oklahoma 73013, USA</p>
+                      <p style="font-size:0.84rem;margin-bottom:2px;"><i class="fa-solid fa-phone" style="color:var(--logo-red);width:14px;margin-right:4px;"></i> Tel: <a href="tel:+14055935176">+1 405 593 5176</a></p>
+                      <p style="font-size:0.84rem;"><i class="fa-solid fa-envelope" style="color:var(--logo-red);width:14px;margin-right:4px;"></i> Email: <a href="mailto:salesiellc@iconelectromatic.com" style="color:var(--logo-red-light);">salesiellc@iconelectromatic.com</a></p>
                     </div>
                   </div>
 
-                  <div class="contact-meta-row">
-                    <div class="contact-meta-icon"><i class="fa-solid fa-clock"></i></div>
+                  <!-- Hours -->
+                  <div class="contact-meta-row" style="align-items:flex-start;margin-top:var(--space-4);padding-top:var(--space-4);border-top:1px solid var(--border-subtle);">
+                    <div class="contact-meta-icon" style="margin-top:2px;"><i class="fa-solid fa-clock"></i></div>
                     <div class="contact-meta-text">
                       <h5>Business Operating Hours</h5>
-                      <p>Monday – Friday: 9:00 AM – 6:00 PM IST<br/>Saturday: 9:30 AM – 1:30 PM IST</p>
+                      <p style="font-size:0.84rem;margin-bottom:2px;">Monday – Friday: 9:00 AM – 6:00 PM IST</p>
+                      <p style="font-size:0.84rem;">Saturday: 9:30 AM – 1:30 PM IST</p>
                     </div>
                   </div>
                 </div>
@@ -173,25 +205,24 @@ export function renderContactPage() {
                   <i class="fa-solid fa-bolt" style="color:var(--logo-red);"></i> Quick Requirement Presets
                 </h4>
                 <p style="font-size:0.85rem;color:var(--text-gray-400);margin-bottom:var(--space-3);">Click any preset to prefill your inquiry message:</p>
-                <div style="display:flex;flex-wrap:wrap;gap:8px;">
-                  <button class="filter-chip-dark quick-preset" data-preset="We require official quotation and pricing for RF Amplifiers (frequency range DC to 18 GHz).">RF Amplifiers RFQ</button>
-                  <button class="filter-chip-dark quick-preset" data-preset="Inquiring about high-Q cavity bandpass filters for aerospace radar systems.">Cavity Filters Radar</button>
-                  <button class="filter-chip-dark quick-preset" data-preset="Requesting stock availability and volume discounts for coaxial attenuators and terminations.">Attenuators Volume</button>
-                  <button class="filter-chip-dark quick-preset" data-preset="We have a custom frequency requirement and need bespoke RF component design support.">Bespoke Design</button>
+                <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+                  <button class="filter-chip-dark quick-preset" data-preset="Inquiring about High Frequency Laminates & Prepregs.">High Frequency Laminates</button>
+                  <button class="filter-chip-dark quick-preset" data-preset="Inquiring about Embedded Resistive Film.">Embedded Resistive Film</button>
+                  <button class="filter-chip-dark quick-preset" data-preset="Inquiring about 3D Printed Dielectric Parts.">3D Printed Dielectrics</button>
+                  <button class="filter-chip-dark quick-preset" data-preset="Inquiring about High Power GaN Device and Beamforming IC.">GaN & Beamforming IC</button>
+                  <button class="filter-chip-dark quick-preset" data-preset="Inquiring about High Power Switches and Limiter.">High Power Switches</button>
+                  <button class="filter-chip-dark quick-preset" data-preset="Inquiring about RF and MW Components.">RF & MW Components</button>
+                  <button class="filter-chip-dark quick-preset" data-preset="Inquiring about Tunable Filters.">Tunable Filters</button>
+                  <button class="filter-chip-dark quick-preset" data-preset="Inquiring about Software Defined Radios.">Software Defined Radios</button>
+                  <button class="filter-chip-dark quick-preset" data-preset="Inquiring about high voltage power supplies.">HV Power Supplies</button>
+                  <button class="filter-chip-dark quick-preset" data-preset="Inquiring about Temperature Sensors.">Temperature Sensors</button>
+                  <button class="filter-chip-dark quick-preset" data-preset="Inquiring about Thin Film Capacitors.">Thin Film Capacitors</button>
+                  <button class="filter-chip-dark quick-preset" data-preset="Inquiring about Ceramic Capacitors.">Ceramic Capacitors</button>
+                  <button class="filter-chip-dark quick-preset" data-preset="Inquiring about PCB Fabrication.">PCB Fabrication</button>
+                  <button class="filter-chip-dark quick-preset" data-preset="Inquiring about Perimeter Intrusion Detection System (PIDS).">PIDS</button>
                 </div>
               </div>
 
-              <!-- Quality Pledge -->
-              <div class="contact-relay-card">
-                <h4 style="font-size:1rem;font-weight:700;color:var(--text-white);margin-bottom:var(--space-3);display:flex;align-items:center;gap:8px;">
-                  <i class="fa-solid fa-shield-halved" style="color:var(--logo-blue-light);"></i> Guaranteed Assurance
-                </h4>
-                <ul style="display:flex;flex-direction:column;gap:8px;font-size:0.85rem;color:var(--text-gray-400);">
-                  <li style="display:flex;align-items:center;gap:8px;"><i class="fa-solid fa-check" style="color:var(--success);"></i> Guaranteed genuine OEM parts with trace certificate</li>
-                  <li style="display:flex;align-items:center;gap:8px;"><i class="fa-solid fa-check" style="color:var(--success);"></i> ISO 9001:2015 certified quality management</li>
-                  <li style="display:flex;align-items:center;gap:8px;"><i class="fa-solid fa-check" style="color:var(--success);"></i> Quotation turnaround within 24 business hours</li>
-                </ul>
-              </div>
             </div>
 
             <!-- 1B. RECRUITING INFO CARDS (Shown on Careers tab) -->
@@ -231,43 +262,13 @@ export function renderContactPage() {
                     <div>
                       <strong>Advanced Microwave Measurement Lab:</strong>
                       Hands-on exposure to Vector Network Analyzers (VNA up to 67 GHz), noise figure meters, and RF anechoic test chambers.
-                    </div>
-                  </div>
-                  <div class="recruiting-perk-item">
-                    <i class="fa-solid fa-chart-line" style="color:var(--success);"></i>
-                    <div>
-                      <strong>Competitive CTC &amp; Growth Trajectory:</strong>
-                      Attractive compensation, performance bonuses, health coverage, technical certifications, and global vendor trainings.
-                    </div>
                   </div>
                 </div>
               </div>
 
-              <!-- Open Positions Preview -->
-              <div class="contact-relay-card">
-                <h4 style="font-size:1.05rem;font-weight:700;color:var(--text-white);margin-bottom:var(--space-2);display:flex;align-items:center;gap:8px;">
-                  <i class="fa-solid fa-briefcase" style="color:var(--logo-blue-light);"></i> Active Priority Openings
-                </h4>
-                <p style="font-size:0.82rem;color:var(--text-gray-400);margin-bottom:10px;">Select any position in the recruiting form to submit your application:</p>
-                <div class="recruiting-positions-tags">
-                  <span class="recruiting-pos-pill"><i class="fa-solid fa-check" style="color:var(--success);font-size:0.65rem;"></i> RF &amp; MW Design Engineer (DC–110 GHz)</span>
-                  <span class="recruiting-pos-pill"><i class="fa-solid fa-check" style="color:var(--success);font-size:0.65rem;"></i> Field Applications Engineer (FAE)</span>
-                  <span class="recruiting-pos-pill"><i class="fa-solid fa-check" style="color:var(--success);font-size:0.65rem;"></i> Technical Sales &amp; Account Manager</span>
-                  <span class="recruiting-pos-pill"><i class="fa-solid fa-check" style="color:var(--success);font-size:0.65rem;"></i> Radar &amp; EW Systems Specialist</span>
-                  <span class="recruiting-pos-pill"><i class="fa-solid fa-check" style="color:var(--success);font-size:0.65rem;"></i> RF Lab Test &amp; QA Engineer</span>
-                  <span class="recruiting-pos-pill"><i class="fa-solid fa-check" style="color:var(--success);font-size:0.65rem;"></i> Graduate RF Engineering Trainee</span>
-                </div>
-
-                <div style="margin-top:var(--space-4);padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-card);border-radius:var(--radius-md);">
-                  <div style="font-size:0.78rem;color:var(--text-gray-400);margin-bottom:3px;">Direct Talent Acquisition Desk:</div>
-                  <div style="font-size:0.88rem;color:var(--text-white);display:flex;align-items:center;gap:8px;">
-                    <i class="fa-solid fa-envelope" style="color:var(--logo-blue-light);"></i>
-                    <a href="mailto:careers@iconelectromatic.com" style="color:var(--logo-blue-light);text-decoration:none;font-weight:600;">careers@iconelectromatic.com</a>
-                  </div>
-                </div>
-              </div>
             </div>
 
+          </div>
           </div>
 
           <!-- Right Column: Interactive Forms -->
@@ -354,24 +355,12 @@ export function renderContactPage() {
                   </div>
                 </div>
 
-                <!-- Row 2: Phone & Current Location -->
+                <!-- Row 2: Position & Phone -->
                 <div class="relay-form-row">
                   <div class="relay-field">
-                    <label for="r-phone">Phone / Mobile Number *</label>
-                    <input type="tel" id="r-phone" name="phone" placeholder="+91 98765 43210" required />
-                  </div>
-                  <div class="relay-field">
-                    <label for="r-city">Current Location / City *</label>
-                    <input type="text" id="r-city" name="city" placeholder="e.g. Bengaluru, Hyderabad, Pune, Chennai" required />
-                  </div>
-                </div>
-
-                <!-- Row 3: Target Role & Experience Level -->
-                <div class="relay-form-row">
-                  <div class="relay-field">
-                    <label for="r-position">Target Position / Domain *</label>
+                    <label for="r-position">Position *</label>
                     <select id="r-position" name="position" required>
-                      <option value="" disabled selected>Select an engineering position...</option>
+                      <option value="" disabled selected>Select Position...</option>
                       <option value="RF & Microwave Design Engineer (DC–110 GHz)">RF &amp; Microwave Design Engineer (DC – 110 GHz)</option>
                       <option value="Field Applications Engineer (FAE) - RF Components">Field Applications Engineer (FAE) – RF Components</option>
                       <option value="Technical Sales & OEM Account Manager">Technical Sales &amp; OEM Account Manager</option>
@@ -379,8 +368,20 @@ export function renderContactPage() {
                       <option value="RF Lab Test & Measurement Specialist (VNA/Spectrum)">RF Lab Test &amp; Measurement Specialist (VNA/Spectrum)</option>
                       <option value="High-Frequency PCB & PTFE Substrates Specialist">High-Frequency PCB &amp; PTFE Substrates Specialist</option>
                       <option value="Graduate RF Engineering Trainee / Intern">Graduate RF Engineering Trainee / Intern</option>
-                      <option value="Other Engineering / Technical Specialist">Other Technical / Engineering Role</option>
+                      <option value="Other Technical / Engineering Specialist">Other Technical / Engineering Role</option>
                     </select>
+                  </div>
+                  <div class="relay-field">
+                    <label for="r-phone">Phone / Mobile Number *</label>
+                    <input type="tel" id="r-phone" name="phone" placeholder="+91 98765 43210" required />
+                  </div>
+                </div>
+
+                <!-- Row 3: Current Location & Experience Level -->
+                <div class="relay-form-row">
+                  <div class="relay-field">
+                    <label for="r-city">Current Location / City *</label>
+                    <input type="text" id="r-city" name="city" placeholder="e.g. Bengaluru, Hyderabad, Pune, Chennai" required />
                   </div>
                   <div class="relay-field">
                     <label for="r-experience">Total Experience *</label>
@@ -452,6 +453,7 @@ export function renderContactPage() {
         </div>
       </div>
     </div>
+  </div>
   `;
 }
 
@@ -582,7 +584,6 @@ export function initContactPage() {
     inquiryForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const name = document.getElementById('c-fullname').value || 'Customer';
-      const refId = 'ICON-' + Math.floor(100000 + Math.random() * 900000);
 
       if (inquiryPanel) {
         inquiryPanel.innerHTML = `
@@ -592,11 +593,8 @@ export function initContactPage() {
             </div>
             <h3 style="font-size:1.5rem;font-weight:800;color:var(--text-white);margin-bottom:8px;">Thank You, ${name}!</h3>
             <p style="color:var(--text-gray-400);font-size:1rem;max-width:480px;margin:0 auto var(--space-6);line-height:1.6;">
-              Your inquiry has been logged with ICON Electromatic Technical Dispatch. A specialized RF application engineer will review your specifications and contact you within 24 hours.
+              Your inquiry has been logged with ICON Electromatic Technical Dispatch.
             </p>
-            <div style="display:inline-block;padding:10px 20px;background:rgba(255,255,255,0.05);border:1px solid var(--border-card);border-radius:var(--radius-md);font-family:var(--font-display);font-size:0.95rem;color:var(--text-white);margin-bottom:var(--space-6);">
-              Inquiry Reference: <span style="color:var(--logo-red-light);font-weight:800;">${refId}</span>
-            </div>
             <div>
               <button class="btn-relay-secondary" id="reset-inquiry-btn" style="padding:8px 18px;font-size:0.85rem;">
                 <i class="fa-solid fa-rotate-left"></i> Send Another Inquiry

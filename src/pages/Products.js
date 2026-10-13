@@ -395,8 +395,14 @@ function renderCategoryCard(oem, cat) {
   return `
     <div class="category-card" data-nav-params="${params}" style="--oem-accent: ${oem.accentColor};">
       <!-- Category Visual Header Preview -->
-      <div class="category-card-visual" style="background-image: url('${image}');">
-        <div class="category-visual-overlay"></div>
+      <div class="category-card-visual">
+        <img 
+          src="${image}" 
+          alt="${cat.name}" 
+          class="category-card-img" 
+          loading="lazy" 
+          onerror="this.onerror=null; this.src='/images/rf-filter.jpg';" 
+        />
         <div class="category-count-badge" style="background: ${oem.accentColor}; color: #ffffff;">
           ${cat.products.length} ${cat.products.length === 1 ? 'Part' : 'Parts'}
         </div>

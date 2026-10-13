@@ -31,7 +31,7 @@ export const CATALOG = [
             description: "PTFE composite laminate with very low dielectric constant and loss, reinforced with glass microfibers.",
             applications: "Antennas, RF/microwave circuits communication system, aerospace & defense, Commercial Airline Broadband Antennas, Microstrip and Stripline Circuits, Millimeter Wave Applications, Military Radar Systems, Missile Guidance Systems, Point to Point Digital Radio Antennas",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/rt-duroid-laminates/rt-duroid-5880-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image1.jpeg"
           },
           {
             id: "rt-duroid-5870-3",
@@ -40,7 +40,7 @@ export const CATALOG = [
             description: "Low Dk PTFE laminate with excellent electrical consistency and low loss.",
             applications: "Broadband RF circuits, microwave links, Commercial Airline Broadband Antennas, Microstrip and Stripline Circuits, Millimeter Wave Applications, Military Radar Systems, Missile Guidance Systems, Point to Point Digital Radio Antennas",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/rt-duroid-laminates/rt-duroid-5870-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image1.jpeg"
           },
           {
             id: "rt-duroid-5880lz-4",
@@ -49,7 +49,7 @@ export const CATALOG = [
             description: "Lightweight PTFE laminate designed for weight-sensitive RF applications.",
             applications: "Aerospace, UAVs, space communication, Airborne antenna system, Lightweight feed networks, Military radar systems, Missile guidance systems, Point-to-point digital radio antennas",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/rt-duroid-laminates/rt-duroid-5880lz-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image1.jpeg"
           },
           {
             id: "rt-duroid-6002-5",
@@ -58,7 +58,7 @@ export const CATALOG = [
             description: "Medium Dk PTFE composite offering controlled impedance and mechanical stability.",
             applications: "RF power amplifiers, filters, couplers.Phased Array Antennas, Ground Based and Airborne Radar Systems, Global Positioning System\nAntennas, Power Backplanes, High Reliability Complex Multilayer Circuits, Commercial Airline Collision Avoidance, Beam Forming Networks",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/rt-duroid-laminates/rt-duroid-6002-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image2.jpeg"
           },
           {
             id: "rt-duroid-6006-6",
@@ -67,7 +67,7 @@ export const CATALOG = [
             description: "Provide high dielectric constants (Dk) to enable circuit size reduction. low loss, ideal for operating at X-band or below. Additionally, their tight Dk and thickness control deliver repeatable circuit performance.",
             applications: "Patch Antennas, Satellite Communications Systems, Power Amplifiers, Aircraft Collision Avoidance Systems, Ground Radar Warning Systems, miniaturized microwave circuits.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/rt-duroid-laminates/rt-duroid-6006-and-6010-2lm-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image2.jpeg"
           },
           {
             id: "rt-duroid-6010-2lm-7",
@@ -76,7 +76,7 @@ export const CATALOG = [
             description: "Provide high dielectric constants (Dk) to enable circuit size reduction. low loss, ideal for operating at X-band or below. Additionally, their tight Dk and thickness control deliver repeatable circuit performance.",
             applications: "Patch Antennas, Satellite Communications Systems, Power Amplifiers, Aircraft Collision Avoidance Systems, Ground Radar Warning Systems, high density RF boards.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/rt-duroid-laminates/rt-duroid-6006-and-6010-2lm-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image3.png"
           },
           {
             id: "rt-duroid-6035htc-8",
@@ -85,7 +85,7 @@ export const CATALOG = [
             description: "Thermally conductive PTFE laminate with medium dielectric constant and excellent heat dissipation.",
             applications: "High-power RF amplifiers, microwave power devices, couplers, filters, combiners, power dividers",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/rt-duroid-laminates/rt-duroid-6035htc-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image4.jpeg"
           },
         ]
       },
@@ -101,7 +101,7 @@ export const CATALOG = [
             description: "Low loss laminate with excellent thermal stability and multilayer capability.",
             applications: "Cellular Base Station Antennas and Power Amplifiers, RF Identification Tags, Automotive Radar and Sensors, LNB\u2019s for Direct Broadcast Satellites, Automotive radar, base stations, RF power.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/ro4000-series-laminates/ro4350b-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image5.jpeg"
           },
           {
             id: "ro4003c-10",
@@ -110,7 +110,7 @@ export const CATALOG = [
             description: "Hydrocarbon ceramic laminate offering FR-4-like processing with RF performance.",
             applications: "Cellular Base Station Antennas and Power Amplifiers, RF Identification Tags, Automotive Radar and Sensors, LNB\u2019s for Direct Broadcast Satellites, RF/microwave circuits, ISM band designs.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/ro4000-series-laminates/ro4003c-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image5.jpeg"
           },
           {
             id: "ro4360g2-15",
@@ -119,7 +119,7 @@ export const CATALOG = [
             description: "High Dk laminate optimized for multilayer high-reliability PCBs.",
             applications: "Multilayer RF PCB boards, defense electronics.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/ro4000-series-laminates/ro4360g2-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image5.jpeg"
           },
           {
             id: "ro4835-16",
@@ -128,7 +128,7 @@ export const CATALOG = [
             description: "Low loss, oxidation-resistant laminate compatible with standard PCB processing.",
             applications: "RF/microwave multilayer circuits.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/ro4000-series-laminates/ro4835-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image5.jpeg"
           },
         ]
       },
@@ -144,7 +144,7 @@ export const CATALOG = [
             description: "Ceramic-filled PTFE laminate with low loss and stable Dk over frequency.",
             applications: "Automotive radar, 5G mmWave, ADAS.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/ro3000-series-laminates/ro3003-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image6.jpeg"
           },
           {
             id: "ro3003g2-12",
@@ -153,7 +153,7 @@ export const CATALOG = [
             description: "Next-generation RO3003 with improved processing and consistency.",
             applications: "ADAS systems like adaptive cruise control, forward collision warning and active brake or lane change assist",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/ro3000-series-laminates/ro3003g2-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image6.jpeg"
           },
           {
             id: "ro3006-13",
@@ -162,7 +162,7 @@ export const CATALOG = [
             description: "Higher Dk ceramic-filled PTFE laminate for compact RF designs.",
             applications: "Automotive radar applications, Global positioning satellite antennas, Cellular telecommunications systems -power amplifiers and antennas, Patch antenna for wireless communications, Direct broadcast satellites, Datalink on cable systems, Remote meter readers, Power backplanes, RF amplifiers, satellite communication.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/ro3000-series-laminates/ro3006-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image6.jpeg"
           },
           {
             id: "ro3010-14",
@@ -171,7 +171,7 @@ export const CATALOG = [
             description: "Ceramic-filled PTFE composites that offer a higher dielectric constant with excellent stability.Very high Dk laminate enabling extreme miniaturization.",
             applications: "Automotive radar applications, Global positioning satellite antennas, Cellular telecommunications systems -power amplifiers and antennas, Patch antenna for wireless communications, Direct broadcast satellites, Datalink on cable systems, Remote meter readers, Power backplanes, Microwave circuits, impedance matching.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/ro3000-series-laminates/ro3010-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image6.jpeg"
           },
         ]
       },
@@ -187,7 +187,7 @@ export const CATALOG = [
             description: "Thermoset microwave laminate with matched CTE to copper.",
             applications: "RF and microwave circuitry, Power amplifiers and combiners, Filters and coupler, Satellite communication systems, Global Positioning Systems Antennas, Patch Antennas, Dielectric polarizers and lenses, Chip testers, Military & aerospace microwave circuits.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/tmm-laminates/tmm-3-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image7.jpeg"
           },
           {
             id: "tmm-4-18",
@@ -196,7 +196,7 @@ export const CATALOG = [
             description: "Thermoset microwave laminate with low Dk and matched CTE to copper.",
             applications: "RF and microwave circuitry, Power amplifiers and combiners, Filters and coupler, Satellite communication systems, Global Positioning Systems Antennas, Patch Antennas, Dielectric polarizers and lenses, Chip testers, Aerospace and defense RF circuits.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/tmm-laminates/tmm-4-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image7.jpeg"
           },
           {
             id: "tmm-6-19",
@@ -205,7 +205,7 @@ export const CATALOG = [
             description: "Medium Dk thermoset laminate with excellent mechanical stability.",
             applications: "RF and microwave circuitry, Power amplifiers and combiners, Filters and coupler, Satellite communication systems, Global Positioning Systems Antennas, Patch Antennas, Dielectric polarizers and lenses, Chip testers,High reliability RF applications.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/tmm-laminates/tmm-6-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image7.jpeg"
           },
           {
             id: "tmm-10-20",
@@ -214,7 +214,7 @@ export const CATALOG = [
             description: "High Dk thermoset laminate for compact microwave designs.",
             applications: "RF and microwave circuitry, Power amplifiers and combiners, Filters and coupler, Satellite communication systems, Global Positioning Systems Antennas, Patch Antennas, Dielectric polarizers and lenses, Chip testers, Power amplifiers, RF modules.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/tmm-laminates/tmm-10-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image7.jpeg"
           },
           {
             id: "tmm-10i-21",
@@ -223,7 +223,7 @@ export const CATALOG = [
             description: "Improved TMM10 with enhanced electrical consistency and reliability.",
             applications: "RF and microwave circuitry, Power amplifiers and combiners, Filters and coupler, Satellite communication systems, Global Positioning Systems Antennas, Patch Antennas, Dielectric polarizers and lenses, Chip testersHigh-reliability microwave circuits.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/tmm-laminates/tmm-10i-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image7.jpeg"
           },
           {
             id: "tmm-13i-22",
@@ -232,7 +232,7 @@ export const CATALOG = [
             description: "Very high Dk thermoset laminate for compact RF designs.",
             applications: "RF and microwave circuitry, Power amplifiers and combiners, Filters and coupler, Satellite communication systems, Global Positioning Systems Antennas, Patch Antennas, Dielectric polarizers and lenses, Chip testersPower amplifiers, impedance matching networks.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/tmm-laminates/tmm-13i-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image9.jpeg"
           },
         ]
       },
@@ -248,7 +248,7 @@ export const CATALOG = [
             description: "PTFE laminate with woven glass reinforcement for dimensional stability.",
             applications: "Aerospace, multilayer RF circuits.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/clte-series-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image8.jpeg"
           },
           {
             id: "clte-mw-24",
@@ -257,7 +257,7 @@ export const CATALOG = [
             description: "Low loss PTFE laminate optimized for microwave multilayer designs.",
             applications: "Radar, satellite communication.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/clte-series-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image8.jpeg"
           },
         ]
       },
@@ -273,7 +273,7 @@ export const CATALOG = [
             description: "PTFE woven-glass reinforced laminate with controlled dielectric properties and good mechanical stability.",
             applications: "RF/microwave circuits, aerospace & defense.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/diclad-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image11.png"
           },
           {
             id: "diclad-870-26",
@@ -282,7 +282,7 @@ export const CATALOG = [
             description: "Low loss PTFE composite laminate optimized for microwave frequency performance.",
             applications: "RF power amplifiers, filters, couplers.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/diclad-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image10.jpeg"
           },
           {
             id: "diclad-527-27",
@@ -291,7 +291,7 @@ export const CATALOG = [
             description: "PTFE laminate with balanced electrical and mechanical properties for RF designs.",
             applications: "Microwave circuits, communication systems.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/diclad-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image10.jpeg"
           },
           {
             id: "magtrex-555-28",
@@ -300,7 +300,7 @@ export const CATALOG = [
             description: "Magnetically loaded laminate engineered for high impedance RF applications.",
             applications: "RF absorbers, EMI suppression, specialty RF designs.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/magtrex-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image12.jpeg"
           },
         ]
       },
@@ -316,7 +316,7 @@ export const CATALOG = [
             description: "Thermally conductive ceramic-filled PTFE laminate for RF thermal management.",
             applications: "High-power RF and microwave circuits.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/tc-series-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image13.jpeg"
           },
           {
             id: "tc350-plus-30",
@@ -325,7 +325,7 @@ export const CATALOG = [
             description: "Enhanced TC350 with improved thermal conductivity and electrical stability.",
             applications: "Power RF modules, base station hardware.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/tc-series-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image14.jpeg"
           },
           {
             id: "tc600-31",
@@ -334,7 +334,7 @@ export const CATALOG = [
             description: "High thermal conductivity PTFE laminate designed for extreme heat dissipation needs.",
             applications: "High-power microwave and RF power electronics.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/tc-series-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image15.png"
           },
           {
             id: "ro4400-bondply-32",
@@ -343,7 +343,7 @@ export const CATALOG = [
             description: "Thermoset prepreg matched to RO4000 series laminates.",
             applications: "Multilayer RF PCB bonding.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/prepregs-and-bondplys",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image16.jpeg"
           },
           {
             id: "ro4400t-bondply-33",
@@ -352,7 +352,7 @@ export const CATALOG = [
             description: "Toughened bondply for sequential lamination.",
             applications: "High layer count RF boards.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/prepregs-and-bondplys",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image16.jpeg"
           },
           {
             id: "2929-bondply-34",
@@ -361,7 +361,7 @@ export const CATALOG = [
             description: "Thin adhesive bondply for RF multilayer constructions.",
             applications: "Microwave multilayer bonding.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/prepregs-and-bondplys",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image17.jpeg"
           },
           {
             id: "cuclad-6250-bonding-film-35",
@@ -370,7 +370,7 @@ export const CATALOG = [
             description: "Thermoplastic bonding film with low dielectric loss.",
             applications: "RF multilayer laminations.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/prepregs-and-bondplys",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image18.jpeg"
           },
           {
             id: "cuclad-6700-bonding-film-36",
@@ -379,7 +379,7 @@ export const CATALOG = [
             description: "CTFE bonding film with excellent electrical properties.",
             applications: "High reliability RF boards.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/prepregs-and-bondplys",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image19.jpeg"
           },
           {
             id: "speedwave-300p-prepreg-37",
@@ -388,7 +388,7 @@ export const CATALOG = [
             description: "Ultra-low loss prepreg for high-speed & RF designs.",
             applications: "5G, radar, aerospace electronics.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/prepregs-and-bondplys",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image20.jpeg"
           },
           {
             id: "xtremespeed-ro1200-38",
@@ -397,7 +397,7 @@ export const CATALOG = [
             description: "Ultra-low loss, low Dk laminate for very high-speed digital and RF designs.",
             applications: "High-speed digital, data centers, advanced RF.",
             link: "https://www.rogerscorp.com/advanced-electronics-solutions/xtremespeed-ro1200-laminates",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image21.jpeg"
           },
         ]
       },
@@ -429,7 +429,7 @@ export const CATALOG = [
             description: "RF adapters for 1.35mm, 1.85mm, 2.4mm, 2.4mm NMD, 2.92mm, 2.92mm NMD, 3.5mm, BNC, N-Type, SMA, SMP, WR19, WR22, and WR28. Wide selection of connector genders, mounting types and orientations.",
             applications: "Frequency Range as wide as DC to 110 GHz\nLow insertion loss\nExcellent VSWR\nRugged construction",
             link: "https://www.minicircuits.com/WebStore/adapters.html",
-            image: "/images/rf-waveguide.jpg"
+            image: "/images/products/image65.png"
           },
         ]
       },
@@ -445,7 +445,7 @@ export const CATALOG = [
             description: "Gain blocks, low noise amplifiers, power amplifiers, RF transistors, Class-A and Class-AB amplifiers, linear amplifiers, 75\u03a9 CATV amplifiers, dual-matched amplifiers, variable gain amplifiers, pulse amplifiers",
             applications: "Connectorized, MMIC surface mount, bare die & waveguide interfaces\nIn-house design and manufacturing\nIndustry-leading quality and reliability\nCost-effective custom solutions",
             link: "https://www.minicircuits.com/WebStore/Amplifiers.html",
-            image: "/images/gan-power-chip.jpg"
+            image: "/images/products/image66.png"
           },
         ]
       },
@@ -461,7 +461,7 @@ export const CATALOG = [
             description: "Fixed, Digital Step, Voltage Variable, & Programmable- Coaxial, surface mount, and MMIC attenuator models for 50-Ohm & 75-Ohm systems including fixed attenuators, high-power attenuators, digital step / programmable attenuators, voltage variable attenuators",
             applications: "DC passing and DC blocking models\nPower handling up to 100W\nBandwidths spanning DC to 67 GHz\nExcellent accuracy and repeatability",
             link: "https://www.minicircuits.com/WebStore/Attenuators.html",
-            image: "/images/rf-attenuator.jpg"
+            image: "/images/products/image67.png"
           },
         ]
       },
@@ -477,7 +477,7 @@ export const CATALOG = [
             description: "RF & Microwave Bias Tees (Bias Ts)\nWideband DC to RF Isolation\nYour complete source for coaxial and surface mount bias tees for DC current up to 5 Amps and RF bandwidths spanning 100 kHz to 54 GHz!",
             applications: "Choose from coaxial connector types including SMA, N-Type, and BNC\nTiny surface mount packages as small as 2.5 x 2.5 mm or bare die MMICs\nExcellent isolation\n50-Ohm and 75-Ohm models",
             link: "https://www.minicircuits.com/WebStore/BiasTees.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image68.png"
           },
         ]
       },
@@ -493,7 +493,7 @@ export const CATALOG = [
             description: "RF Coaxial Cables\nSystem Interconnect Cables and Precision Test Leads\nMini-Circuits suite of RF cable solutions is built for precision, performance, and versatility. Our RF/microwave interconnect and precision test cables are available for 50-Ohm and 75-Ohm systems, covering frequencies from DC to 110 GHz. With connector options including SMA, N-Type, F-Type, BNC, and 2.92mm, we provide unmatched flexibility cross applications.",
             applications: "Available in male and female connector combinations\nConnector formats: straight, right angle, bulkhead, quick-connect\nEngineered to deliver high reliability under demanding test and field conditions\nCustom RF cable assemblies available to meet specific design requirements",
             link: "https://www.minicircuits.com/WebStore/Cables.html",
-            image: "/images/rf-waveguide.jpg"
+            image: "/images/products/image69.png"
           },
         ]
       },
@@ -509,7 +509,7 @@ export const CATALOG = [
             description: "RF Couplers\nDirectional, Bi-Directional, Dual Directional & RF Tap\nOver 475 models with power handling from 0.5 to 250W covering DC to 65 GHz!",
             applications: "Transformer-based, LTCC, stripline/microstrip, bridge, and MMIC designs\nSurface mount and coaxial formats\nWide selection for 50-ohm and 75-ohm systems",
             link: "https://www.minicircuits.com/WebStore/Cables.html",
-            image: "/images/rf-attenuator.jpg"
+            image: "/images/products/image70.png"
           },
         ]
       },
@@ -525,7 +525,7 @@ export const CATALOG = [
             description: "Custom integration to achieve highly functional systems and sub-systems.",
             applications: "Signal Generator Assemblies\nSignal Splitters and Distribution Systems\nFrequency Convertor Module\nAmplifier Switch Filter Assemblies",
             link: "https://www.minicircuits.com/products/CustomAssemblies.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image71.png"
           },
         ]
       },
@@ -541,7 +541,7 @@ export const CATALOG = [
             description: "Choose from a variety of wideband DC blocks with SMA, N-type, BNC, 2.92mm, 2.4mm and 1.85mm connector types for 50-Ohm and 75-Ohm applications from 100 kHz to 65 GHz!",
             applications: "Low insertion loss and excellent return loss\nRugged constructio",
             link: "https://www.minicircuits.com/WebStore/dc_blocks.html",
-            image: "/images/rf-waveguide.jpg"
+            image: "/images/products/image72.png"
           },
         ]
       },
@@ -557,7 +557,7 @@ export const CATALOG = [
             description: "Mini-Circuits offers a broad selection of MMIC components in bare die format for your chip and wire integration, including amplifiers, attenuators, couplers, filters, mixers, multipliers, and splitter/combiners.",
             applications: "Wide selection of models spanning DC to mmWave\nAvailable in small quantity gel-paks, partial and full wafers\nMore models available as unpackaged die on request",
             link: "https://www.minicircuits.com/WebStore/Die.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image73.png"
           },
         ]
       },
@@ -573,7 +573,7 @@ export const CATALOG = [
             description: "Voltage Variable and Fixed Slope Models\nNearly 100 equalizer models for gain flattening and frequency-dependent loss compensation in a wide range of applications from DC to 45 GHz.",
             applications: "Coaxial, surface-mount packages, and bare die\nPrecise attenuation slope control\n50-Ohm and 75-Ohm designs",
             link: "https://www.minicircuits.com/WebStore/equalizers.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image74.png"
           },
         ]
       },
@@ -589,7 +589,7 @@ export const CATALOG = [
             description: "RF Filters\nLow-Pass, High-Pass, Band-Pass, Band-Stop, Diplexers. Triplexers, and More!\nMini-Circuits has over 3000 models of RF filters available for same-day shipping and is able to create custom designs with fast turnarounds for almost any need",
             applications: "Patented MMIC Reflectionless Filters Eliminate Spurs\nSharp-Rejection Cavity and Suspended Substrate Filters\nLTCC Filters as small as 0603\nPassbands spanning DC to 58 GHz",
             link: "https://www.minicircuits.com/WebStore/RF-Filters.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image75.png"
           },
         ]
       },
@@ -605,7 +605,7 @@ export const CATALOG = [
             description: "RF Frequency Mixers\nThe Industry's Widest Selection\nOver 300 models of RF frequency mixers available in coaxial, surface mount, and MMIC die formats from 500 Hz to 65GHz! Whether you need wideband performance, high IP3, low distortion, upconverters, downconverters, active mixers, hi-rel ceramic mixers - we have a solution for your needs. Most models are in-stock and ship same-day.",
             applications: "LO power levels from -3 to 27 dBm\nExcellent repeatability\nHi-rel, hermetically sealed ceramic models\nMMIC mixers up to 65 GHz",
             link: "https://www.minicircuits.com/WebStore/Mixers.html",
-            image: "/images/rf-mixer.jpg"
+            image: "/images/products/image76.png"
           },
         ]
       },
@@ -621,7 +621,7 @@ export const CATALOG = [
             description: "Frequency Multipliers\nMini-Circuits offers a wide array of off-the-shelf multipliers including doublers, triplers, quadruplers, X5, X7, and X12 multipliers with output frequencies ranging from 100 KHz to 72 GHz!",
             applications: "Low conversion loss\nExcellent suppression of unwanted harmonics\nCoaxial, surface mount and MMIC die formats",
             link: "https://www.minicircuits.com/WebStore/Multipliers.html",
-            image: "/images/rf-mixer.jpg"
+            image: "/images/products/image77.png"
           },
         ]
       },
@@ -637,7 +637,7 @@ export const CATALOG = [
             description: "Surface mount and coaxial 50 Ohm / 75 Ohm impedance matching pads for CATV systems, broadband networks, test setups and more!",
             applications: "SMA, N-Type and BNC connectors available\nFrequency ranges as wide as DC to 3000 MHz\nExcellent matching VSWR",
             link: "https://www.minicircuits.com/WebStore/MatchingPads.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image78.png"
           },
         ]
       },
@@ -653,7 +653,7 @@ export const CATALOG = [
             description: "Tough and reliable for the harshest operating conditions, from 100 kHz to 8.2 GHz!\nTough and reliable for the harshest operating conditions, from 100 KHz to 8.20 GHz",
             applications: "Rugged coaxial models\nHermetically sealed LTCC models as small as 0.12 x 0.12 x 0.045 in.\nQuick recovery times\nCost-effective custom models with rapid response and fast turnaround!",
             link: "https://www.minicircuits.com/WebStore/Limiters.html",
-            image: "/images/rf-switch.jpg"
+            image: "/images/products/image79.png"
           },
         ]
       },
@@ -669,7 +669,7 @@ export const CATALOG = [
             description: "&Q and QPSK Modulators / Demodulators",
             applications: "QPSK modulators and I&Q modulator/demodulators covering RF/LO frequencies from 1 to 2000 MHz and I&Q frequencies from DC to 5 MHz. Available in coaxial connectorized and surface mount packages, these components provide excellent harmonic rejection as well as good carrier and sideband rejection while maintaining low conversion loss over their operating range.",
             link: "https://www.minicircuits.com/WebStore/ModulatorsDemodulators.html",
-            image: "/images/rf-mixer.jpg"
+            image: "/images/products/image80.png"
           },
         ]
       },
@@ -685,7 +685,7 @@ export const CATALOG = [
             description: "Voltage Controlled Oscillators (VCOs)\nWide selection of models from spot frequency and narrow band to medium and wide bandwidths up to 1.5 octaves with low phase noise, linear tuning, dual outputs, 5V tuning for PLLs and more!",
             applications: "Voltage Controlled Oscillators (VCOs)\nWide selection of models from spot frequency and narrow band to medium and wide bandwidths up to 1.5 octaves with low phase noise, linear tuning, dual outputs, 5V tuning for PLLs and more!",
             link: "https://www.minicircuits.com/WebStore/Oscillators.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image81.png"
           },
         ]
       },
@@ -701,7 +701,7 @@ export const CATALOG = [
             description: "RF Phase Detectors\nBroadband and optimized band RF phase detectors for phase locked loops (PLLs), monitoring and levelling circuits from 1 to 650 MHz",
             applications: "High DC output versus phase\nLow DC offset\nCoaxial designs with rugged construction\nMiniature, surface-mount packages",
             link: "https://www.minicircuits.com/WebStore/PhaseDetectors.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image82.png"
           },
         ]
       },
@@ -717,7 +717,7 @@ export const CATALOG = [
             description: "RF Phase Shifters\nMini-Circuits\u2019 broad selection of surface-mount and coaxial voltage-variable phase shifters gives you precise phase control up to 360 degrees for a wide range of applications including cellular, radar, test and measurement and more!",
             applications: "Precise 180-degree and 360-degree phase control\nLow insertion loss\nRugged coaxial and miniature surface-mount formats available",
             link: "https://www.minicircuits.com/WebStore/PhaseShifters.html?srsltid=AfmBOor-ZUoJo2KhtxAV2nzRixN0sAA4rnfJeXd4qesnvZFZb3DSNYkU",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image83.png"
           },
         ]
       },
@@ -733,7 +733,7 @@ export const CATALOG = [
             description: "RF Power Detectors\nPrecision RF power detectors for a wide range of applications including RF/IF power measurement, transmit/receive power monitoring, RF leakage monitors, fast feedback levelling circuits, receiver gain control systems and more!",
             applications: "Wide bandwidth, 0.01 to 67 GHz\nDynamic range as wide as 60 dB, spanning -60 to +20 dBm\nLow noise\nBuilt-in temperature sensor",
             link: "https://www.minicircuits.com/WebStore/pd_coax.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image84.png"
           },
         ]
       },
@@ -749,7 +749,7 @@ export const CATALOG = [
             description: "RF Power Sensors\nFor CW, RMS, Peak & Average Measurements. The PWR series features a high range of performance sensors, including up to a 40 GHz power sensor and supporting measurements of any type of signal from CW / single tone applications, to pulsed signals and most modern digital modulations.",
             applications: "Input power ranges down to -60 dBm are ideal for measurement of transmitted signals and characterization of components with high loss or rejection (such as filters). Sample rates up to 80 million samples per second allow detailed signal analysis with very fine measurement resolution.Frequency Ranges Spanning\n9 kHz - 40 GHz\n\nDynamic range options spanning\n-60 to +20 dBm\n\nCW, true RMS peak and average measurement capability\n\nUSB rf power sensor and ethernet control options",
             link: "https://www.minicircuits.com/WebStore/RF-Smart-Power-Sensors.html",
-            image: "/images/rf-microwave-pcb.jpg"
+            image: "/images/products/image85.png"
           },
           {
             id: "power-sensors-111",
@@ -758,7 +758,7 @@ export const CATALOG = [
             description: "RF Power Sensors\nFor CW, RMS, Peak & Average Measurements\nThe RF power sensor from Mini-Circuits has been developed to provide a reliable and affordable option for any test requirement, budget, and experience level.",
             applications: "The PWR series features a high range of performance sensors, including up to a 40 GHz power sensor and supporting measurements of any type of signal from CW / single tone applications, to pulsed signals and most modern digital modulations.",
             link: "https://www.minicircuits.com/WebStore/RF-Smart-Power-Sensors.html",
-            image: "/images/rf-microwave-pcb.jpg"
+            image: "/images/products/image85.png"
           },
         ]
       },
@@ -774,7 +774,7 @@ export const CATALOG = [
             description: "RF Power Splitters/Dividers/Combiners\n2-Way, 3-way, 4-way, 6-way, 8-way, 10-way, 12-way, 16-way and up to 24-way models for 50 Ohm and 75 Ohm systems from DC to 67 GHz!",
             applications: "Coaxial, surface mount, and MMIC die formats available\nSMA, N-Type, F-Type, BNC, 2.92mm, 2.4mm, 1.85mm and 7/16 DIN connectors\nPower handling up to 1.2kW\nDC passing and DC blocking",
             link: "https://www.minicircuits.com/?srsltid=AfmBOoqk3h45StJjNRndIYTipkqZupyp8-ZXK5W2jG2Zr769WqvkZSym",
-            image: "/images/rf-attenuator.jpg"
+            image: "/images/products/image86.png"
           },
         ]
       },
@@ -790,7 +790,7 @@ export const CATALOG = [
             description: "90-Degree and 180-Degree\nHybrid Splitter/Combiners\nA broad selection of quadrature (90-degree) and 180-degree hybrids in coaxial connectorized and surface-mount packages as well as MMIC die.",
             applications: "90\u00b0, 180\u00b0, and quadrifilar phase shifts\nPower handling up to 50W\nLow phase and amplitude unbalance\nChoose from LTCC, MMIC, core and wire, and microstrip/stripline designs\nBROWSE CATALOG\nCONTACT US\nCatalog Products",
             link: "https://www.minicircuits.com",
-            image: "/images/rf-attenuator.jpg"
+            image: "/images/products/image87.png"
           },
         ]
       },
@@ -806,7 +806,7 @@ export const CATALOG = [
             description: "High performance Reference Designs solution engineered for demanding RF, microwave, and aerospace applications.",
             applications: "Aerospace, Defense, Radar, Telecommunications, Space",
             link: "https://www.minicircuits.com",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image88.png"
           },
         ]
       },
@@ -822,7 +822,7 @@ export const CATALOG = [
             description: "RF Chokes\nRF Chokes with effective parallel resistance over wide bandwidths from 5 MHz to 10 GHz!\nRF chokes are commonly used in RF system design to block RF signal while passing DC current. Mini-Circuits offers RF chokes with effective parallel resistance for DC current up to 15A over wide bandwidths from 5 MHz to 10 GH",
             applications: "Tiny surface mount packages, as small as 0.15 x 0.15 x 0.15\"\nLow DC resistance\nLow parasitic capacitance\nDC current handling up to 15A",
             link: "https://www.minicircuits.com/WebStore/rf_chokes.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image89.png"
           },
         ]
       },
@@ -838,7 +838,7 @@ export const CATALOG = [
             description: "UVNA-63 microwave transceiver kit includes everything students need to build a fully functioning vector network analyzer and bridge the gap between textbook theory in the classroom and practical, real-world measurement in the lab.",
             applications: "The IMAGEVK-74 is a revolutionary tool incorporating Vayyar's highly integrated RFIC technology and radar IP into a compact evaluation kit. This kit enables researchers around the world to explore and realize millimeter wave imaging and sensing applications without the cost and overhead that would otherwise be associated with developing the required hardware.",
             link: "https://www.minicircuits.com/products/researcheducation.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image90.png"
           },
         ]
       },
@@ -854,7 +854,7 @@ export const CATALOG = [
             description: "High performance RF & Microwave Energy solution engineered for demanding RF, microwave, and aerospace applications.",
             applications: "Aerospace, Defense, Radar, Telecommunications, Space",
             link: "https://www.minicircuits.com",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image91.png"
           },
         ]
       },
@@ -870,7 +870,7 @@ export const CATALOG = [
             description: "Mil Spec or Equivalent Qualification with EEE-INST-002 Compliant Workflows\nMini-Circuits has a long history of space-level screening and testing servicing some of the earliest government space missions all the way through to the modern independent enterprises. Most of our catalog and custom components can be upscreened in-house for Mil Standard or equivalent in as little as 90 days. Our in-house screening reduces costs and accelerates your project timeline.",
             applications: "Standard Capabilities: Burn-in, thermal shock, vibration*, radiographic inspection*, destructive physical analysis (DPA)*, mechanical shock, hermeticity, outgassing requirements, residual gas analysis, and hydrogen poisoning susceptibility with accompanying acceptance test procedure (ATP).\n\nIn addition to our standard capabilities, Mini-Circuits' space specialists on the applications support team can develop custom solutions for nearly any project.",
             link: "https://www.minicircuits.com/ads/space-upscreening.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image65.png"
           },
         ]
       },
@@ -886,7 +886,7 @@ export const CATALOG = [
             description: "F/Microwave Switches\nSPDT, DPDT (transfer), SP4T, SP6T, SP8T, and SP10T mechanical and solid state RF switches for 50-ohm and 75-ohm systems spanning DC to 50 GHz!",
             applications: "Ultra-reliable mechanical switches capable of extended life up to 10-million switch cycles!\nSolid-state switches with extremely fast switching times\nUSB, Ethernet, and SPI control interfaces available\nCoaxial and surface mount formats available",
             link: "https://www.minicircuits.com/WebStore/Switches.html",
-            image: "/images/rf-switch.jpg"
+            image: "/images/products/image66.png"
           },
         ]
       },
@@ -902,7 +902,7 @@ export const CATALOG = [
             description: "RF Frequency Synthesizers\nMini-Circuits offers a broad selection of RF/microwave frequency synthesizers to meet the needs of engineers for a wide range of applications up to 7800 MHz",
             applications: "Surface mount and coaxial formats\nFixed frequency to broadband\nLow phase noise and spurious\nAffordable custom designs available",
             link: "https://www.minicircuits.com/WebStore/Synthesizers.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image67.png"
           },
         ]
       },
@@ -918,7 +918,7 @@ export const CATALOG = [
             description: "RF Terminations\nReliable dissipation of signal power for 50-Ohm and 75-Ohm systems from DC to 110 GHz. Choose from a wide variety of male and female connector types including 1.85mm, 2.4mm, 2.92mm, SMA, SMP, N-Type, and DIN 1.0/2.3.",
             applications: "Up to 250W\nExcellent return loss\nRugged construction",
             link: "https://www.minicircuits.com/WebStore/terminations.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image68.png"
           },
         ]
       },
@@ -934,7 +934,7 @@ export const CATALOG = [
             description: "RF Test Solutions\nSoftware-controlled building blocks in-stock for automation of lab and production test environments",
             applications: "Modular Test Systems\nMechanical Switch Systems\nSolid State Switch Systems\nProgrammable Attenuators\nMesh Network Test Systems\nInstrumentation Amplifiers\nNxM Switch Matrices 50\u03a9/75\u03a9\nSignal Generation & Measurement\nHigh Power Test Systems\nPanel Mounted Structures\nSignal Distribution Systems\nCustom Designs 50\u03a9/75\u03a9",
             link: "https://www.minicircuits.com/products/PortableTestEquipment.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image69.png"
           },
         ]
       },
@@ -950,7 +950,7 @@ export const CATALOG = [
             description: "RF Instrumentation Amplifiers\nPrecision Amplifier Systems for a Wide Range of Test and Measurement Applications.\nMini-Circuits\u2019 extensive selection of amplifiers in stock allows us to build integrated amplifier systems for specific test applications. These systems range in complexity from simple multi-channel amplifier racks to designs with additional functions such as gain control, filtering and more.",
             applications: "2-Channel Amplifier, 2U, 3.5 mm\n12-Channel Amplifier System\n4-Channel Variable Gain Amplifier",
             link: "https://www.minicircuits.com/WebStore/RF-Instrumentation-Amplifiers.html",
-            image: "/images/gan-power-chip.jpg"
+            image: "/images/products/image70.png"
           },
         ]
       },
@@ -966,7 +966,7 @@ export const CATALOG = [
             description: "High performance Precision Connector Gauges solution engineered for demanding RF, microwave, and aerospace applications.",
             applications: "Aerospace, Defense, Radar, Telecommunications, Space",
             link: "https://www.minicircuits.com",
-            image: "/images/rf-waveguide.jpg"
+            image: "/images/products/image71.png"
           },
         ]
       },
@@ -982,7 +982,7 @@ export const CATALOG = [
             description: "RF Signal Distribution Systems\nFor High-Volume Test Setups\nFor test systems requiring distribution of signal to many DUTs, Mini-Circuits\u2019 signal distribution systems combine splitter/combiners and directional couplers to expand test signal into multiple channels. Amplifiers can also be incorporated to minimize path loss and manage signal power from input to output.",
             applications: "Wide selection of splitter/combiners and directional couplers in stock\nBandwidths up to 65 GHz\nRF input power up to 250W\nRack-mounted, panel-mounted or benchtop structures",
             link: "https://www.minicircuits.com/WebStore/RF-Signal-Distribution-Systems.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image72.png"
           },
         ]
       },
@@ -998,7 +998,7 @@ export const CATALOG = [
             description: "RF Signal Generation & Measurement\nRF Signal Generators, Power Sensors & More\nMini-Circuits offers a wide selection of benchtop signal sources and measurement instruments for RF test and measurement applications. Comprising synthesized signal generators, power sensors and a 2-port vector network analyzer, our product line provides powerful functionality for an exceptional value with industry-leading quality and technical support.",
             applications: "Synthesized signal generators\nPower sensors and frequency counters\nControl products\nUser-friendly GUI and API included",
             link: "https://www.minicircuits.com/WebStore/RF-Signal-Generation-Measurement.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image73.png"
           },
         ]
       },
@@ -1014,7 +1014,7 @@ export const CATALOG = [
             description: "Solid State RF Switch Systems\nFast Switching & High Reliability for RF Test & Measurement\nMini-Circuits offers a wide selection of solid-state RF switches for test and measurement applications, from compact switch modules to complex, rack-mountable switch matrices with integrated attenuation and other functions. Our wealth of components in-stock allows us to configure affordable high-performance systems to customers' unique needs with fast turnaround. Switches feature TTL, SPI and I2C control ports, and our unique daisy-chain interface on some models provides added flexibility to control multiple switches on a single control line to scale your switching configuration as your needs change.",
             applications: "Ultra-high reliability with long switching life\nSwitch transition time as fast as 5 ns\nDaisy-chain configuration simplifies control systems\nWide selection of switch modules in stock\nIntegrated rack-mount systems with fast turnaround",
             link: "https://www.minicircuits.com/WebStore/RF-Solid-State-Switch-Systems.html",
-            image: "/images/rf-switch.jpg"
+            image: "/images/products/image74.png"
           },
         ]
       },
@@ -1030,7 +1030,7 @@ export const CATALOG = [
             description: "RF Connector Wrenches\nFor SMA, N-Type, 3.5mm, 2.92mm, 2.4mm, 1.85mm & 1.0mm Connectors\nMini-Circuits' TRQ-series of 8 in-lb and 4 in-lb torque calibrated breakover wrenches are the perfect tool for tightening a variety of RF connector types without damaging the connector interface due to over-tightening. Our HT-series of SMA wrench extensions offer added utility in tight spaces and dense connector arrays.",
             applications: "8 in-lb and 4 in-lb calibrated torque wrenches\nSMA wrench extensions for tightening connectors in tight spaces\nOptions for SMA, N-Type, 3.5mm, 2.92mm, 2.4mm, 1.8mm and 1.0mm connector types",
             link: "https://www.minicircuits.com/WebStore/Wrenches.html",
-            image: "/images/rf-waveguide.jpg"
+            image: "/images/products/image75.png"
           },
         ]
       },
@@ -1046,7 +1046,7 @@ export const CATALOG = [
             description: "Custom RF Test Equipment\nIntegrated Test Systems Tailored to Your Requirements\nOur experience in the test space has evolved according to your needs. The diversity of customer requirements for highly customized test solutions has led us to build our business around principles of flexibility, reliability, economy and speed. Our wealth and variety of components in stock allows us to take a building-block approach to developing custom equipment for your unique needs with exceptionally fast turnaround.",
             applications: "Designed and built to your unique test requirements\nAll systems fully characterized during production\nOn-site integration available when needed\nFull GUI and API for programming with your native test software",
             link: "https://www.minicircuits.com/WebStore/RF-Custom-Designs.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image76.png"
           },
         ]
       },
@@ -1062,7 +1062,7 @@ export const CATALOG = [
             description: "RF Transformers and Baluns\nOver 500 transformer and balun models in a wide variety of DC passing and DC isolated configurations with for single-ended and balanced/differential transmission lines from DC to 24000 MHz!",
             applications: "Surface mount and coaxial case styles\nTiny LTCC models as small as 0603\nWideband MMIC baluns up to 24 GHz\n50/75 Ohm matching transformers and matching pads",
             link: "https://www.minicircuits.com/WebStore/Transformers.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image77.png"
           },
         ]
       },
@@ -1078,7 +1078,7 @@ export const CATALOG = [
             description: "RF Equalizers\nVoltage Variable and Fixed Slope Models\nNearly 100 equalizer models for gain flattening and frequency-dependent loss compensation in a wide range of applications from DC to 45 GHz.",
             applications: "Coaxial, surface-mount packages, and bare die\nPrecise attenuation slope control\n50-Ohm and 75-Ohm designs",
             link: "https://www.minicircuits.com/WebStore/equalizers.html",
-            image: "/images/rf-filter.jpg"
+            image: "/images/products/image78.png"
           },
         ]
       },
@@ -1094,7 +1094,7 @@ export const CATALOG = [
             description: "Waveguide bandpass filters  Mini-Circuits feature models with passbands up to 86 GHz with low insertion loss and high stopband rejection.",
             applications: "Aerospace, Defense, Radar, Telecommunications, Space",
             link: "https://www.minicircuits.com",
-            image: "/images/rf-waveguide.jpg"
+            image: "/images/products/image79.png"
           },
         ]
       },
@@ -1126,7 +1126,7 @@ export const CATALOG = [
             description: "1. Frequency coverage from DC to W-band\n2. Application-specific product focus (such as power or linearity)\n3. Variety of power levels along with high PAE and gain performance\n4. Superior thermal management\n5. Small footprint packages",
             applications: "1. Military and commercial radar,\n2. Military and commercial satellite communications,\n3. Infrastructure communication links,\n4. Instrumentation,\n5. Traveling wave tube amplifier (TWTA) replacement.",
             link: "https://www.qorvo.com/products/amplifiers/power-amplifiers",
-            image: "/images/gan-power-chip.jpg"
+            image: "/images/products/image53.png"
           },
         ]
       },
@@ -1142,7 +1142,7 @@ export const CATALOG = [
             description: "1. High efficiency\n2. High linearity\n3. High gain",
             applications: "1. Base station\n2. Defense communications\n3. Electronic warfare (EW) and radar\n4. Optical\n5. Point-to-point radio\n6. VSAT",
             link: "https://www.qorvo.com/products/amplifiers/driver-amplifiers",
-            image: "/images/gan-power-chip.jpg"
+            image: "/images/products/image54.png"
           },
         ]
       },
@@ -1158,7 +1158,7 @@ export const CATALOG = [
             description: "1. Ultra-low noise figure \u2013 as low as 0.4 dB NF\n2. Integrated active biasing for most parts\n3. Integrated on-chip matching for most parts\n4. Available in die or packaged form",
             applications: "1. Automotive\n2. Base station\n3. Cable TV (CATV) / fiber to the home (FTTH)\n4. Defense communications\n5. Optical\n6. Point-to-point (PtP) radio",
             link: "https://www.qorvo.com/products/amplifiers/low-noise-amplifiers",
-            image: "/images/gan-power-chip.jpg"
+            image: "/images/products/image55.png"
           },
         ]
       },
@@ -1174,7 +1174,7 @@ export const CATALOG = [
             description: "1. Integration offers PCB size reduction\n2. High linearity\n3. High efficiency\n4. Same package configuration across 3GPP bands",
             applications: "1. Base station\n2. Distributed antenna systems (DAS)\n3. Repeaters",
             link: "https://www.qorvo.com/products/amplifiers/variable-gain-amplifiers",
-            image: "/images/gan-power-chip.jpg"
+            image: "/images/products/image58.png"
           },
         ]
       },
@@ -1190,7 +1190,7 @@ export const CATALOG = [
             description: "1. Lowest $/dBm commercially available today\n2. Multi-band performance\n3. Advanced digital core simplifying design\n4. Smart integration\n5. System level support for optimized solutions\n6. Proven in volume in fielded radios",
             applications: "1. Military / commercial radar\n2. SATCOM LEO/MEO, mobile GEO\n3. Millimeter wave (mmWave) 5G\n4. Future FR3",
             link: "https://www.qorvo.com/products/active-antenna-systems/beamformers",
-            image: "/images/gan-power-chip.jpg"
+            image: "/images/products/image56.png"
           },
         ]
       },
@@ -1206,7 +1206,7 @@ export const CATALOG = [
             description: "1. High power efficiency\n2. Low noise figure\n3. Front end protection\n4. Suitable for harsh environments",
             applications: "1. Military / commercial radar\n2. Long range communications",
             link: "https://www.qorvo.com/products/active-antenna-systems/front-end-modules",
-            image: "/images/gan-power-chip.jpg"
+            image: "/images/products/image57.png"
           },
         ]
       },
@@ -1222,7 +1222,7 @@ export const CATALOG = [
             description: "1. Protection against high-power incident RF signals\n2. Low flat leakage\n3. Low insertion loss\n4. Passive component that requires no system power\n5. Small footprint SMT packaging",
             applications: "1. Receiver protection for radar systems",
             link: "https://www.qorvo.com/products/passives/limiters",
-            image: "/images/rf-switch.jpg"
+            image: "/images/products/image62.png"
           },
         ]
       },
@@ -1238,7 +1238,7 @@ export const CATALOG = [
             description: "1. High linearity\n2. Low current draw",
             applications: "1. Automotive\n2. Base station\n3. Repeaters\n4. Defense communications\n5. Point-to-point radio",
             link: "https://www.qorvo.com/products/frequency-converters/mixers",
-            image: "/images/rf-mixer.jpg"
+            image: "/images/products/image59.png"
           },
         ]
       },
@@ -1254,7 +1254,7 @@ export const CATALOG = [
             description: "1. High efficiency and power density\n2. Superior gain\n3. Ruggedness and ability to operate over a wide bandwidth\n4. Record-setting reliability that exceeds previous industry standards\n5. Design expertise as a frontrunner in GaN technology",
             applications: "1. Military and civilian radar\n2. Professional and military radio communications\n3. Test instrumentation\n4. Wideband or narrowband amplifiers\n5. Jammers\n6. Base station \u2013 base transceiver station, repeaters, pico cells, macro cell networks",
             link: "https://www.qorvo.com/products/discrete-transistors/gan-hemts",
-            image: "/images/gan-power-chip.jpg"
+            image: "/images/products/image60.png"
           },
         ]
       },
@@ -1270,7 +1270,7 @@ export const CATALOG = [
             description: "1. Ultra-low noise figure \u2013 as low as 0.15 dB NF (min)\n2. Available in die or packaged form",
             applications: "1. Base station\n2. Defense communications\n3. Point-to-point (PtP) radio",
             link: "https://www.qorvo.com/products/discrete-transistors/gaas-phemts",
-            image: "/images/gan-power-chip.jpg"
+            image: "/images/products/image61.png"
           },
         ]
       },
@@ -1302,7 +1302,7 @@ export const CATALOG = [
             description: "Single Layer Chip Capacitors (A Type)\nSingle Layer Chip Capacitors (B Type)\nSingle Layer Chip Capacitors (C Type)\nRectangular SLCS\nBinary Capacitors\nGap Capacitors\nRow Capacitors\nIntegrated Resistor-Capacitor",
             applications: "Aerospace, Defense, Radar, Telecommunications, Space",
             link: "https://us.tecdia.com/",
-            image: "/images/rf-attenuator.jpg"
+            image: "/images/products/image92.png"
           },
         ]
       },
@@ -1318,7 +1318,7 @@ export const CATALOG = [
             description: "High performance Tunable Dielectric Capacitors solution engineered for demanding RF, microwave, and aerospace applications.",
             applications: "Aerospace, Defense, Radar, Telecommunications, Space",
             link: "https://us.tecdia.com",
-            image: "/images/dielectric-3d-lens.jpg"
+            image: "/images/products/image93.png"
           },
         ]
       },
@@ -1334,7 +1334,7 @@ export const CATALOG = [
             description: "High performance Thin Film Substrates solution engineered for demanding RF, microwave, and aerospace applications.",
             applications: "Diamond Scribe Tool",
             link: "https://us.tecdia.com",
-            image: "/images/rf-attenuator.jpg"
+            image: "/images/products/image94.png"
           },
         ]
       },
@@ -1350,7 +1350,7 @@ export const CATALOG = [
             description: "Arque Dispensing Nozzles\nSuper Long Tipped Nozzles\nRuby Nozzle\nSpecial Application Nozzles\nPrecision nozzle for 3D printing (kaika)",
             applications: "Ejector Needles\nProbe Needle",
             link: "https://us.tecdia.com",
-            image: "/images/rf-attenuator.jpg"
+            image: "/images/products/image94.png"
           },
         ]
       },
@@ -1366,7 +1366,7 @@ export const CATALOG = [
             description: "High performance Diamond Products solution engineered for demanding RF, microwave, and aerospace applications.",
             applications: "Aerospace, Defense, Radar, Telecommunications, Space",
             link: "https://us.tecdia.com",
-            image: "/images/rf-attenuator.jpg"
+            image: "/images/products/image94.png"
           },
         ]
       },
@@ -1382,7 +1382,7 @@ export const CATALOG = [
             description: "High performance Handy Wafer Scriber Kit solution engineered for demanding RF, microwave, and aerospace applications.",
             applications: "Aerospace, Defense, Radar, Telecommunications, Space",
             link: "https://us.tecdia.com",
-            image: "/images/rf-attenuator.jpg"
+            image: "/images/products/image94.png"
           },
         ]
       },
@@ -1398,7 +1398,7 @@ export const CATALOG = [
             description: "High performance Diamond Pick Up Tools solution engineered for demanding RF, microwave, and aerospace applications.",
             applications: "Aerospace, Defense, Radar, Telecommunications, Space",
             link: "https://us.tecdia.com",
-            image: "/images/rf-attenuator.jpg"
+            image: "/images/products/image94.png"
           },
         ]
       },
@@ -1462,7 +1462,7 @@ export const CATALOG = [
             description: "Always RF offers a family of passive and quasi-active High Power RF Limiters which operate from HF to Ku Band frequency ranges with power handling capabilities up to +60 dBm. These RF Limiters provide \"Always On\" protection which afford complete protection to sensitive RF receivers, even when the system is turned off.",
             applications: "1. Receiver Protection, Protects LNAs, mixers, and ADCs from damage or compression caused by high RF power.                 2. Common in radar receivers, EW/ESM systems, and wideband monitoring receivers.                                                                          3. Radar Systems, Used at the front end of radar receivers to prevent damage from: \nTransmit leakage, Reflections from nearby targets.                                                                                 4. Electronic Warfare (EW) & SIGINT, \nShields sensitive receivers from strong intentional or unintentional signals.",
             link: "https://www.rfuw-engineering.com/rf-limiters.html",
-            image: "/images/rf-switch.jpg"
+            image: "/images/products/image63.jpeg"
           },
         ]
       },
@@ -1478,7 +1478,7 @@ export const CATALOG = [
             description: "Always RF offers a family of High Power PIN diode based surface mount RF switches which operate HF to Ku Band frequency ranges with power handling capabilities from +50 dBm to +62 dBm. The standard product family comes in SP2T, SP3T, SP4T, SP5T and SP6T configurations.",
             applications: "1. Communication Systems, Antenna switching between transmit and receive paths, \nBand selection in multi-band radios and Redundancy switching for backup transceivers.                                                                   2. Radar Systems, T/R switching between transmitter and receiver, Beamforming networks, Switching between calibration, test, and operational paths.                                            3. Electronic Warfare (EW), SIGINT & ESM, \nRapid selection among multiple antennas, \nThreat monitoring and signal direction finding and Channelized receiver front ends.",
             link: "https://www.rfuw-engineering.com/rf-switches.html",
-            image: "/images/rf-switch.jpg"
+            image: "/images/products/image64.jpeg"
           },
         ]
       },
@@ -1609,21 +1609,66 @@ export const CATALOG = [
     defaultImage: "/images/rf-attenuator.jpg",
     logoImg: "/images/oem-logos/Evans_logo.png",
     logoSvg: "<svg viewBox=\"0 0 200 42\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"2\" y=\"2\" width=\"38\" height=\"38\" rx=\"9\" fill=\"rgba(37,99,235,0.2)\" stroke=\"#3B82F6\" stroke-width=\"1.8\"/><path d=\"M13 20h5m0-8v16m8-16v16m0-8h5\" stroke=\"#60A5FA\" stroke-width=\"2.5\" stroke-linecap=\"round\"/><text x=\"48\" y=\"20\" fill=\"#93C5FD\" font-family=\"'Plus Jakarta Sans', sans-serif\" font-weight=\"800\" font-size=\"10\" letter-spacing=\"1.4\">QUANTIC</text><text x=\"48\" y=\"34\" fill=\"#FFFFFF\" font-family=\"'Plus Jakarta Sans', sans-serif\" font-weight=\"900\" font-size=\"15\" letter-spacing=\"0.8\">EVANS / EULEX</text></svg>",
-    categories: [
+        categories: [
       {
         id: "eulex",
         name: "Eulex",
         description: "RF/High Frequency Ceramic Capacitors",
         products: [
           {
-            id: "eulex-137",
-            name: "Eulex",
+            id: "xg1-series-binary-136",
+            name: "XG1 Series- Binary",
             category: "Eulex",
-            description: "RF/High Frequency Ceramic Capacitors",
-            applications: "Advanced broadband & RF systems, Military & aerospace: radar, satcom & EW, Automotive: mmWave radar, vision sensing & C-V2X",
+            description: "High-Q binary ceramic capacitor for precision frequency tuning in microwave circuits.",
+            applications: "Military & aerospace radar, satcom & EW, mmWave beamforming",
             link: "https://www.evans-group.com/eulex",
-            image: "/images/rf-attenuator.jpg"
+            image: "/images/products/image25.png"
           },
+          {
+            id: "xg2-series-2-terminal-137",
+            name: "XG2 Series - 2 Terminal",
+            category: "Eulex",
+            description: "Ultra-compact two-terminal ceramic capacitor with tight tolerance and high self-resonance.",
+            applications: "Advanced broadband & RF systems, optical transceivers, automotive mmWave",
+            link: "https://www.evans-group.com/eulex",
+            image: "/images/products/image26.png"
+          },
+          {
+            id: "xg3-series-3-terminal-138",
+            name: "XG3 Series - 3 Terminal",
+            category: "Eulex",
+            description: "Three-terminal feedthrough ceramic capacitor engineered for noise suppression.",
+            applications: "Power supply decoupling, high-speed digital and RF signal filtering",
+            link: "https://www.evans-group.com/eulex",
+            image: "/images/products/image27.png"
+          },
+          {
+            id: "xq-series-ultra-high-q-139",
+            name: "XQ Series - Ultra-High Q",
+            category: "Eulex",
+            description: "Ultra-High Q RF capacitor featuring low ESR and exceptional dielectric stability.",
+            applications: "High-power RF amplifiers, matching networks, MRI and defense transceivers",
+            link: "https://www.evans-group.com/eulex",
+            image: "/images/products/image28.png"
+          },
+          {
+            id: "xv-series-vertical-layer-140",
+            name: "XV Series - Vertical Layer",
+            category: "Eulex",
+            description: "Vertical layer ceramic capacitor designed for ultra-broadband bypass and coupling.",
+            applications: "DC blocks, broadband amplifier bias tees, radar RF front-ends",
+            link: "https://www.evans-group.com/eulex",
+            image: "/images/products/image29.png"
+          },
+          {
+            id: "substrates-141",
+            name: "Substrates",
+            category: "Eulex",
+            description: "Precision engineered ceramic substrates with controlled dielectric properties.",
+            applications: "Thin-film hybrid circuits, MCMs, and multi-chip microwave modules",
+            link: "https://www.evans-group.com/eulex",
+            image: "/images/products/image30.png"
+          }
         ]
       },
       {
@@ -1632,14 +1677,77 @@ export const CATALOG = [
         description: "Hybrid Wet Tantalum",
         products: [
           {
-            id: "evans-138",
-            name: "Evans",
+            id: "tdd-series-142",
+            name: "TDD Series",
             category: "Evans",
-            description: "Hybrid Wet Tantalum",
-            applications: "Power Hold-up (MIL-STD-704 / DO-160), Electric Propulsion, Space (routinely tested to NASA EEE INST-002)",
+            description: "High energy density hybrid wet tantalum capacitor for extreme pulse power.",
+            applications: "Radar pulse transmitters, laser drivers, defense electronics",
             link: "https://www.evans-group.com/evans",
-            image: "/images/rf-attenuator.jpg"
+            image: "/images/products/image31.png"
           },
+          {
+            id: "tde-series-143",
+            name: "TDE Series",
+            category: "Evans",
+            description: "Extended range hybrid wet tantalum capacitor with high volumetric efficiency.",
+            applications: "Avionics hold-up, space power systems, airborne surveillance",
+            link: "https://www.evans-group.com/evans",
+            image: "/images/products/image32.png"
+          },
+          {
+            id: "ths3-series-144",
+            name: "THS3 Series",
+            category: "Evans",
+            description: "Hermetically sealed square hybrid tantalum capacitor with ruggedized construction.",
+            applications: "Downhole drilling, aerospace telemetry, missile guidance",
+            link: "https://www.evans-group.com/evans",
+            image: "/images/products/image33.jpeg"
+          },
+          {
+            id: "thq-145",
+            name: "THQ",
+            category: "Evans",
+            description: "High reliability hybrid capacitor providing low ESR and instant energy discharge.",
+            applications: "Phased array radars, EW pods, flight computers",
+            link: "https://www.evans-group.com/evans",
+            image: "/images/products/image34.png"
+          },
+          {
+            id: "thqa2-m2-t2-series-146",
+            name: "THQA2/M2/T2 Series",
+            category: "Evans",
+            description: "Multi-voltage hybrid tantalum capacitor arrays for custom power architectures.",
+            applications: "Electronic countermeasure (ECM), satellite payloads, pulsed RF",
+            link: "https://www.evans-group.com/evans",
+            image: "/images/products/image35.png"
+          },
+          {
+            id: "hycap-series-147",
+            name: "HyCap Series",
+            category: "Evans",
+            description: "Ultra-high capacitance hybrid wet tantalum module for power interruption hold-up.",
+            applications: "MIL-STD-704 hold-up, electric propulsion, mission computer backup",
+            link: "https://www.evans-group.com/evans",
+            image: "/images/products/image36.png"
+          },
+          {
+            id: "capattery-series-148",
+            name: "Capattery Series",
+            category: "Evans",
+            description: "High energy storage capacitor-battery hybrid providing long duration pulses.",
+            applications: "Space propulsion, tactical sensors, distributed energy buffers",
+            link: "https://www.evans-group.com/evans",
+            image: "/images/products/image37.png"
+          },
+          {
+            id: "capacitor-banks-149",
+            name: "Capacitor Banks",
+            category: "Evans",
+            description: "Engineered multi-capacitor banks tailored for megawatt-level pulsed power systems.",
+            applications: "Railguns, Directed Energy Weapons (DEW), high-power radar transmitters",
+            link: "https://www.evans-group.com/evans",
+            image: "/images/products/image38.png"
+          }
         ]
       },
       {
@@ -1648,14 +1756,50 @@ export const CATALOG = [
         description: "Multi-layer Polymer (MLP) Stacked Film",
         products: [
           {
-            id: "paktron-139",
-            name: "Paktron",
+            id: "angstor-150",
+            name: "Angstor",
             category: "Paktron",
-            description: "Multi-layer Polymer (MLP) Stacked Film",
-            applications: "Wide Bandgap Applications, VPX Systems",
+            description: "Ultra-miniature stacked multi-layer polymer film capacitor with high ripple current capability.",
+            applications: "Wide Bandgap GaN/SiC power converters, VPX systems, space computing",
             link: "https://www.evans-group.com/paktron",
-            image: "/images/rf-attenuator.jpg"
+            image: "/images/products/image39.png"
           },
+          {
+            id: "capstick-151",
+            name: "Capstick",
+            category: "Paktron",
+            description: "High-density stacked polymer film capacitor designed for low inductance high-frequency decoupling.",
+            applications: "SMPS power stages, GaN inverters, high-temperature avionics",
+            link: "https://www.evans-group.com/paktron",
+            image: "/images/products/image40.png"
+          },
+          {
+            id: "quencharc-rc-snubber-152",
+            name: "Quencharc RC Snubber",
+            category: "Paktron",
+            description: "Precision integrated RC snubber network for transient voltage suppression and arc suppression.",
+            applications: "Relay contact protection, inductive load switching, motor drives",
+            link: "https://www.evans-group.com/paktron",
+            image: "/images/products/image41.jpeg"
+          },
+          {
+            id: "new-high-voltage-mlp-153",
+            name: "New High Voltage MLP",
+            category: "Paktron",
+            description: "High voltage multi-layer polymer capacitor offering self-healing dielectric properties.",
+            applications: "EV power electronics, defense power distribution, high-voltage converters",
+            link: "https://www.evans-group.com/paktron",
+            image: "/images/products/image42.png"
+          },
+          {
+            id: "surfilm-154",
+            name: "Surfilm",
+            category: "Paktron",
+            description: "Surface-mount multi-layer polymer capacitor with ultra-low ESR and zero piezoelectric noise.",
+            applications: "Audio and precision instrumentation, radar IF processing, space sensors",
+            link: "https://www.evans-group.com/paktron",
+            image: "/images/products/image43.png"
+          }
         ]
       },
       {
@@ -1664,16 +1808,88 @@ export const CATALOG = [
         description: "Multi-layer Ceramic (MLCC) Stacked Film",
         products: [
           {
-            id: "utc-140",
-            name: "UTC",
+            id: "mlcc-low-and-mid-voltage-155",
+            name: "MLCC (Low and Mid Voltage)",
             category: "UTC",
-            description: "Multi-layer Ceramic (MLCC) Stacked Film",
-            applications: "Hi-rel military and defense power electronics",
-            link: "https://www.evans-group.com/paktron",
-            image: "/images/rf-attenuator.jpg"
+            description: "High-reliability multi-layer ceramic capacitors for commercial space and harsh industrial use.",
+            applications: "Satellite electronics, telemetry systems, industrial instrumentation",
+            link: "https://www.evans-group.com/utc",
+            image: "/images/products/image44.png"
           },
+          {
+            id: "smps-156",
+            name: "SMPS",
+            category: "UTC",
+            description: "Switch-mode power supply ceramic capacitor stacks engineered for high ripple current and low ESR.",
+            applications: "High-density DC-DC converters, airborne power supplies, radar modules",
+            link: "https://www.evans-group.com/utc",
+            image: "/images/products/image45.png"
+          },
+          {
+            id: "military-mil-prf-49470-157",
+            name: "Military (MIL-PRF 49470)",
+            category: "UTC",
+            description: "Qualified military-grade ceramic capacitor assemblies certified to MIL-PRF-49470 standard.",
+            applications: "Mission-critical defense, tactical communications, missile electronic units",
+            link: "https://www.evans-group.com/utc",
+            image: "/images/products/image46.png"
+          },
+          {
+            id: "megacap-type-bc-series-158",
+            name: "MegaCap Type (BC Series)",
+            category: "UTC",
+            description: "High capacitance metal-frame ceramic capacitor assembly providing mechanical stress relief.",
+            applications: "Automotive EV inverters, power distribution backplanes, avionics",
+            link: "https://www.evans-group.com/utc",
+            image: "/images/products/image47.png"
+          },
+          {
+            id: "pulse-energy-159",
+            name: "Pulse Energy",
+            category: "UTC",
+            description: "Specialized ceramic capacitors optimized for pulsed power discharge and laser systems.",
+            applications: "Detonation systems, pulsed lasers, high-intensity strobe circuits",
+            link: "https://www.evans-group.com/utc",
+            image: "/images/products/image48.png"
+          },
+          {
+            id: "radial-leaded-160",
+            name: "Radial Leaded",
+            category: "UTC",
+            description: "Conformal coated radial leaded ceramic capacitors designed for through-hole PCB assembly.",
+            applications: "Harsh vibration environments, defense legacy systems, oil and gas sensors",
+            link: "https://www.evans-group.com/utc",
+            image: "/images/products/image49.png"
+          },
+          {
+            id: "discoidal-161",
+            name: "Discoidal",
+            category: "UTC",
+            description: "Circular discoidal feedthrough capacitors providing low inductance EMI suppression up to microwave frequencies.",
+            applications: "EMI/RFI filter connectors, hermetic feedthroughs, radar chassis shielding",
+            link: "https://www.evans-group.com/utc",
+            image: "/images/products/image50.png"
+          },
+          {
+            id: "planar-arrays-162",
+            name: "Planar Arrays",
+            category: "UTC",
+            description: "Multi-pin ceramic planar capacitor arrays tailored for circular and D-sub filter connectors.",
+            applications: "MIL-DTL-38999 connectors, avionics data buses, secure communications",
+            link: "https://www.evans-group.com/utc",
+            image: "/images/products/image51.png"
+          },
+          {
+            id: "safety-caps-163",
+            name: "Safety Caps",
+            category: "UTC",
+            description: "Class X and Y certified AC safety capacitors engineered for line-to-line and line-to-ground protection.",
+            applications: "Primary AC power line filtering, aerospace ground power units, medical devices",
+            link: "https://www.evans-group.com/utc",
+            image: "/images/products/image52.png"
+          }
         ]
-      },
+      }
     ]
   },
   {
@@ -1702,7 +1918,7 @@ export const CATALOG = [
             description: "10 \u03a9/sq thin-film embedded resistor copper foil on \u00bd oz (18 \u00b5m) copper. High reliability resistive conductor material for PCB integration.",
             applications: "Embedded resistors in RF/microwave/5G PCBs, aerospace, defense, automotive, industrial.",
             link: "https://quanticohmega.com/ohmegaply/",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
           {
             id: "ohmegaply-rcm-0-5a25pt-40",
@@ -1711,7 +1927,7 @@ export const CATALOG = [
             description: "25 \u03a9/sq thin-film embedded resistor foil on \u00bd oz copper. Ideal for standard embedded resistor designs.",
             applications: "PCB boards needing tight resistor integration and improved signal integrity.",
             link: "https://quanticohmega.com/ohmegaply/",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
           {
             id: "ohmegaply-rcm-0-5a40pt-41",
@@ -1720,7 +1936,7 @@ export const CATALOG = [
             description: "40 \u03a9/sq embedded resistor conductor copper foil for moderate resistance applications.",
             applications: "High frequency/medium-power embedded resistive networks.",
             link: "https://quanticohmega.com/ohmegaply/",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
           {
             id: "ohmegaply-rcm-0-5a50pt-42",
@@ -1729,7 +1945,7 @@ export const CATALOG = [
             description: "50 \u03a9/sq embedded resistive foil with predictable sheet resistivity.",
             applications: "Broadband embedded resistor solutions for RF & high-speed boards.",
             link: "https://quanticohmega.com/ohmegaply/",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
           {
             id: "ohmegaply-rcm-0-5a100pt-43",
@@ -1738,7 +1954,7 @@ export const CATALOG = [
             description: "100 \u03a9/sq resistive conductor material on \u00bd oz copper.",
             applications: "High-density resistor embedding, signal termination layers.",
             link: "https://quanticohmega.com/ohmegaply/",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
           {
             id: "ohmegaply-rcm-0-5a250pt-44",
@@ -1747,7 +1963,7 @@ export const CATALOG = [
             description: "250 \u03a9/sq high resistivity embedded foil.",
             applications: "Specialized high resistive networks for signal termination and filtering.",
             link: "https://quanticohmega.com/ohmegaply/",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
           {
             id: "ohmegaply-rcm-0-5a377pt-45",
@@ -1756,7 +1972,7 @@ export const CATALOG = [
             description: "377 \u03a9/sq high sheet resistivity material.",
             applications: "Designed for high-frequency and calibration networks where high resistivity is critical.",
             link: "https://quanticohmega.com/ohmegaply/",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
           {
             id: "ohmegaply-rcm-1a10pt-46",
@@ -1765,7 +1981,7 @@ export const CATALOG = [
             description: "10 \u03a9/sq on 1 oz (35 \u00b5m) copper for higher current capacity.",
             applications: "Embedded resistor networks with higher current requirements.",
             link: "https://quanticohmega.com/ohmegaply/",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
           {
             id: "ohmegaply-rcm-1a25pt-47",
@@ -1774,7 +1990,7 @@ export const CATALOG = [
             description: "25 \u03a9/sq on 1 oz copper combining high reliability and standard resistance.",
             applications: "Medium resistance embedded designs in demanding environments.",
             link: "https://quanticohmega.com/ohmegaply/",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
           {
             id: "ohmegaply-rcm-1a50pt-48",
@@ -1783,7 +1999,7 @@ export const CATALOG = [
             description: "50 \u03a9/sq on 1 oz copper for standard embedded resistor solutions.",
             applications: "RF termination networks, high frequency PCBs.",
             link: "https://quanticohmega.com/ohmegaply/",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
           {
             id: "ohmegaply-rcm-1a100pt-49",
@@ -1792,7 +2008,7 @@ export const CATALOG = [
             description: "100 \u03a9/sq on thicker copper for precision resistor applications.",
             applications: "High density embedded resistor layers for advanced PCB designs.",
             link: "https://quanticohmega.com/ohmegaply/",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
         ]
       },
@@ -1808,7 +2024,7 @@ export const CATALOG = [
             description: "25 \u03a9/sq Ticer thin-film resistive copper foil on \u00bd oz (18 \u00b5m) copper, designed for high-frequency response.",
             applications: "Embedded resistor foil for RF/mmWave PCBs.",
             link: "https://quanticohmega.com/tcr/",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
           {
             id: "tcr-50n18p9x-51",
@@ -1817,7 +2033,7 @@ export const CATALOG = [
             description: "50 \u03a9/sq TCR resistive material on \u00bd oz copper for RF/HDI embedded resistors.",
             applications: "High speed digital & RF embedded circuits.",
             link: "https://quanticohmega.com/tcr/",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
           {
             id: "tcr-100n18p9x-52",
@@ -1826,7 +2042,7 @@ export const CATALOG = [
             description: "100 \u03a9/sq TCR resistive foil on \u00bd oz copper.",
             applications: "Signal termination networks in high frequency circuit boards.",
             link: "https://quanticohmega.com/tcr/",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
           {
             id: "tcr-250a18p9x-53",
@@ -1835,7 +2051,7 @@ export const CATALOG = [
             description: "250 \u03a9/sq TCR resistive conductor material on \u00bd oz copper.",
             applications: "Highly resistive embedded networks for specialized PCB functions.",
             link: "https://quanticohmega.com/tcr/",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
           {
             id: "tcr-1ko18p9x-54",
@@ -1844,7 +2060,7 @@ export const CATALOG = [
             description: "1000 \u03a9/sq ultra-high resistivity Ticer embedded foil.",
             applications: "Low-loss, high resistivity networks for precision embedded resistors.",
             link: "https://quanticohmega.com/tcr/",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
         ]
       },
@@ -1860,7 +2076,7 @@ export const CATALOG = [
             description: "25 \u03a9/sq TCR EHF embedded foil with very smooth thin film for lowest loss.",
             applications: "mmWave frequency embedded resistor foils.",
             link: "TCR-EHF\u00ae Embedded Resistor Copper Foil | 5G mmWave PCB",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
           {
             id: "tcr-ehf-50n18p8x-56",
@@ -1869,7 +2085,7 @@ export const CATALOG = [
             description: "50 \u03a9/sq TCR EHF resistive foil optimized for high speed & high frequency.",
             applications: "Embedded resistor applications with minimized insertion loss.",
             link: "TCR-EHF\u00ae Embedded Resistor Copper Foil | 5G mmWave PCB",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
           {
             id: "tcr-ehf-100n18p8x-57",
@@ -1878,7 +2094,7 @@ export const CATALOG = [
             description: "100 \u03a9/sq TCR EHF resistive foil for high precision mmWave embedded networks.",
             applications: "Advanced RF/mmWave PCB designs.",
             link: "TCR-EHF\u00ae Embedded Resistor Copper Foil | 5G mmWave PCB",
-            image: "/images/rf-laminate.jpg"
+            image: "/images/products/image22.png"
           },
         ]
       },
@@ -2037,7 +2253,7 @@ export const CATALOG = [
             description: "High frequency laminate expertise",
             applications: "Base Station Power Amplifiers",
             link: "https://www.nee-intl.com",
-            image: "/images/rf-microwave-pcb.jpg"
+            image: "/images/products/image23.png"
           },
           {
             id: "rf-microwave-pcb-142",
@@ -2046,7 +2262,7 @@ export const CATALOG = [
             description: "Power amplifier heatsink fabrication and attachment",
             applications: "Base Station Large Format Antenna",
             link: "https://www.nee-intl.com",
-            image: "/images/rf-microwave-pcb.jpg"
+            image: "/images/products/image23.png"
           },
           {
             id: "rf-microwave-pcb-143",
@@ -2055,7 +2271,7 @@ export const CATALOG = [
             description: "High performance RF/Microwave PCB solution engineered for demanding RF, microwave, and aerospace applications.",
             applications: "Satellite LNB/LNA circuits",
             link: "https://www.nee-intl.com",
-            image: "/images/rf-microwave-pcb.jpg"
+            image: "/images/products/image24.jpeg"
           },
           {
             id: "rf-microwave-pcb-144",
@@ -2064,7 +2280,7 @@ export const CATALOG = [
             description: "High performance RF/Microwave PCB solution engineered for demanding RF, microwave, and aerospace applications.",
             applications: "High power circuit boards",
             link: "https://www.nee-intl.com",
-            image: "/images/rf-microwave-pcb.jpg"
+            image: "/images/products/image24.jpeg"
           },
         ]
       },
@@ -2095,7 +2311,7 @@ export const CATALOG = [
             description: "RF, Microwave, and mmWave PCB Fabrication Experts",
             applications: "Aerospace, Defense, Radar, Telecommunications, Space",
             link: "https://translinetech.com",
-            image: "/images/rf-microwave-pcb.jpg"
+            image: "/images/products/image24.jpeg"
           },
         ]
       },

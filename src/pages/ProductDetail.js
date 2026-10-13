@@ -54,11 +54,11 @@ export function renderProductDetailPage(params) {
           <!-- Gallery -->
           <div>
             <div style="background:var(--bg-card);border:1px solid var(--border-card);border-radius:var(--radius-xl);overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.5);margin-bottom:var(--space-4);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;padding:var(--space-4);">
-              <img src="${displayImage}" alt="${product.model}" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-md);" />
+              <img src="${displayImage}" alt="${product.model}" style="width:100%;height:100%;object-fit:contain;padding:12px;border-radius:var(--radius-md);" />
             </div>
             <div style="display:flex;gap:10px;">
-              <div style="width:72px;height:72px;border-radius:var(--radius-md);border:1.5px solid var(--logo-blue);overflow:hidden;cursor:pointer;background:rgba(0,0,0,0.4);">
-                <img src="${displayImage}" alt="Thumb" style="width:100%;height:100%;object-fit:cover;" />
+              <div style="width:72px;height:72px;border-radius:var(--radius-md);border:1.5px solid var(--logo-blue);overflow:hidden;cursor:pointer;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
+                <img src="${displayImage}" alt="Thumb" style="width:100%;height:100%;object-fit:contain;padding:4px;" />
               </div>
             </div>
           </div>

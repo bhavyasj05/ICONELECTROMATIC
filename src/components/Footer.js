@@ -6,6 +6,7 @@ import { ContentService } from '../data/ContentService.js';
 
 export function renderFooter() {
   const d = ContentService.getData('footer');
+  const logoSrc = ContentService.resolveImg(d.logoUrl || '/icon-logo-transparent.png');
   const year = new Date().getFullYear();
 
   return `
@@ -16,7 +17,7 @@ export function renderFooter() {
           <!-- Left: Logo, Tagline, Socials -->
           <div class="footer-brand-col">
             <a href="#/" data-route="/" class="footer-logo-link">
-              <img src="/icon-logo-transparent.png" alt="ICON ELECTROMATIC" />
+              <img src="${logoSrc}" alt="ICON ELECTROMATIC" />
             </a>
             <p class="footer-tagline">
               ${d.tagline || 'Delivering advanced RF, Microwave, and High-Rel electronic components from DC to 86 GHz for aerospace, defense, SATCOM, and telecommunications.'}

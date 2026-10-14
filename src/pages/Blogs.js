@@ -6,6 +6,7 @@
  */
 import { CATALOG } from '../data/catalogData.js';
 import { OEM_BLOGS, getBlogDataForOem, getAllArticles, getAllVideos, getOemContentCount } from '../data/blogData.js';
+import { ContentService } from '../data/ContentService.js';
 
 export function renderBlogsPage() {
   const hash = window.location.hash || '';
@@ -123,7 +124,7 @@ function renderAllOemsBlogView() {
                 <!-- Centered Prominent OEM Logo Showcase -->
                 <div class="blogs-oem-card-logo-showcase">
                   <div class="oem-logo-badge-pod" style="--oem-accent:${oem.accentColor};">
-                    ${oem.logoImg ? `<img src="${oem.logoImg}" alt="${oem.name} Official Logo" class="oem-logo-img" loading="eager" />` : oem.logoSvg}
+                    ${oem.logoImg ? `<img src="${ContentService.resolveImg(oem.logoImg)}" alt="${oem.name} Official Logo" class="oem-logo-img" loading="eager" />` : (oem.logoSvg || '')}
                   </div>
                 </div>
 
@@ -156,7 +157,7 @@ function renderAllOemsBlogView() {
             ${allArticles.slice(0, 6).map(art => `
               <div class="blog-article-card" data-article-id="${art.id}">
                 <div class="blog-article-img-wrap">
-                  <img src="${art.image}" alt="${art.title}" class="blog-article-img" loading="lazy" />
+                  <img src="${ContentService.resolveImg(art.image)}" alt="${art.title}" class="blog-article-img" loading="lazy" />
                   <span class="blog-article-cat-pill">${art.category}</span>
                 </div>
                 <div class="blog-article-body">
@@ -299,7 +300,7 @@ function renderSingleOemBlogView(oem, blog, activeTab) {
           <div class="blogs-selected-header" style="border-top:3px solid ${oem.accentColor};margin-bottom:0;">
             <div class="blogs-selected-info">
               <div class="blogs-selected-logo-wrap">
-                ${oem.logoImg ? `<img src="${oem.logoImg}" alt="${oem.name} Official Logo" class="oem-logo-img" loading="eager" />` : oem.logoSvg}
+                ${oem.logoImg ? `<img src="${ContentService.resolveImg(oem.logoImg)}" alt="${oem.name} Official Logo" class="oem-logo-img" loading="eager" />` : (oem.logoSvg || '')}
               </div>
               <div class="blogs-selected-text">
                 <h2>${oem.name}</h2>
@@ -355,7 +356,7 @@ function renderSingleOemBlogView(oem, blog, activeTab) {
               ${articles.map(art => `
                 <div class="blog-article-card" data-article-id="${art.id}">
                   <div class="blog-article-img-wrap">
-                    <img src="${art.image}" alt="${art.title}" class="blog-article-img" loading="lazy" />
+                    <img src="${ContentService.resolveImg(art.image)}" alt="${art.title}" class="blog-article-img" loading="lazy" />
                     <span class="blog-article-cat-pill">${art.category}</span>
                   </div>
                   <div class="blog-article-body">
@@ -597,7 +598,7 @@ export function initBlogsPage() {
           ${article.title}
         </h2>
         <div style="border-radius:12px;overflow:hidden;margin-bottom:20px;max-height:240px;background:#090D16;">
-          <img src="${article.image}" alt="${article.title}" style="width:100%;height:100%;object-fit:cover;" />
+          <img src="${ContentService.resolveImg(article.image)}" alt="${article.title}" style="width:100%;height:100%;object-fit:cover;" />
         </div>
         <div class="article-rich-text">
           ${article.content}

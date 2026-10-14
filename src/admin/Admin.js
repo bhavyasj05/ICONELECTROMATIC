@@ -1,30 +1,32 @@
 import './admin.css';
 import { ContentService } from '../data/ContentService.js';
-import { CATALOG } from '../data/catalogData.js';
+import { ImageStorage } from '../data/ImageStorage.js';
 
 // ─── State ─────────────────────────────────────────────────────────────────
 let isAuthenticated = localStorage.getItem('admin_auth') === 'true';
 let currentTab = 'dashboard';
-let editingProductId = null;
-let partnerEditId = null;
+let currentSubTab = 'fields'; // for pages with subtabs (fields vs cards)
 
 // ─── Sidebar navigation config ──────────────────────────────────────────────
 const NAV = [
   { section: 'OVERVIEW' },
-  { id: 'dashboard',  icon: 'fa-solid fa-gauge',          label: 'Dashboard' },
+  { id: 'dashboard',    icon: 'fa-solid fa-gauge',           label: 'Dashboard' },
   { section: 'PAGES' },
-  { id: 'home',       icon: 'fa-solid fa-house',           label: 'Home Page' },
-  { id: 'about',      icon: 'fa-solid fa-building',        label: 'About Us' },
-  { id: 'services',   icon: 'fa-solid fa-cog',             label: 'Services' },
-  { id: 'contact',    icon: 'fa-solid fa-phone',           label: 'Contact' },
+  { id: 'home',         icon: 'fa-solid fa-house',           label: 'Home Page' },
+  { id: 'about',        icon: 'fa-solid fa-building',        label: 'About Us' },
+  { id: 'services',     icon: 'fa-solid fa-gear',            label: 'Services' },
+  { id: 'projects',     icon: 'fa-solid fa-diagram-project', label: 'Projects' },
+  { id: 'gallery',      icon: 'fa-solid fa-images',          label: 'Gallery' },
+  { id: 'testimonials', icon: 'fa-solid fa-comments',        label: 'Testimonials' },
+  { id: 'contact',      icon: 'fa-solid fa-phone',           label: 'Contact' },
   { section: 'CONTENT' },
-  { id: 'products',   icon: 'fa-solid fa-microchip',       label: 'Products / OEMs' },
-  { id: 'partners',   icon: 'fa-solid fa-handshake',       label: 'Partners' },
-  { id: 'blogs',      icon: 'fa-solid fa-newspaper',       label: 'Blogs' },
+  { id: 'products',     icon: 'fa-solid fa-microchip',       label: 'Products / OEMs' },
+  { id: 'partners',     icon: 'fa-solid fa-handshake',       label: 'Partners' },
+  { id: 'blogs',        icon: 'fa-solid fa-newspaper',       label: 'Blogs' },
   { section: 'GLOBAL' },
-  { id: 'header',     icon: 'fa-solid fa-bars',            label: 'Header & Nav' },
-  { id: 'footer',     icon: 'fa-solid fa-shoe-prints',     label: 'Footer & Contact' },
-  { id: 'seo',        icon: 'fa-solid fa-magnifying-glass',label: 'SEO Settings' },
+  { id: 'header',       icon: 'fa-solid fa-bars',            label: 'Header & Nav' },
+  { id: 'footer',       icon: 'fa-solid fa-shoe-prints',     label: 'Footer & Offices' },
+  { id: 'seo',          icon: 'fa-solid fa-magnifying-glass',label: 'SEO Settings' },
 ];
 
 // ─── Entry Points ────────────────────────────────────────────────────────────
@@ -110,7 +112,7 @@ function renderShell() {
       <aside class="a-sidebar">
         <div class="a-sidebar-brand">
           <h1>ICON Admin</h1>
-          <small>Content Portal</small>
+          <small>Universal CMS Portal</small>
         </div>
         <nav class="a-nav">${sidebarItems}</nav>
       </aside>
@@ -119,14 +121,14 @@ function renderShell() {
         <div class="a-topbar">
           <div class="a-topbar-left">
             <h2>${pageTitle}</h2>
-            <p>Website-mapped CMS · Local demo mode (localStorage)</p>
+            <p>Live CMS with IndexedDB Image Storage &amp; Card Management</p>
           </div>
           <div class="a-topbar-right">
             <a href="#/" class="a-btn a-btn-outline a-btn-sm" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
               <i class="fa-solid fa-globe"></i> View Site
             </a>
-            <button class="a-btn a-btn-outline a-btn-sm" id="a-reset-btn">
-              <i class="fa-solid fa-rotate-left"></i> Reset Section
+            <button class="a-btn a-btn-outline a-btn-sm" id="a-reset-btn" title="Reset this section to authentic default data">
+              <i class="fa-solid fa-rotate-left"></i> Reset Defaults
             </button>
             <button class="a-btn a-btn-danger a-btn-sm" id="a-logout-btn">
               Logout <i class="fa-solid fa-arrow-right-from-bracket"></i>
@@ -136,13 +138,16 @@ function renderShell() {
 
         <div class="a-content">
           <div class="a-notice">
-            <i class="fa-solid fa-flask"></i>
-            <span><strong>Frontend Demo Mode:</strong> Changes are saved to your browser's localStorage. They will reflect on this local site only and are not published to all visitors. Your friend's backend will replace this layer.</span>
+            <i class="fa-solid fa-circle-check"></i>
+            <span><strong>CMS Active:</strong> All changes to text, cards, and uploaded images persist across refreshes via localStorage &amp; IndexedDB and immediately reflect on the public website.</span>
           </div>
           ${renderTabContent()}
         </div>
       </div>
     </div>
+
+    <!-- Universal Modal Container -->
+    <div id="a-modal-container"></div>
   `;
 }
 
@@ -151,8 +156,7 @@ function bindShell() {
   document.querySelectorAll('.a-nav-item[data-tab]').forEach(btn => {
     btn.addEventListener('click', () => {
       currentTab = btn.getAttribute('data-tab');
-      editingProductId = null;
-      partnerEditId = null;
+      currentSubTab = 'fields';
       rerender();
     });
   });
@@ -166,29 +170,15 @@ function bindShell() {
 
   // Reset section
   document.getElementById('a-reset-btn')?.addEventListener('click', () => {
-    if (confirm(`Reset "${currentTab}" to default content? This cannot be undone.`)) {
+    if (confirm(`Reset "${currentTab}" to default authentic content? All custom edits in this section will be replaced with defaults.`)) {
       ContentService.resetData(currentTab);
       rerender();
-      showToast('Section reset to defaults.', 'success');
+      showToast('Section reset to authentic defaults.', 'success');
     }
   });
 
-  // Generic save form
-  const form = document.getElementById('a-page-form');
-  if (form) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const data = {};
-      new FormData(form).forEach((v, k) => { data[k] = v; });
-      ContentService.saveData(currentTab, data);
-      showToast('Changes saved!', 'success');
-    });
-  }
-
-  // Product-specific bindings
-  bindProductTab();
-  // Partner-specific bindings
-  bindPartnerTab();
+  // Bind active tab specific events & image widgets
+  bindTabEvents();
 }
 
 function rerender() {
@@ -206,34 +196,262 @@ function showToast(msg, type = '') {
   const t = document.createElement('div');
   t.id = 'a-toast';
   t.className = `a-toast ${type}`;
-  t.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${msg}`;
+  t.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${msg}`;
   document.body.appendChild(t);
-  setTimeout(() => t.remove(), 3000);
+  setTimeout(() => t.remove(), 3200);
+}
+
+// ─── Universal Image Upload Widget ───────────────────────────────────────────
+export function renderImageUploadField(fieldName, label, currentValue, ctxText = '') {
+  const resolved = ImageStorage.resolveImageUrl(currentValue);
+  const hasImg = Boolean(currentValue);
+
+  return `
+    <div class="a-field span2 a-image-widget" data-field="${fieldName}">
+      <label class="a-label">${label} <span class="a-label-ctx">${ctxText}</span></label>
+      <div class="a-img-uploader">
+        <div class="a-img-thumb-box" id="thumb-box-${fieldName}">
+          ${hasImg 
+            ? `<img src="${resolved}" class="a-thumb-img" id="thumb-img-${fieldName}" alt="Preview" />` 
+            : `<div class="a-thumb-empty" id="thumb-empty-${fieldName}"><i class="fa-solid fa-image"></i><span>No image</span></div>`}
+        </div>
+        <div class="a-img-actions">
+          <input type="hidden" name="${fieldName}" id="hidden-${fieldName}" value="${currentValue || ''}" />
+          <div class="a-img-btn-row">
+            <label class="a-btn a-btn-sm a-btn-primary a-upload-btn">
+              <i class="fa-solid fa-cloud-arrow-up"></i> <span id="upload-txt-${fieldName}">${hasImg ? 'Replace Image' : 'Upload Image'}</span>
+              <input type="file" accept="image/*" class="a-file-input" data-target="${fieldName}" style="display:none;" />
+            </label>
+            <button type="button" class="a-btn a-btn-sm a-btn-danger a-img-delete-btn" data-target="${fieldName}" id="del-btn-${fieldName}" style="${hasImg ? '' : 'display:none;'}">
+              <i class="fa-solid fa-trash"></i> Delete
+            </button>
+          </div>
+          <div class="a-img-url-row">
+            <input type="text" class="a-input a-input-sm a-img-url-input" data-target="${fieldName}" placeholder="Or paste asset path (/images/...) or URL" value="${currentValue || ''}" />
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function bindImageWidgets(container = document) {
+  // File upload input change
+  container.querySelectorAll('.a-file-input').forEach(input => {
+    input.addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const fieldName = input.getAttribute('data-target');
+      showToast('Saving image to IndexedDB...', '');
+
+      try {
+        const imgId = await ImageStorage.saveImage(file);
+        const resolvedUrl = ImageStorage.resolveImageUrl(imgId);
+
+        // Update hidden input & text input
+        const hiddenInput = container.querySelector(`#hidden-${fieldName}`) || container.querySelector(`input[name="${fieldName}"]`);
+        if (hiddenInput) hiddenInput.value = imgId;
+
+        const urlInput = container.querySelector(`.a-img-url-input[data-target="${fieldName}"]`);
+        if (urlInput) urlInput.value = imgId;
+
+        // Update thumbnail preview
+        const thumbBox = container.querySelector(`#thumb-box-${fieldName}`) || container.querySelector(`.a-image-widget[data-field="${fieldName}"] .a-img-thumb-box`);
+        if (thumbBox) {
+          thumbBox.innerHTML = `<img src="${resolvedUrl}" class="a-thumb-img" alt="Preview" />`;
+        }
+
+        // Show delete button and update button label
+        const delBtn = container.querySelector(`#del-btn-${fieldName}`) || container.querySelector(`.a-img-delete-btn[data-target="${fieldName}"]`);
+        if (delBtn) delBtn.style.display = 'inline-flex';
+
+        const uploadTxt = container.querySelector(`#upload-txt-${fieldName}`);
+        if (uploadTxt) uploadTxt.textContent = 'Replace Image';
+
+        showToast('Image saved securely in IndexedDB!', 'success');
+      } catch (err) {
+        console.error('Image upload failed:', err);
+        alert('Failed to save image. Please check console.');
+      }
+    });
+  });
+
+  // URL input change
+  container.querySelectorAll('.a-img-url-input').forEach(input => {
+    input.addEventListener('input', (e) => {
+      const fieldName = input.getAttribute('data-target');
+      const val = input.value.trim();
+
+      const hiddenInput = container.querySelector(`#hidden-${fieldName}`) || container.querySelector(`input[name="${fieldName}"]`);
+      if (hiddenInput) hiddenInput.value = val;
+
+      const thumbBox = container.querySelector(`#thumb-box-${fieldName}`) || container.querySelector(`.a-image-widget[data-field="${fieldName}"] .a-img-thumb-box`);
+      const delBtn = container.querySelector(`#del-btn-${fieldName}`) || container.querySelector(`.a-img-delete-btn[data-target="${fieldName}"]`);
+      const uploadTxt = container.querySelector(`#upload-txt-${fieldName}`);
+
+      if (val) {
+        const resolved = ImageStorage.resolveImageUrl(val);
+        if (thumbBox) thumbBox.innerHTML = `<img src="${resolved}" class="a-thumb-img" alt="Preview" onerror="this.parentElement.innerHTML='<div class=\\'a-thumb-empty\\'><i class=\\'fa-solid fa-triangle-exclamation\\'></i><span>Invalid</span></div>'" />`;
+        if (delBtn) delBtn.style.display = 'inline-flex';
+        if (uploadTxt) uploadTxt.textContent = 'Replace Image';
+      } else {
+        if (thumbBox) thumbBox.innerHTML = `<div class="a-thumb-empty"><i class="fa-solid fa-image"></i><span>No image</span></div>`;
+        if (delBtn) delBtn.style.display = 'none';
+        if (uploadTxt) uploadTxt.textContent = 'Upload Image';
+      }
+    });
+  });
+
+  // Delete image button
+  container.querySelectorAll('.a-img-delete-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const fieldName = btn.getAttribute('data-target');
+      const hiddenInput = container.querySelector(`#hidden-${fieldName}`) || container.querySelector(`input[name="${fieldName}"]`);
+      const currentVal = hiddenInput ? hiddenInput.value : '';
+
+      if (currentVal && currentVal.startsWith('idb:')) {
+        await ImageStorage.deleteImage(currentVal);
+      }
+
+      if (hiddenInput) hiddenInput.value = '';
+
+      const urlInput = container.querySelector(`.a-img-url-input[data-target="${fieldName}"]`);
+      if (urlInput) urlInput.value = '';
+
+      const thumbBox = container.querySelector(`#thumb-box-${fieldName}`) || container.querySelector(`.a-image-widget[data-field="${fieldName}"] .a-img-thumb-box`);
+      if (thumbBox) {
+        thumbBox.innerHTML = `<div class="a-thumb-empty"><i class="fa-solid fa-image"></i><span>No image</span></div>`;
+      }
+
+      btn.style.display = 'none';
+      const uploadTxt = container.querySelector(`#upload-txt-${fieldName}`);
+      if (uploadTxt) uploadTxt.textContent = 'Upload Image';
+
+      showToast('Image removed.', '');
+    });
+  });
+}
+
+// ─── Modal Dialog Helper ─────────────────────────────────────────────────────
+function openModal(title, formHtml, onSave) {
+  const container = document.getElementById('a-modal-container');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="a-modal-backdrop" id="a-modal-backdrop">
+      <div class="a-modal">
+        <div class="a-modal-header">
+          <h3>${title}</h3>
+          <button type="button" class="a-modal-close" id="a-modal-close-btn">&times;</button>
+        </div>
+        <form id="a-modal-form">
+          <div class="a-modal-body">
+            ${formHtml}
+          </div>
+          <div class="a-modal-footer">
+            <button type="button" class="a-btn a-btn-outline" id="a-modal-cancel-btn">Cancel</button>
+            <button type="submit" class="a-btn a-btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Card</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+
+  bindImageWidgets(container);
+
+  const closeModal = () => { container.innerHTML = ''; };
+
+  document.getElementById('a-modal-close-btn')?.addEventListener('click', closeModal);
+  document.getElementById('a-modal-cancel-btn')?.addEventListener('click', closeModal);
+  document.getElementById('a-modal-backdrop')?.addEventListener('click', (e) => {
+    if (e.target.id === 'a-modal-backdrop') closeModal();
+  });
+
+  document.getElementById('a-modal-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const data = {};
+    fd.forEach((v, k) => { data[k] = v; });
+    onSave(data);
+    closeModal();
+    rerender();
+    showToast('Card saved successfully!', 'success');
+  });
+}
+
+// ─── Card Reordering & Action Handlers ───────────────────────────────────────
+function reorderArray(arr, fromIdx, toIdx) {
+  if (toIdx < 0 || toIdx >= arr.length) return arr;
+  const clone = [...arr];
+  const [item] = clone.splice(fromIdx, 1);
+  clone.splice(toIdx, 0, item);
+  return clone;
 }
 
 // ─── Tab Content Router ──────────────────────────────────────────────────────
 function renderTabContent() {
   switch (currentTab) {
-    case 'dashboard':  return renderDashboard();
-    case 'home':       return renderPageEditor('home');
-    case 'about':      return renderPageEditor('about');
-    case 'services':   return renderPageEditor('services');
-    case 'contact':    return renderPageEditor('contact');
-    case 'header':     return renderPageEditor('header');
-    case 'footer':     return renderPageEditor('footer');
-    case 'seo':        return renderPageEditor('seo');
-    case 'products':   return renderProductsTab();
-    case 'partners':   return renderPartnersTab();
-    case 'blogs':      return renderBlogsTab();
-    default:           return `<p>Section not yet implemented.</p>`;
+    case 'dashboard':    return renderDashboard();
+    case 'home':         return renderHomePageEditor();
+    case 'about':        return renderAboutPageEditor();
+    case 'services':     return renderServicesPageEditor();
+    case 'projects':     return renderProjectsPageEditor();
+    case 'gallery':      return renderGalleryPageEditor();
+    case 'testimonials': return renderTestimonialsPageEditor();
+    case 'contact':      return renderContactPageEditor();
+    case 'header':       return renderHeaderPageEditor();
+    case 'footer':       return renderFooterPageEditor();
+    case 'seo':          return renderSeoPageEditor();
+    case 'products':     return renderProductsTab();
+    case 'partners':     return renderPartnersTab();
+    case 'blogs':        return renderBlogsTab();
+    default:             return `<p>Section not yet implemented.</p>`;
+  }
+}
+
+function bindTabEvents() {
+  // Bind image widgets in content
+  bindImageWidgets(document.querySelector('.a-content'));
+
+  // Generic page form submission
+  const genericForm = document.getElementById('a-page-form');
+  if (genericForm) {
+    genericForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fd = new FormData(genericForm);
+      const existing = ContentService.getData(currentTab) || {};
+      const updated = { ...existing };
+      fd.forEach((v, k) => { updated[k] = v; });
+      ContentService.saveData(currentTab, updated);
+      showToast('Page sections saved successfully!', 'success');
+      rerender();
+    });
+  }
+
+  // Bind specific tabs
+  switch (currentTab) {
+    case 'home':         bindHomeTabEvents(); break;
+    case 'about':        bindAboutTabEvents(); break;
+    case 'services':     bindServicesTabEvents(); break;
+    case 'projects':     bindProjectsTabEvents(); break;
+    case 'gallery':      bindGalleryTabEvents(); break;
+    case 'testimonials': bindTestimonialsTabEvents(); break;
+    case 'contact':      bindContactTabEvents(); break;
+    case 'products':     bindProductsTabEvents(); break;
+    case 'partners':     bindPartnersTabEvents(); break;
+    case 'blogs':        bindBlogsTabEvents(); break;
   }
 }
 
 // ─── Dashboard ───────────────────────────────────────────────────────────────
 function renderDashboard() {
-  const products = ContentService.getData('products');
-  const partners = ContentService.getData('partners');
-  const blogs = ContentService.getData('blogs');
+  const products = ContentService.getData('products') || [];
+  const partners = ContentService.getData('partners') || [];
+  const blogs = ContentService.getData('blogs') || [];
+  const projects = ContentService.getData('projects')?.items || [];
+  const gallery = ContentService.getData('gallery')?.items || [];
+  const testimonials = ContentService.getData('testimonials')?.items || [];
 
   return `
     <div class="a-stats-row">
@@ -243,36 +461,50 @@ function renderDashboard() {
       </div>
       <div class="a-stat-card red">
         <h3>${partners.length}</h3>
-        <p>Partners</p>
+        <p>Technology Partners</p>
       </div>
       <div class="a-stat-card">
-        <h3>${blogs.length}</h3>
-        <p>Blog Entries</p>
+        <h3>${projects.length}</h3>
+        <p>Featured Projects</p>
       </div>
       <div class="a-stat-card red">
-        <h3>7</h3>
-        <p>Editable Pages</p>
+        <h3>${testimonials.length}</h3>
+        <p>Testimonials</p>
+      </div>
+      <div class="a-stat-card">
+        <h3>${gallery.length}</h3>
+        <p>Gallery Photos</p>
+      </div>
+      <div class="a-stat-card red">
+        <h3>${blogs.length}</h3>
+        <p>Blog Entries</p>
       </div>
     </div>
 
     <div class="a-card">
       <div class="a-card-header">
-        <div><h3>Website Sections Overview</h3><p>All sections mapped from actual source code</p></div>
+        <div>
+          <h3>Full Website Content &amp; Card Architecture</h3>
+          <p>Every image, card, and section across the entire website is editable, reorderable, and saved locally</p>
+        </div>
       </div>
       <div class="a-table-wrap">
         <table class="a-table">
-          <thead><tr><th>Section</th><th>Status</th><th>Fields</th></tr></thead>
+          <thead><tr><th>Section</th><th>Image Upload</th><th>Card CRUD &amp; Reorder</th><th>Status</th></tr></thead>
           <tbody>
-            <tr><td>Home Page – Hero & Stats</td><td><span class="a-badge a-badge-green">Connected</span></td><td>Title, Subtitle, CTAs, Stats (×4), Capabilities (×4)</td></tr>
-            <tr><td>About Us Page</td><td><span class="a-badge a-badge-green">Connected</span></td><td>Hero, Lead, Badges, Description</td></tr>
-            <tr><td>Services Page</td><td><span class="a-badge a-badge-green">Connected</span></td><td>Hero, 4 Services with titles & descriptions</td></tr>
-            <tr><td>Contact Page</td><td><span class="a-badge a-badge-green">Connected</span></td><td>3 Office addresses, phones, emails</td></tr>
-            <tr><td>Header & Navigation</td><td><span class="a-badge a-badge-green">Connected</span></td><td>Logo, all nav labels, CTA button</td></tr>
-            <tr><td>Footer</td><td><span class="a-badge a-badge-green">Connected</span></td><td>Tagline, 3 offices, socials, copyright</td></tr>
-            <tr><td>SEO Settings</td><td><span class="a-badge a-badge-blue">Editor Ready</span></td><td>Meta title, description, keywords, OG tags</td></tr>
-            <tr><td>Products / OEMs</td><td><span class="a-badge a-badge-green">Full CRUD</span></td><td>Add, Edit, Delete · Name, specialty, description, logo</td></tr>
-            <tr><td>Partners</td><td><span class="a-badge a-badge-green">Full CRUD</span></td><td>Add, Edit, Delete · Name, domain, description, logo</td></tr>
-            <tr><td>Blogs</td><td><span class="a-badge a-badge-blue">View Only</span></td><td>Seeded from real blogData.js</td></tr>
+            <tr><td><strong>Home Page</strong></td><td><i class="fa-solid fa-check" style="color:var(--a-success);"></i> Background video/img</td><td>Hero Stats &amp; Core Capabilities cards</td><td><span class="a-badge a-badge-green">Full CRUD</span></td></tr>
+            <tr><td><strong>About Us</strong></td><td><i class="fa-solid fa-check" style="color:var(--a-success);"></i> Infographic &amp; Card photos</td><td>Badges, Stats, Milestones, Domains, Pillars, Why Us</td><td><span class="a-badge a-badge-green">Full CRUD</span></td></tr>
+            <tr><td><strong>Services</strong></td><td><i class="fa-solid fa-check" style="color:var(--a-success);"></i> Multi-image sliders</td><td>4 Service Pillars with photo carousels &amp; tags</td><td><span class="a-badge a-badge-green">Full CRUD</span></td></tr>
+            <tr><td><strong>Projects</strong></td><td><i class="fa-solid fa-check" style="color:var(--a-success);"></i> Project covers</td><td>Defense &amp; Space engineering project cards</td><td><span class="a-badge a-badge-green">Full CRUD</span></td></tr>
+            <tr><td><strong>Gallery</strong></td><td><i class="fa-solid fa-check" style="color:var(--a-success);"></i> Hardware photos</td><td>Component &amp; hardware gallery cards</td><td><span class="a-badge a-badge-green">Full CRUD</span></td></tr>
+            <tr><td><strong>Testimonials</strong></td><td><i class="fa-solid fa-check" style="color:var(--a-success);"></i> Client avatars</td><td>Scientist &amp; Engineer testimonial cards</td><td><span class="a-badge a-badge-green">Full CRUD</span></td></tr>
+            <tr><td><strong>Products / OEMs</strong></td><td><i class="fa-solid fa-check" style="color:var(--a-success);"></i> OEM Logos</td><td>All 15 global manufacturers with logo upload</td><td><span class="a-badge a-badge-green">Full CRUD</span></td></tr>
+            <tr><td><strong>Partners</strong></td><td><i class="fa-solid fa-check" style="color:var(--a-success);"></i> Partner Logos</td><td>All 13 partners in running ticker &amp; static grid</td><td><span class="a-badge a-badge-green">Full CRUD</span></td></tr>
+            <tr><td><strong>Blogs</strong></td><td><i class="fa-solid fa-check" style="color:var(--a-success);"></i> Article covers</td><td>Technical news, notes, and bulletins</td><td><span class="a-badge a-badge-green">Full CRUD</span></td></tr>
+            <tr><td><strong>Contact &amp; Offices</strong></td><td><i class="fa-solid fa-minus" style="color:#94a3b8;"></i> Text based</td><td>Offices (India, Singapore, USA) &amp; Requirement presets</td><td><span class="a-badge a-badge-green">Connected</span></td></tr>
+            <tr><td><strong>Header &amp; Nav</strong></td><td><i class="fa-solid fa-check" style="color:var(--a-success);"></i> Brand Logo</td><td>Navigation labels, CTA button text &amp; destination</td><td><span class="a-badge a-badge-green">Connected</span></td></tr>
+            <tr><td><strong>Footer</strong></td><td><i class="fa-solid fa-check" style="color:var(--a-success);"></i> Footer Logo</td><td>Tagline, 3 offices, socials, copyright bar</td><td><span class="a-badge a-badge-green">Connected</span></td></tr>
+            <tr><td><strong>SEO Settings</strong></td><td><i class="fa-solid fa-check" style="color:var(--a-success);"></i> OpenGraph image</td><td>Meta titles, descriptions, keywords, social tags</td><td><span class="a-badge a-badge-green">Connected</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -280,375 +512,1762 @@ function renderDashboard() {
   `;
 }
 
-// ─── Generic Page Editor ─────────────────────────────────────────────────────
-const PAGE_SCHEMAS = {
-  home: [
-    { div: 'Hero Section' },
-    { key: 'heroTitle',           label: 'Main Heading',         ctx: 'Home → Hero',        textarea: true },
-    { key: 'heroSubtitle',        label: 'Sub-description',      ctx: 'Home → Hero',        textarea: true },
-    { key: 'ctaExploreText',      label: 'Primary CTA Label',    ctx: 'Home → Hero Button' },
-    { key: 'ctaQuoteText',        label: 'Secondary CTA Label',  ctx: 'Home → Hero Button' },
-    { div: 'Stats Bar (4 figures)' },
-    { key: 'stat1Value',  label: 'Stat 1 Value', ctx: 'e.g. 4,000+' },
-    { key: 'stat1Label',  label: 'Stat 1 Label', ctx: 'e.g. PRODUCTS AVAILABLE' },
-    { key: 'stat2Value',  label: 'Stat 2 Value', ctx: 'e.g. 24+' },
-    { key: 'stat2Label',  label: 'Stat 2 Label', ctx: 'e.g. COMPONENT LINES' },
-    { key: 'stat3Value',  label: 'Stat 3 Value', ctx: 'e.g. 86 GHz' },
-    { key: 'stat3Label',  label: 'Stat 3 Label', ctx: 'e.g. MAX FREQUENCY' },
-    { key: 'stat4Value',  label: 'Stat 4 Value', ctx: 'e.g. 100%' },
-    { key: 'stat4Label',  label: 'Stat 4 Label', ctx: 'e.g. RoHS & ISO 9001' },
-    { div: 'Core Capabilities Section' },
-    { key: 'coreCapabilitiesTitle',    label: 'Section Title',       ctx: 'Home → Core Capabilities' },
-    { key: 'coreCapabilitiesSubtitle', label: 'Section Subtitle',    ctx: 'Home → Core Capabilities' },
-    { key: 'coreCapabilitiesLead',     label: 'Section Description', ctx: 'Home → Core Capabilities', textarea: true },
-    { key: 'cap1Title',  label: 'Capability 1 Title',       ctx: 'e.g. RF & Microwave Active' },
-    { key: 'cap1Desc',   label: 'Capability 1 Description', ctx: 'Home → Capability Card 1',  textarea: true },
-    { key: 'cap2Title',  label: 'Capability 2 Title',       ctx: 'e.g. Passive & Waveguides' },
-    { key: 'cap2Desc',   label: 'Capability 2 Description', ctx: 'Home → Capability Card 2',  textarea: true },
-    { key: 'cap3Title',  label: 'Capability 3 Title',       ctx: 'e.g. Defense & Aerospace' },
-    { key: 'cap3Desc',   label: 'Capability 3 Description', ctx: 'Home → Capability Card 3',  textarea: true },
-    { key: 'cap4Title',  label: 'Capability 4 Title',       ctx: 'e.g. Test & Measurement' },
-    { key: 'cap4Desc',   label: 'Capability 4 Description', ctx: 'Home → Capability Card 4',  textarea: true },
-  ],
-  about: [
-    { div: 'Hero Banner' },
-    { key: 'heroEyebrow', label: 'Eyebrow Tag',   ctx: 'About → Hero' },
-    { key: 'heroTitle',   label: 'Page Title',    ctx: 'About → Hero' },
-    { key: 'heroLead',    label: 'Lead Paragraph',ctx: 'About → Hero', textarea: true },
-    { div: 'Trust Badges' },
-    { key: 'badge1', label: 'Badge 1 Text', ctx: 'About → Highlights Strip' },
-    { key: 'badge2', label: 'Badge 2 Text', ctx: 'About → Highlights Strip' },
-    { key: 'badge3', label: 'Badge 3 Text', ctx: 'About → Highlights Strip' },
-    { div: 'Company Introduction' },
-    { key: 'coreCapabilitiesTitle',    label: 'Section Title',    ctx: 'About → Core Capabilities' },
-    { key: 'coreCapabilitiesSubtitle', label: 'Section Subtitle', ctx: 'About → Core Capabilities' },
-    { key: 'companyDesc', label: 'Company Description', ctx: 'About → Introduction', textarea: true },
-  ],
-  services: [
-    { div: 'Hero Banner' },
-    { key: 'heroEyebrow', label: 'Eyebrow Tag',    ctx: 'Services → Hero' },
-    { key: 'heroTitle',   label: 'Page Title',     ctx: 'Services → Hero' },
-    { key: 'heroLead',    label: 'Lead Paragraph', ctx: 'Services → Hero', textarea: true },
-    { div: 'Service 1 – Global Representation' },
-    { key: 'service1Title',    label: 'Title',    ctx: 'Services → Block 1' },
-    { key: 'service1Subtitle', label: 'Subtitle', ctx: 'Services → Block 1' },
-    { key: 'service1Desc',     label: 'Description', ctx: 'Services → Block 1', textarea: true },
-    { div: 'Service 2 – Government Portals' },
-    { key: 'service2Title',    label: 'Title',    ctx: 'Services → Block 2' },
-    { key: 'service2Subtitle', label: 'Subtitle', ctx: 'Services → Block 2' },
-    { key: 'service2Desc',     label: 'Description', ctx: 'Services → Block 2', textarea: true },
-    { div: 'Service 3 – Bespoke Solutions' },
-    { key: 'service3Title',    label: 'Title',    ctx: 'Services → Block 3' },
-    { key: 'service3Subtitle', label: 'Subtitle', ctx: 'Services → Block 3' },
-    { key: 'service3Desc',     label: 'Description', ctx: 'Services → Block 3', textarea: true },
-    { div: 'Service 4 – Supply Chain' },
-    { key: 'service4Title',    label: 'Title',    ctx: 'Services → Block 4' },
-    { key: 'service4Subtitle', label: 'Subtitle', ctx: 'Services → Block 4' },
-    { key: 'service4Desc',     label: 'Description', ctx: 'Services → Block 4', textarea: true },
-  ],
-  contact: [
-    { div: 'Page Hero' },
-    { key: 'heroTitle', label: 'Page Title', ctx: 'Contact → Hero' },
-    { key: 'heroLead',  label: 'Lead Text',  ctx: 'Contact → Hero', textarea: true },
-    { div: 'India Office' },
-    { key: 'indiaOfficeName', label: 'Office Name',    ctx: 'Contact → India' },
-    { key: 'indiaAddress',    label: 'Full Address',   ctx: 'Contact → India', textarea: true },
-    { key: 'indiaPhone',      label: 'Phone',          ctx: 'Contact → India' },
-    { key: 'indiaEmail',      label: 'Email',          ctx: 'Contact → India' },
-    { div: 'Singapore Office' },
-    { key: 'singaporeOfficeName', label: 'Office Name',  ctx: 'Contact → Singapore' },
-    { key: 'singaporeAddress',    label: 'Full Address',  ctx: 'Contact → Singapore', textarea: true },
-    { key: 'singaporeEmail',      label: 'Email',         ctx: 'Contact → Singapore' },
-    { div: 'USA Office' },
-    { key: 'usaOfficeName', label: 'Office Name',   ctx: 'Contact → USA' },
-    { key: 'usaAddress',    label: 'Full Address',  ctx: 'Contact → USA', textarea: true },
-    { key: 'usaPhone',      label: 'Phone',         ctx: 'Contact → USA' },
-    { key: 'usaEmail',      label: 'Email',         ctx: 'Contact → USA' },
-  ],
-  header: [
-    { div: 'Logo & Branding' },
-    { key: 'logoUrl',    label: 'Logo Image URL', ctx: 'Header → Logo (path or URL)' },
-    { div: 'CTA Button' },
-    { key: 'ctaLabel',   label: 'CTA Button Text', ctx: 'Header → Top-right button' },
-    { key: 'ctaLink',    label: 'CTA Button Link', ctx: 'e.g. /contact' },
-    { div: 'Navigation Labels' },
-    { key: 'navHome',     label: 'Home Label',     ctx: 'Header → Nav' },
-    { key: 'navAbout',    label: 'About Us Label', ctx: 'Header → Nav' },
-    { key: 'navPartners', label: 'Partners Label', ctx: 'Header → Nav' },
-    { key: 'navProducts', label: 'Products Label', ctx: 'Header → Nav' },
-    { key: 'navServices', label: 'Services Label', ctx: 'Header → Nav' },
-    { key: 'navBlogs',    label: 'Blogs Label',    ctx: 'Header → Nav' },
-    { key: 'navContact',  label: 'Contact Label',  ctx: 'Header → Nav' },
-  ],
-  footer: [
-    { div: 'Company Tagline' },
-    { key: 'tagline',       label: 'Company Tagline', ctx: 'Footer → Brand column', textarea: true },
-    { div: 'India Office' },
-    { key: 'indiaOfficeName', label: 'Office Name', ctx: 'Footer → India' },
-    { key: 'indiaAddress',    label: 'Full Address', ctx: 'Footer → India', textarea: true },
-    { key: 'indiaPhone',      label: 'Phone',        ctx: 'Footer → India' },
-    { key: 'indiaEmail',      label: 'Email',        ctx: 'Footer → India' },
-    { div: 'Singapore Office' },
-    { key: 'singaporeOfficeName', label: 'Office Name', ctx: 'Footer → Singapore' },
-    { key: 'singaporeAddress',    label: 'Full Address', ctx: 'Footer → Singapore', textarea: true },
-    { key: 'singaporeEmail',      label: 'Email',        ctx: 'Footer → Singapore' },
-    { div: 'USA Office' },
-    { key: 'usaOfficeName', label: 'Office Name', ctx: 'Footer → USA' },
-    { key: 'usaAddress',    label: 'Full Address', ctx: 'Footer → USA', textarea: true },
-    { key: 'usaPhone',      label: 'Phone',        ctx: 'Footer → USA' },
-    { key: 'usaEmail',      label: 'Email',        ctx: 'Footer → USA' },
-    { div: 'Social Links' },
-    { key: 'linkedinUrl', label: 'LinkedIn URL', ctx: 'Footer → Socials' },
-    { key: 'youtubeUrl',  label: 'YouTube URL',  ctx: 'Footer → Socials' },
-    { div: 'Legal' },
-    { key: 'copyrightText', label: 'Copyright Text', ctx: 'Footer → Bottom bar', textarea: false },
-  ],
-  seo: [
-    { div: 'Page Meta Tags' },
-    { key: 'siteTitle',       label: 'Site Title',              ctx: '<title> tag' },
-    { key: 'metaDescription', label: 'Meta Description',        ctx: 'SEO description', textarea: true },
-    { key: 'metaKeywords',    label: 'Meta Keywords',           ctx: 'Comma-separated' },
-    { div: 'Open Graph (Social Sharing)' },
-    { key: 'ogTitle',         label: 'OG Title',                ctx: 'Facebook / LinkedIn share title' },
-    { key: 'ogDescription',   label: 'OG Description',          ctx: 'Share preview description', textarea: true },
-    { key: 'ogImage',         label: 'OG Image URL',            ctx: 'Social share image path' },
-  ],
-};
-
-function renderPageEditor(pageKey) {
-  const schema = PAGE_SCHEMAS[pageKey];
-  if (!schema) return `<p>No schema defined for <strong>${pageKey}</strong>.</p>`;
-
-  const data = ContentService.getData(pageKey);
-
-  const fields = schema.map(item => {
-    if (item.div) {
-      return `<div class="a-section-divider span2">${item.div}</div>`;
-    }
-    const val = (data[item.key] || '').replace(/"/g, '&quot;');
-    const labelHtml = `<label class="a-label">${item.label} <span class="a-label-ctx">${item.ctx || ''}</span></label>`;
-    const inputHtml = item.textarea
-      ? `<textarea class="a-textarea" name="${item.key}">${data[item.key] || ''}</textarea>`
-      : `<input class="a-input" type="text" name="${item.key}" value="${val}">`;
-    return `<div class="a-field ${item.textarea ? 'span2' : ''}">${labelHtml}${inputHtml}</div>`;
-  }).join('');
+// ─── HOME PAGE EDITOR ────────────────────────────────────────────────────────
+function renderHomePageEditor() {
+  const d = ContentService.getData('home') || {};
+  const stats = d.stats || [];
+  const caps = d.capabilities || [];
 
   return `
-    <form id="a-page-form">
-      <div class="a-card">
-        <div class="a-card-header">
-          <div>
-            <h3>Edit Content</h3>
-            <p>Each field label shows its exact location on the public website</p>
+    <div class="a-subtabs-nav">
+      <button type="button" class="a-subtab-btn ${currentSubTab === 'fields' ? 'active' : ''}" data-subtab="fields"><i class="fa-solid fa-pen-to-square"></i> Hero &amp; Section Texts</button>
+      <button type="button" class="a-subtab-btn ${currentSubTab === 'stats' ? 'active' : ''}" data-subtab="stats"><i class="fa-solid fa-chart-simple"></i> Hero Stats Bar (${stats.length})</button>
+      <button type="button" class="a-subtab-btn ${currentSubTab === 'capabilities' ? 'active' : ''}" data-subtab="capabilities"><i class="fa-solid fa-boxes-stacked"></i> Core Capabilities Cards (${caps.length})</button>
+    </div>
+
+    ${currentSubTab === 'fields' ? `
+      <form id="a-page-form">
+        <div class="a-card">
+          <div class="a-card-header"><div><h3>Hero Banner Section</h3><p>Main high-impact visual &amp; headline</p></div></div>
+          <div class="a-form-grid">
+            <div class="a-field span2"><label class="a-label">Main Heading <span class="a-label-ctx">HTML supported for color accent</span></label>
+              <textarea class="a-textarea" name="heroTitle">${d.heroTitle || ''}</textarea></div>
+            <div class="a-field span2"><label class="a-label">Sub-description</label>
+              <textarea class="a-textarea" name="heroSubtitle">${d.heroSubtitle || ''}</textarea></div>
+            <div class="a-field"><label class="a-label">Hero Video URL / Path</label>
+              <input class="a-input" type="text" name="heroBgVideo" value="${d.heroBgVideo || '/icon-video.mp4'}"></div>
+            ${renderImageUploadField('heroBgImage', 'Hero Poster / Background Image', d.heroBgImage || '', 'Fallback or video poster')}
+            <div class="a-field"><label class="a-label">Primary CTA Label</label>
+              <input class="a-input" type="text" name="ctaExploreText" value="${d.ctaExploreText || 'Explore Products'}"></div>
+            <div class="a-field"><label class="a-label">Primary CTA Link</label>
+              <input class="a-input" type="text" name="ctaExploreLink" value="${d.ctaExploreLink || '/products'}"></div>
+            <div class="a-field"><label class="a-label">Secondary CTA Label</label>
+              <input class="a-input" type="text" name="ctaQuoteText" value="${d.ctaQuoteText || 'Request a Quote'}"></div>
+            <div class="a-field"><label class="a-label">Secondary CTA Link</label>
+              <input class="a-input" type="text" name="ctaQuoteLink" value="${d.ctaQuoteLink || '/contact'}"></div>
           </div>
         </div>
-        <div class="a-form-grid">${fields}</div>
+
+        <div class="a-card">
+          <div class="a-card-header"><div><h3>Section Headers on Home Page</h3><p>Customize section titles &amp; subtitles displayed on the homepage</p></div></div>
+          <div class="a-form-grid">
+            <div class="a-section-divider span2">Core Capabilities Section</div>
+            <div class="a-field"><label class="a-label">Section Tag</label><input class="a-input" name="coreCapabilitiesTitle" value="${d.coreCapabilitiesTitle || 'Core Capabilities'}"></div>
+            <div class="a-field"><label class="a-label">Section Subtitle</label><input class="a-input" name="coreCapabilitiesSubtitle" value="${d.coreCapabilitiesSubtitle || 'Engineered for extreme performance.'}"></div>
+            <div class="a-field span2"><label class="a-label">Section Lead</label><textarea class="a-textarea" name="coreCapabilitiesLead">${d.coreCapabilitiesLead || ''}</textarea></div>
+
+            <div class="a-section-divider span2">Popular Products Section</div>
+            <div class="a-field"><label class="a-label">Title</label><input class="a-input" name="popularTitle" value="${d.popularTitle || 'Popular Products & Components'}"></div>
+            <div class="a-field span2"><label class="a-label">Lead</label><textarea class="a-textarea" name="popularLead">${d.popularLead || ''}</textarea></div>
+
+            <div class="a-section-divider span2">Featured Projects Section</div>
+            <div class="a-field"><label class="a-label">Title</label><input class="a-input" name="projectsTitle" value="${d.projectsTitle || 'Featured Projects'}"></div>
+            <div class="a-field"><label class="a-label">Subtitle</label><input class="a-input" name="projectsSubtitle" value="${d.projectsSubtitle || 'Mission-Ready Hardware Deployments'}"></div>
+            <div class="a-field span2"><label class="a-label">Lead</label><textarea class="a-textarea" name="projectsLead">${d.projectsLead || ''}</textarea></div>
+
+            <div class="a-section-divider span2">Hardware Gallery Section</div>
+            <div class="a-field"><label class="a-label">Title</label><input class="a-input" name="galleryTitle" value="${d.galleryTitle || 'Hardware Gallery'}"></div>
+            <div class="a-field"><label class="a-label">Subtitle</label><input class="a-input" name="gallerySubtitle" value="${d.gallerySubtitle || 'High-Rel Components in Action'}"></div>
+            <div class="a-field span2"><label class="a-label">Lead</label><textarea class="a-textarea" name="galleryLead">${d.galleryLead || ''}</textarea></div>
+
+            <div class="a-section-divider span2">Testimonials Section</div>
+            <div class="a-field"><label class="a-label">Title</label><input class="a-input" name="testimonialsTitle" value="${d.testimonialsTitle || 'Trusted by Industry Leaders'}"></div>
+            <div class="a-field"><label class="a-label">Subtitle</label><input class="a-input" name="testimonialsSubtitle" value="${d.testimonialsSubtitle || 'What Defense, Space & Aerospace Engineers Say'}"></div>
+            <div class="a-field span2"><label class="a-label">Lead</label><textarea class="a-textarea" name="testimonialsLead">${d.testimonialsLead || ''}</textarea></div>
+
+            <div class="a-section-divider span2">Latest Insights / Blogs Section</div>
+            <div class="a-field"><label class="a-label">Title</label><input class="a-input" name="insightsTitle" value="${d.insightsTitle || 'Insights'}"></div>
+            <div class="a-field"><label class="a-label">Subtitle</label><input class="a-input" name="insightsSubtitle" value="${d.insightsSubtitle || 'Latest Blogs'}"></div>
+            <div class="a-field span2"><label class="a-label">Lead</label><textarea class="a-textarea" name="insightsLead">${d.insightsLead || ''}</textarea></div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="submit" class="a-btn a-btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Home Page Content</button>
+        </div>
+      </form>
+    ` : ''}
+
+    ${currentSubTab === 'stats' ? `
+      <div class="a-cards-box">
+        <div class="a-cards-box-header">
+          <div>
+            <h3>Hero Stats Bar Figures</h3>
+            <p>Reorder, edit, or add figures shown in the hero stats banner</p>
+          </div>
+          <button type="button" class="a-btn a-btn-primary a-btn-sm" id="a-add-stat-btn"><i class="fa-solid fa-plus"></i> Add Stat Figure</button>
+        </div>
+        <div class="a-table-wrap">
+          <table class="a-table">
+            <thead><tr><th>Reorder</th><th>Stat Value</th><th>Label</th><th>Actions</th></tr></thead>
+            <tbody>
+              ${stats.map((st, idx) => `
+                <tr>
+                  <td style="width:90px;">
+                    <div class="a-reorder-group">
+                      <button class="a-btn-reorder btn-move-stat" data-dir="up" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''} title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+                      <button class="a-btn-reorder btn-move-stat" data-dir="down" data-idx="${idx}" ${idx === stats.length - 1 ? 'disabled' : ''} title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+                    </div>
+                  </td>
+                  <td><strong style="color:var(--a-red); font-size:1.1rem;">${st.value}</strong></td>
+                  <td>${st.label}</td>
+                  <td>
+                    <button class="a-btn a-btn-outline a-btn-sm btn-edit-stat" data-idx="${idx}"><i class="fa-solid fa-pen"></i> Edit</button>
+                    <button class="a-btn a-btn-danger a-btn-sm btn-del-stat" data-idx="${idx}" style="margin-left:6px;"><i class="fa-solid fa-trash"></i></button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div style="display:flex; justify-content:flex-end; gap:10px;">
-        <button type="button" class="a-btn a-btn-outline" onclick="this.closest('form').reset()">Reset</button>
-        <button type="submit" class="a-btn a-btn-primary" id="a-save-btn">
-          <i class="fa-solid fa-floppy-disk"></i> Save Changes
-        </button>
+    ` : ''}
+
+    ${currentSubTab === 'capabilities' ? `
+      <div class="a-cards-box">
+        <div class="a-cards-box-header">
+          <div>
+            <h3>Core Capabilities Cards</h3>
+            <p>Add, edit, delete, and reorder the capability cards shown on the homepage</p>
+          </div>
+          <button type="button" class="a-btn a-btn-primary a-btn-sm" id="a-add-cap-btn"><i class="fa-solid fa-plus"></i> Add Capability Card</button>
+        </div>
+        <div class="a-table-wrap">
+          <table class="a-table">
+            <thead><tr><th>Reorder</th><th>Icon</th><th>Title</th><th>Description</th><th>Action Link</th><th>Actions</th></tr></thead>
+            <tbody>
+              ${caps.map((cap, idx) => `
+                <tr>
+                  <td style="width:90px;">
+                    <div class="a-reorder-group">
+                      <button class="a-btn-reorder btn-move-cap" data-dir="up" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''}><i class="fa-solid fa-arrow-up"></i></button>
+                      <button class="a-btn-reorder btn-move-cap" data-dir="down" data-idx="${idx}" ${idx === caps.length - 1 ? 'disabled' : ''}><i class="fa-solid fa-arrow-down"></i></button>
+                    </div>
+                  </td>
+                  <td style="font-size:1.2rem; color:var(--a-blue);"><i class="${cap.icon || 'fa-solid fa-microchip'}"></i></td>
+                  <td><strong>${cap.title}</strong></td>
+                  <td style="font-size:0.82rem; color:var(--a-muted); max-width:320px;">${cap.desc}</td>
+                  <td style="font-size:0.8rem;"><code>${cap.linkUrl || '/products'}</code></td>
+                  <td>
+                    <button class="a-btn a-btn-outline a-btn-sm btn-edit-cap" data-idx="${idx}"><i class="fa-solid fa-pen"></i> Edit</button>
+                    <button class="a-btn a-btn-danger a-btn-sm btn-del-cap" data-idx="${idx}" style="margin-left:6px;"><i class="fa-solid fa-trash"></i></button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </form>
+    ` : ''}
   `;
 }
 
-// ─── Products Tab ────────────────────────────────────────────────────────────
-function renderProductsTab() {
-  const products = ContentService.getData('products');
-  const editing = editingProductId ? products.find(p => p.id === editingProductId) : null;
+function bindHomeTabEvents() {
+  // Subtabs switcher
+  document.querySelectorAll('.a-subtab-btn[data-subtab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentSubTab = btn.getAttribute('data-subtab');
+      rerender();
+    });
+  });
 
-  const rows = products.map(p => `
-    <tr>
-      <td>
-        ${p.logoImg ? `<img src="${p.logoImg}" class="a-img-preview" alt="${p.name}">` : '<span style="color:#94a3b8; font-size:0.75rem;">No logo</span>'}
-      </td>
-      <td><strong>${p.name}</strong></td>
-      <td style="color:var(--a-muted); font-size:0.8rem;">${p.specialty || p.category || '—'}</td>
-      <td>
-        <button class="a-btn a-btn-outline a-btn-sm prod-edit-btn" data-id="${p.id}" style="margin-right:6px;">
-          <i class="fa-solid fa-pen"></i> Edit
-        </button>
-        <button class="a-btn a-btn-danger a-btn-sm prod-del-btn" data-id="${p.id}">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </td>
-    </tr>
-  `).join('');
+  const d = ContentService.getData('home') || {};
 
-  const formTitle = editing ? `Editing: ${editing.name}` : 'Add New OEM / Product';
+  // Stats Card management
+  document.getElementById('a-add-stat-btn')?.addEventListener('click', () => {
+    openModal('Add Hero Stat Figure', `
+      <div class="a-field"><label class="a-label">Stat Value (e.g. 4,000+)</label><input class="a-input" name="value" required /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Label (e.g. PRODUCTS AVAILABLE)</label><input class="a-input" name="label" required /></div>
+    `, (data) => {
+      const stats = d.stats || [];
+      stats.push({ id: 'stat-' + Date.now(), value: data.value, label: data.label });
+      d.stats = stats;
+      ContentService.saveData('home', d);
+    });
+  });
+
+  document.querySelectorAll('.btn-edit-stat').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const st = d.stats[idx];
+      openModal('Edit Hero Stat Figure', `
+        <div class="a-field"><label class="a-label">Stat Value</label><input class="a-input" name="value" value="${st.value}" required /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Label</label><input class="a-input" name="label" value="${st.label}" required /></div>
+      `, (data) => {
+        d.stats[idx] = { ...st, value: data.value, label: data.label };
+        ContentService.saveData('home', d);
+      });
+    });
+  });
+
+  document.querySelectorAll('.btn-del-stat').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      if (confirm('Delete this stat figure?')) {
+        d.stats.splice(idx, 1);
+        ContentService.saveData('home', d);
+        rerender();
+        showToast('Stat removed.', '');
+      }
+    });
+  });
+
+  document.querySelectorAll('.btn-move-stat').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const dir = btn.getAttribute('data-dir');
+      const targetIdx = dir === 'up' ? idx - 1 : idx + 1;
+      d.stats = reorderArray(d.stats, idx, targetIdx);
+      ContentService.saveData('home', d);
+      rerender();
+      showToast('Stat order updated!', 'success');
+    });
+  });
+
+  // Capabilities Card management
+  document.getElementById('a-add-cap-btn')?.addEventListener('click', () => {
+    openModal('Add Capability Card', `
+      <div class="a-field"><label class="a-label">Card Title</label><input class="a-input" name="title" required /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">FontAwesome Icon (e.g. fa-solid fa-wave-square)</label><input class="a-input" name="icon" value="fa-solid fa-wave-square" /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Description</label><textarea class="a-textarea" name="desc" required></textarea></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Link Label (e.g. Explore Amplifiers →)</label><input class="a-input" name="linkText" value="Explore →" /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Link URL (e.g. /products?category=amplifiers)</label><input class="a-input" name="linkUrl" value="/products" /></div>
+    `, (data) => {
+      const caps = d.capabilities || [];
+      caps.push({ id: 'cap-' + Date.now(), ...data });
+      d.capabilities = caps;
+      ContentService.saveData('home', d);
+    });
+  });
+
+  document.querySelectorAll('.btn-edit-cap').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const cap = d.capabilities[idx];
+      openModal('Edit Capability Card', `
+        <div class="a-field"><label class="a-label">Card Title</label><input class="a-input" name="title" value="${cap.title}" required /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">FontAwesome Icon</label><input class="a-input" name="icon" value="${cap.icon || 'fa-solid fa-microchip'}" /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Description</label><textarea class="a-textarea" name="desc" required>${cap.desc || ''}</textarea></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Link Label</label><input class="a-input" name="linkText" value="${cap.linkText || 'Explore →'}" /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Link URL</label><input class="a-input" name="linkUrl" value="${cap.linkUrl || '/products'}" /></div>
+      `, (data) => {
+        d.capabilities[idx] = { ...cap, ...data };
+        ContentService.saveData('home', d);
+      });
+    });
+  });
+
+  document.querySelectorAll('.btn-del-cap').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      if (confirm('Delete this capability card?')) {
+        d.capabilities.splice(idx, 1);
+        ContentService.saveData('home', d);
+        rerender();
+        showToast('Capability card deleted.', '');
+      }
+    });
+  });
+
+  document.querySelectorAll('.btn-move-cap').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const dir = btn.getAttribute('data-dir');
+      const targetIdx = dir === 'up' ? idx - 1 : idx + 1;
+      d.capabilities = reorderArray(d.capabilities, idx, targetIdx);
+      ContentService.saveData('home', d);
+      rerender();
+      showToast('Capability cards reordered!', 'success');
+    });
+  });
+}
+
+// ─── ABOUT US PAGE EDITOR ────────────────────────────────────────────────────
+function renderAboutPageEditor() {
+  const d = ContentService.getData('about') || {};
+  const badges = d.badges || [];
+  const highlights = d.highlightCards || [];
+  const stats = d.stats || [];
+  const milestones = d.milestones || [];
+  const domains = d.domains || [];
+  const pillars = d.pillars || [];
+  const whyUs = d.whyUs || [];
 
   return `
-    <div class="a-card" style="margin-bottom:20px;">
-      <div class="a-card-header">
-        <div>
-          <h3 id="prod-form-heading">${formTitle}</h3>
-          <p>Fill in the details and click Save</p>
-        </div>
-      </div>
-      <form id="a-page-form" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-        <input type="hidden" name="id" value="${editing?.id || ''}">
-        <div class="a-field"><label class="a-label">OEM / Product Name <span class="a-label-ctx">Products → Name</span></label>
-          <input class="a-input" type="text" name="name" value="${editing?.name || ''}" required></div>
-        <div class="a-field"><label class="a-label">Specialty / Category <span class="a-label-ctx">Products → Category</span></label>
-          <input class="a-input" type="text" name="specialty" value="${editing?.specialty || editing?.category || ''}"></div>
-        <div class="a-field"><label class="a-label">Logo Image URL <span class="a-label-ctx">Products → Logo path</span></label>
-          <input class="a-input" type="text" name="logoImg" id="prod-logo-input" value="${editing?.logoImg || ''}" placeholder="/images/oem-logos/..."></div>
-        <div class="a-field"><label class="a-label">Website URL <span class="a-label-ctx">Products → External link</span></label>
-          <input class="a-input" type="text" name="website" value="${editing?.website || ''}"></div>
-        <div class="a-field" style="grid-column:span 2"><label class="a-label">Tagline <span class="a-label-ctx">Products → Short tagline</span></label>
-          <input class="a-input" type="text" name="tagline" value="${editing?.tagline || ''}"></div>
-        <div class="a-field" style="grid-column:span 2"><label class="a-label">Description <span class="a-label-ctx">Products → Full description</span></label>
-          <textarea class="a-textarea" name="description">${editing?.description || ''}</textarea></div>
-        <div style="grid-column:span 2; display:flex; gap:10px; justify-content:flex-end;">
-          ${editing ? `<button type="button" class="a-btn a-btn-outline" id="prod-cancel-btn">Cancel Edit</button>` : ''}
-          <button type="submit" class="a-btn a-btn-primary">
-            <i class="fa-solid fa-floppy-disk"></i> ${editing ? 'Update Product' : 'Add Product'}
-          </button>
-        </div>
-      </form>
+    <div class="a-subtabs-nav">
+      <button type="button" class="a-subtab-btn ${currentSubTab === 'fields' ? 'active' : ''}" data-subtab="fields"><i class="fa-solid fa-pen-to-square"></i> General &amp; Vision</button>
+      <button type="button" class="a-subtab-btn ${currentSubTab === 'badges' ? 'active' : ''}" data-subtab="badges"><i class="fa-solid fa-award"></i> Badges (${badges.length})</button>
+      <button type="button" class="a-subtab-btn ${currentSubTab === 'highlights' ? 'active' : ''}" data-subtab="highlights"><i class="fa-solid fa-star"></i> Highlights (${highlights.length})</button>
+      <button type="button" class="a-subtab-btn ${currentSubTab === 'stats' ? 'active' : ''}" data-subtab="stats"><i class="fa-solid fa-chart-line"></i> Quick Facts (${stats.length})</button>
+      <button type="button" class="a-subtab-btn ${currentSubTab === 'milestones' ? 'active' : ''}" data-subtab="milestones"><i class="fa-solid fa-timeline"></i> Timeline (${milestones.length})</button>
+      <button type="button" class="a-subtab-btn ${currentSubTab === 'domains' ? 'active' : ''}" data-subtab="domains"><i class="fa-solid fa-satellite-dish"></i> Domains (${domains.length})</button>
+      <button type="button" class="a-subtab-btn ${currentSubTab === 'pillars' ? 'active' : ''}" data-subtab="pillars"><i class="fa-solid fa-monument"></i> Pillars (${pillars.length})</button>
+      <button type="button" class="a-subtab-btn ${currentSubTab === 'whyus' ? 'active' : ''}" data-subtab="whyus"><i class="fa-solid fa-circle-question"></i> Why Us (${whyUs.length})</button>
     </div>
 
-    <div class="a-card">
-      <div class="a-card-header">
-        <div><h3>All OEMs / Products</h3><p>${products.length} entries</p></div>
+    ${currentSubTab === 'fields' ? `
+      <form id="a-page-form">
+        <div class="a-card">
+          <div class="a-card-header"><div><h3>About Us Hero Banner</h3><p>Page heading and introduction</p></div></div>
+          <div class="a-form-grid">
+            <div class="a-field"><label class="a-label">Eyebrow</label><input class="a-input" name="heroEyebrow" value="${d.heroEyebrow || 'ABOUT ICON ELECTROMATIC'}"></div>
+            <div class="a-field"><label class="a-label">Page Title</label><input class="a-input" name="heroTitle" value="${d.heroTitle || 'About Us'}"></div>
+            <div class="a-field span2"><label class="a-label">Lead Paragraph</label><textarea class="a-textarea" name="heroLead">${d.heroLead || ''}</textarea></div>
+          </div>
+        </div>
+
+        <div class="a-card">
+          <div class="a-card-header"><div><h3>Company Background &amp; Downloads</h3><p>Narrative paragraphs and brochure downloads</p></div></div>
+          <div class="a-form-grid">
+            <div class="a-field"><label class="a-label">Section Title</label><input class="a-input" name="coreCapabilitiesTitle" value="${d.coreCapabilitiesTitle || 'Core Capabilities'}"></div>
+            <div class="a-field"><label class="a-label">Section Subtitle</label><input class="a-input" name="coreCapabilitiesSubtitle" value="${d.coreCapabilitiesSubtitle || 'Fulfillment partners for your electronic ambitions'}"></div>
+            <div class="a-field span2"><label class="a-label">Description Paragraph 1</label><textarea class="a-textarea" name="companyDesc1">${d.companyDesc1 || ''}</textarea></div>
+            <div class="a-field span2"><label class="a-label">Description Paragraph 2</label><textarea class="a-textarea" name="companyDesc2">${d.companyDesc2 || ''}</textarea></div>
+            <div class="a-field"><label class="a-label">Corporate Presentation Link</label><input class="a-input" name="presentationLink" value="${d.presentationLink || ''}"></div>
+            <div class="a-field"><label class="a-label">Company Flyer Link</label><input class="a-input" name="flyerLink" value="${d.flyerLink || ''}"></div>
+          </div>
+        </div>
+
+        <div class="a-card">
+          <div class="a-card-header"><div><h3>Vision &amp; Mission</h3><p>Guiding organizational principles</p></div></div>
+          <div class="a-form-grid">
+            <div class="a-field"><label class="a-label">Vision Title</label><input class="a-input" name="visionTitle" value="${d.visionTitle || 'Our Vision'}"></div>
+            <div class="a-field"><label class="a-label">Mission Title</label><input class="a-input" name="missionTitle" value="${d.missionTitle || 'Our Mission'}"></div>
+            <div class="a-field span2"><label class="a-label">Vision Statement</label><textarea class="a-textarea" name="visionDesc">${d.visionDesc || ''}</textarea></div>
+            <div class="a-field span2"><label class="a-label">Mission Statement</label><textarea class="a-textarea" name="missionDesc">${d.missionDesc || ''}</textarea></div>
+          </div>
+        </div>
+
+        <div class="a-card">
+          <div class="a-card-header"><div><h3>Chronology / Journey Section</h3><p>Timeline lead and official presentation infographic slide</p></div></div>
+          <div class="a-form-grid">
+            <div class="a-field"><label class="a-label">Title</label><input class="a-input" name="journeyTitle" value="${d.journeyTitle || 'Chronology'}"></div>
+            <div class="a-field"><label class="a-label">Subtitle</label><input class="a-input" name="journeySubtitle" value="${d.journeySubtitle || 'Our Journey'}"></div>
+            <div class="a-field span2"><label class="a-label">Lead Paragraph</label><textarea class="a-textarea" name="journeyLead">${d.journeyLead || ''}</textarea></div>
+            ${renderImageUploadField('infographicImage', 'Chronology Infographic Slide Image', d.infographicImage || '', 'High-res image opened by View Slide Graphic modal')}
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="submit" class="a-btn a-btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save About Us Content</button>
+        </div>
+      </form>
+    ` : ''}
+
+    ${currentSubTab === 'badges' ? renderCardsManagerTab('Trust Badges', badges, 'badge', ['text', 'icon', 'color']) : ''}
+    ${currentSubTab === 'highlights' ? renderCardsManagerTab('Feature Highlights', highlights, 'highlight', ['title', 'desc', 'icon', 'color']) : ''}
+    ${currentSubTab === 'stats' ? renderCardsManagerTab('Quick Facts Counters', stats, 'quickstat', ['target', 'suffix', 'label', 'icon', 'color']) : ''}
+    ${currentSubTab === 'milestones' ? renderCardsManagerTab('Timeline Milestones', milestones, 'milestone', ['year', 'title', 'desc', 'image', 'caption', 'color']) : ''}
+    ${currentSubTab === 'domains' ? renderCardsManagerTab('Strategic Application Domains', domains, 'domain', ['title', 'desc', 'image', 'tag']) : ''}
+    ${currentSubTab === 'pillars' ? renderCardsManagerTab('Strategic Pillars', pillars, 'pillar', ['eyebrow', 'title', 'subtitle', 'desc', 'image', 'color']) : ''}
+    ${currentSubTab === 'whyus' ? renderCardsManagerTab('Why Us Points', whyUs, 'whyus', ['number', 'title', 'desc', 'icon', 'color']) : ''}
+  `;
+}
+
+function bindAboutTabEvents() {
+  document.querySelectorAll('.a-subtab-btn[data-subtab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentSubTab = btn.getAttribute('data-subtab');
+      rerender();
+    });
+  });
+
+  const d = ContentService.getData('about') || {};
+
+  // Badges
+  bindUniversalCardActions('about', d, 'badges', 'badge', () => `
+    <div class="a-field"><label class="a-label">Badge Text</label><input class="a-input" name="text" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Icon (e.g. fa-solid fa-award)</label><input class="a-input" name="icon" value="fa-solid fa-award" /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Text Color Hex (e.g. #FDA4AF)</label><input class="a-input" name="color" value="#FDA4AF" /></div>
+  `, (card) => `
+    <div class="a-field"><label class="a-label">Badge Text</label><input class="a-input" name="text" value="${card.text}" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Icon</label><input class="a-input" name="icon" value="${card.icon || ''}" /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Text Color Hex</label><input class="a-input" name="color" value="${card.color || ''}" /></div>
+  `);
+
+  // Highlights
+  bindUniversalCardActions('about', d, 'highlightCards', 'highlight', () => `
+    <div class="a-field"><label class="a-label">Card Title</label><input class="a-input" name="title" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Icon</label><input class="a-input" name="icon" value="fa-solid fa-tower-broadcast" /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Accent Color (blue / red)</label><input class="a-input" name="color" value="blue" /></div>
+    <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Description</label><textarea class="a-textarea" name="desc" required></textarea></div>
+  `, (card) => `
+    <div class="a-field"><label class="a-label">Card Title</label><input class="a-input" name="title" value="${card.title}" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Icon</label><input class="a-input" name="icon" value="${card.icon || ''}" /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Accent Color (blue / red)</label><input class="a-input" name="color" value="${card.color || 'blue'}" /></div>
+    <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Description</label><textarea class="a-textarea" name="desc" required>${card.desc || ''}</textarea></div>
+  `);
+
+  // Stats
+  bindUniversalCardActions('about', d, 'stats', 'quickstat', () => `
+    <div class="a-field"><label class="a-label">Target Number (e.g. 1500)</label><input class="a-input" name="target" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Suffix (e.g. +)</label><input class="a-input" name="suffix" value="+" /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Label (e.g. Products)</label><input class="a-input" name="label" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Icon</label><input class="a-input" name="icon" value="fa-solid fa-boxes-stacked" /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Color (red / blue)</label><input class="a-input" name="color" value="red" /></div>
+  `, (card) => `
+    <div class="a-field"><label class="a-label">Target Number</label><input class="a-input" name="target" value="${card.target}" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Suffix</label><input class="a-input" name="suffix" value="${card.suffix || '+'}" /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Label</label><input class="a-input" name="label" value="${card.label}" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Icon</label><input class="a-input" name="icon" value="${card.icon || ''}" /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Color (red / blue)</label><input class="a-input" name="color" value="${card.color || 'red'}" /></div>
+  `);
+
+  // Milestones
+  bindUniversalCardActions('about', d, 'milestones', 'milestone', () => `
+    <div class="a-field"><label class="a-label">Year / Milestone Date (e.g. 2009)</label><input class="a-input" name="year" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Headline Title</label><input class="a-input" name="title" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Theme Color (cyan / red / navy / amber)</label><input class="a-input" name="color" value="cyan" /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Photo Caption</label><input class="a-input" name="caption" /></div>
+    ${renderImageUploadField('image', 'Milestone Photo', '', 'Visual for this timeline step')}
+    <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Milestone Description</label><textarea class="a-textarea" name="desc" required></textarea></div>
+  `, (card) => `
+    <div class="a-field"><label class="a-label">Year / Milestone Date</label><input class="a-input" name="year" value="${card.year}" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Headline Title</label><input class="a-input" name="title" value="${card.title}" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Theme Color (cyan / red / navy / amber)</label><input class="a-input" name="color" value="${card.color || 'cyan'}" /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Photo Caption</label><input class="a-input" name="caption" value="${card.caption || ''}" /></div>
+    ${renderImageUploadField('image', 'Milestone Photo', card.image || '', 'Visual for this timeline step')}
+    <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Milestone Description</label><textarea class="a-textarea" name="desc" required>${card.desc || ''}</textarea></div>
+  `);
+
+  // Domains
+  bindUniversalCardActions('about', d, 'domains', 'domain', () => `
+    <div class="a-field"><label class="a-label">Domain Name (e.g. Aerospace & Defence)</label><input class="a-input" name="title" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Tag Pill (e.g. Radar & EW Systems)</label><input class="a-input" name="tag" /></div>
+    ${renderImageUploadField('image', 'Domain Photo', '', 'Image displayed on domain card')}
+    <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Description</label><textarea class="a-textarea" name="desc" required></textarea></div>
+  `, (card) => `
+    <div class="a-field"><label class="a-label">Domain Name</label><input class="a-input" name="title" value="${card.title}" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Tag Pill</label><input class="a-input" name="tag" value="${card.tag || ''}" /></div>
+    ${renderImageUploadField('image', 'Domain Photo', card.image || '', 'Image displayed on domain card')}
+    <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Description</label><textarea class="a-textarea" name="desc" required>${card.desc || ''}</textarea></div>
+  `);
+
+  // Pillars
+  bindUniversalCardActions('about', d, 'pillars', 'pillar', () => `
+    <div class="a-field"><label class="a-label">Eyebrow (e.g. GLOBAL ALLIANCES)</label><input class="a-input" name="eyebrow" value="FOUNDATIONAL PILLAR" /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Title</label><input class="a-input" name="title" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Subtitle</label><input class="a-input" name="subtitle" /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Color (blue / red)</label><input class="a-input" name="color" value="blue" /></div>
+    ${renderImageUploadField('image', 'Pillar Photo', '', 'Image displayed for this pillar')}
+    <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Description</label><textarea class="a-textarea" name="desc" required></textarea></div>
+  `, (card) => `
+    <div class="a-field"><label class="a-label">Eyebrow</label><input class="a-input" name="eyebrow" value="${card.eyebrow || ''}" /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Title</label><input class="a-input" name="title" value="${card.title}" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Subtitle</label><input class="a-input" name="subtitle" value="${card.subtitle || ''}" /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Color (blue / red)</label><input class="a-input" name="color" value="${card.color || 'blue'}" /></div>
+    ${renderImageUploadField('image', 'Pillar Photo', card.image || '', 'Image displayed for this pillar')}
+    <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Description</label><textarea class="a-textarea" name="desc" required>${card.desc || ''}</textarea></div>
+  `);
+
+  // Why Us
+  bindUniversalCardActions('about', d, 'whyUs', 'whyus', () => `
+    <div class="a-field"><label class="a-label">Number (e.g. 01)</label><input class="a-input" name="number" value="01" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Title</label><input class="a-input" name="title" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Icon</label><input class="a-input" name="icon" value="fa-solid fa-bullseye" /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Color (red / blue)</label><input class="a-input" name="color" value="red" /></div>
+    <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Description</label><textarea class="a-textarea" name="desc" required></textarea></div>
+  `, (card) => `
+    <div class="a-field"><label class="a-label">Number</label><input class="a-input" name="number" value="${card.number || '01'}" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Title</label><input class="a-input" name="title" value="${card.title}" required /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Icon</label><input class="a-input" name="icon" value="${card.icon || ''}" /></div>
+    <div class="a-field" style="margin-top:12px;"><label class="a-label">Color (red / blue)</label><input class="a-input" name="color" value="${card.color || 'red'}" /></div>
+    <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Description</label><textarea class="a-textarea" name="desc" required>${card.desc || ''}</textarea></div>
+  `);
+}
+
+// ─── SERVICES PAGE EDITOR ────────────────────────────────────────────────────
+function renderServicesPageEditor() {
+  const d = ContentService.getData('services') || {};
+  const items = d.items || [];
+  const badges = d.badges || [];
+
+  return `
+    <div class="a-subtabs-nav">
+      <button type="button" class="a-subtab-btn ${currentSubTab === 'fields' ? 'active' : ''}" data-subtab="fields"><i class="fa-solid fa-pen-to-square"></i> Hero &amp; Badges</button>
+      <button type="button" class="a-subtab-btn ${currentSubTab === 'services' ? 'active' : ''}" data-subtab="services"><i class="fa-solid fa-gears"></i> Service Pillars (${items.length})</button>
+    </div>
+
+    ${currentSubTab === 'fields' ? `
+      <form id="a-page-form">
+        <div class="a-card">
+          <div class="a-card-header"><div><h3>Services Hero Banner</h3><p>Page heading and introduction</p></div></div>
+          <div class="a-form-grid">
+            <div class="a-field"><label class="a-label">Eyebrow Tag</label><input class="a-input" name="heroEyebrow" value="${d.heroEyebrow || 'CAPABILITIES & SERVICES'}"></div>
+            <div class="a-field"><label class="a-label">Page Title</label><input class="a-input" name="heroTitle" value="${d.heroTitle || 'Engineering Services & Global Representation'}"></div>
+            <div class="a-field span2"><label class="a-label">Lead Paragraph</label><textarea class="a-textarea" name="heroLead">${d.heroLead || ''}</textarea></div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="submit" class="a-btn a-btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Services Hero</button>
+        </div>
+      </form>
+    ` : ''}
+
+    ${currentSubTab === 'services' ? `
+      <div class="a-cards-box">
+        <div class="a-cards-box-header">
+          <div>
+            <h3>Core Service Blocks &amp; Sliders</h3>
+            <p>Each service block has its own title, descriptions, tags, and multi-image slideshow</p>
+          </div>
+          <button type="button" class="a-btn a-btn-primary a-btn-sm" id="a-add-srv-btn"><i class="fa-solid fa-plus"></i> Add Service Pillar</button>
+        </div>
+        <div class="a-table-wrap">
+          <table class="a-table">
+            <thead><tr><th>Reorder</th><th>Service Title</th><th>Subtitle / Domain</th><th>Slideshow Images</th><th>Actions</th></tr></thead>
+            <tbody>
+              ${items.map((srv, idx) => {
+                const slidesCount = (srv.slides || []).length;
+                const firstImg = slidesCount ? ImageStorage.resolveImageUrl(srv.slides[0].image) : '';
+                return `
+                  <tr>
+                    <td style="width:90px;">
+                      <div class="a-reorder-group">
+                        <button class="a-btn-reorder btn-move-srv" data-dir="up" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''}><i class="fa-solid fa-arrow-up"></i></button>
+                        <button class="a-btn-reorder btn-move-srv" data-dir="down" data-idx="${idx}" ${idx === items.length - 1 ? 'disabled' : ''}><i class="fa-solid fa-arrow-down"></i></button>
+                      </div>
+                    </td>
+                    <td>
+                      <div style="display:flex; align-items:center; gap:10px;">
+                        ${firstImg ? `<img src="${firstImg}" class="a-img-preview" alt="Thumb" style="width:50px; height:38px;" />` : ''}
+                        <div>
+                          <strong>${srv.title}</strong>
+                          <div style="font-size:0.75rem; color:var(--a-muted);">${srv.badge || ''}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>${srv.subtitle || '—'}</td>
+                    <td><span class="a-badge a-badge-blue">${slidesCount} Slides</span></td>
+                    <td>
+                      <button class="a-btn a-btn-outline a-btn-sm btn-edit-srv" data-idx="${idx}"><i class="fa-solid fa-pen"></i> Edit</button>
+                      <button class="a-btn a-btn-danger a-btn-sm btn-del-srv" data-idx="${idx}" style="margin-left:6px;"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    ` : ''}
+  `;
+}
+
+function bindServicesTabEvents() {
+  document.querySelectorAll('.a-subtab-btn[data-subtab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentSubTab = btn.getAttribute('data-subtab');
+      rerender();
+    });
+  });
+
+  const d = ContentService.getData('services') || {};
+
+  document.getElementById('a-add-srv-btn')?.addEventListener('click', () => {
+    openModal('Add Service Block', `
+      <div class="a-field"><label class="a-label">Service Title</label><input class="a-input" name="title" required /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Subtitle / Focus</label><input class="a-input" name="subtitle" /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Badge Pill Label</label><input class="a-input" name="badge" value="Core Capability" /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Badge Color (blue / red)</label><input class="a-input" name="badgeColor" value="blue" /></div>
+      <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Primary Description</label><textarea class="a-textarea" name="desc" required></textarea></div>
+      <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Secondary Description (Optional)</label><textarea class="a-textarea" name="desc2"></textarea></div>
+      <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Tags (comma separated)</label><input class="a-input" name="tags" placeholder="e.g. Mil-Spec, Direct Warranty, Stock Hub" /></div>
+      ${renderImageUploadField('slide1', 'Slide Image 1', '', 'First slideshow photo')}
+      <div class="a-field span2"><label class="a-label">Slide 1 Caption</label><input class="a-input" name="caption1" /></div>
+      ${renderImageUploadField('slide2', 'Slide Image 2 (Optional)', '', 'Second slideshow photo')}
+      <div class="a-field span2"><label class="a-label">Slide 2 Caption</label><input class="a-input" name="caption2" /></div>
+    `, (data) => {
+      const items = d.items || [];
+      const slides = [];
+      if (data.slide1) slides.push({ image: data.slide1, caption: data.caption1 || '' });
+      if (data.slide2) slides.push({ image: data.slide2, caption: data.caption2 || '' });
+      if (!slides.length) slides.push({ image: '/images/hero-amplifier.jpg', caption: data.title });
+
+      const tags = (data.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+      items.push({
+        id: 'srv-' + Date.now(),
+        title: data.title,
+        subtitle: data.subtitle,
+        badge: data.badge,
+        badgeColor: data.badgeColor,
+        desc: data.desc,
+        desc2: data.desc2,
+        tags,
+        slides,
+        ctaText: 'Explore More',
+        ctaLink: '/products'
+      });
+      d.items = items;
+      ContentService.saveData('services', d);
+    });
+  });
+
+  document.querySelectorAll('.btn-edit-srv').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const srv = d.items[idx];
+      const s1 = srv.slides?.[0] || {};
+      const s2 = srv.slides?.[1] || {};
+
+      openModal('Edit Service Block', `
+        <div class="a-field"><label class="a-label">Service Title</label><input class="a-input" name="title" value="${srv.title}" required /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Subtitle / Focus</label><input class="a-input" name="subtitle" value="${srv.subtitle || ''}" /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Badge Pill Label</label><input class="a-input" name="badge" value="${srv.badge || ''}" /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Badge Color (blue / red)</label><input class="a-input" name="badgeColor" value="${srv.badgeColor || 'blue'}" /></div>
+        <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Primary Description</label><textarea class="a-textarea" name="desc" required>${srv.desc || ''}</textarea></div>
+        <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Secondary Description (Optional)</label><textarea class="a-textarea" name="desc2">${srv.desc2 || ''}</textarea></div>
+        <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Tags (comma separated)</label><input class="a-input" name="tags" value="${(srv.tags || []).join(', ')}" /></div>
+        ${renderImageUploadField('slide1', 'Slide Image 1', s1.image || '', 'First slideshow photo')}
+        <div class="a-field span2"><label class="a-label">Slide 1 Caption</label><input class="a-input" name="caption1" value="${s1.caption || ''}" /></div>
+        ${renderImageUploadField('slide2', 'Slide Image 2', s2.image || '', 'Second slideshow photo')}
+        <div class="a-field span2"><label class="a-label">Slide 2 Caption</label><input class="a-input" name="caption2" value="${s2.caption || ''}" /></div>
+      `, (data) => {
+        const slides = [];
+        if (data.slide1) slides.push({ image: data.slide1, caption: data.caption1 || '' });
+        if (data.slide2) slides.push({ image: data.slide2, caption: data.caption2 || '' });
+        // Preserve any remaining slides
+        if (srv.slides && srv.slides.length > 2) {
+          slides.push(...srv.slides.slice(2));
+        }
+
+        const tags = (data.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+        d.items[idx] = {
+          ...srv,
+          title: data.title,
+          subtitle: data.subtitle,
+          badge: data.badge,
+          badgeColor: data.badgeColor,
+          desc: data.desc,
+          desc2: data.desc2,
+          tags,
+          slides: slides.length ? slides : srv.slides
+        };
+        ContentService.saveData('services', d);
+      });
+    });
+  });
+
+  document.querySelectorAll('.btn-del-srv').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      if (confirm('Delete this service block?')) {
+        d.items.splice(idx, 1);
+        ContentService.saveData('services', d);
+        rerender();
+        showToast('Service block deleted.', '');
+      }
+    });
+  });
+
+  document.querySelectorAll('.btn-move-srv').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const dir = btn.getAttribute('data-dir');
+      const targetIdx = dir === 'up' ? idx - 1 : idx + 1;
+      d.items = reorderArray(d.items, idx, targetIdx);
+      ContentService.saveData('services', d);
+      rerender();
+      showToast('Service blocks reordered!', 'success');
+    });
+  });
+}
+
+// ─── PROJECTS PAGE EDITOR ────────────────────────────────────────────────────
+function renderProjectsPageEditor() {
+  const d = ContentService.getData('projects') || {};
+  const items = d.items || [];
+
+  return `
+    <form id="a-page-form" style="margin-bottom:20px;">
+      <div class="a-card">
+        <div class="a-card-header"><div><h3>Projects Section Intro</h3><p>Section title and narrative lead</p></div></div>
+        <div class="a-form-grid">
+          <div class="a-field"><label class="a-label">Section Title</label><input class="a-input" name="heroTitle" value="${d.heroTitle || 'Featured Engineering Projects'}"></div>
+          <div class="a-field"><label class="a-label">Section Subtitle</label><input class="a-input" name="heroSubtitle" value="${d.heroSubtitle || 'Mission-Ready Hardware Deployments'}"></div>
+          <div class="a-field span2"><label class="a-label">Lead Paragraph</label><textarea class="a-textarea" name="heroLead">${d.heroLead || ''}</textarea></div>
+        </div>
+        <div style="display:flex; justify-content:flex-end; margin-top:14px;">
+          <button type="submit" class="a-btn a-btn-primary a-btn-sm"><i class="fa-solid fa-floppy-disk"></i> Save Header</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="a-cards-box">
+      <div class="a-cards-box-header">
+        <div>
+          <h3>Engineering Project Cards (${items.length})</h3>
+          <p>Add, edit, delete, and reorder defense, space &amp; microwave projects</p>
+        </div>
+        <button type="button" class="a-btn a-btn-primary a-btn-sm" id="a-add-proj-btn"><i class="fa-solid fa-plus"></i> Add New Project</button>
       </div>
       <div class="a-table-wrap">
         <table class="a-table">
-          <thead><tr><th>Logo</th><th>Name</th><th>Specialty</th><th>Actions</th></tr></thead>
-          <tbody>${rows || '<tr><td colspan="4">No products. Add one above.</td></tr>'}</tbody>
+          <thead><tr><th>Reorder</th><th>Cover</th><th>Project Title</th><th>Client / Sector</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            ${items.map((proj, idx) => {
+              const img = ImageStorage.resolveImageUrl(proj.image);
+              return `
+                <tr>
+                  <td style="width:90px;">
+                    <div class="a-reorder-group">
+                      <button class="a-btn-reorder btn-move-proj" data-dir="up" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''}><i class="fa-solid fa-arrow-up"></i></button>
+                      <button class="a-btn-reorder btn-move-proj" data-dir="down" data-idx="${idx}" ${idx === items.length - 1 ? 'disabled' : ''}><i class="fa-solid fa-arrow-down"></i></button>
+                    </div>
+                  </td>
+                  <td>${img ? `<img src="${img}" class="a-img-preview" alt="Thumb" />` : '<span style="color:#94a3b8; font-size:0.75rem;">No image</span>'}</td>
+                  <td><strong>${proj.title}</strong><div style="font-size:0.75rem; color:var(--a-muted);">${proj.category || ''}</div></td>
+                  <td style="font-size:0.82rem;">${proj.clientSector || '—'}</td>
+                  <td><span class="a-badge a-badge-green">${proj.status || 'Active'}</span></td>
+                  <td>
+                    <button class="a-btn a-btn-outline a-btn-sm btn-edit-proj" data-idx="${idx}"><i class="fa-solid fa-pen"></i> Edit</button>
+                    <button class="a-btn a-btn-danger a-btn-sm btn-del-proj" data-idx="${idx}" style="margin-left:6px;"><i class="fa-solid fa-trash"></i></button>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
         </table>
       </div>
     </div>
   `;
 }
 
-function bindProductTab() {
-  const form = document.getElementById('a-page-form');
-  if (!form || currentTab !== 'products') return;
+function bindProjectsTabEvents() {
+  const d = ContentService.getData('projects') || {};
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const fd = new FormData(form);
-    const prod = { id: fd.get('id') || ('oem-' + Date.now()), name: fd.get('name'), specialty: fd.get('specialty'), category: fd.get('specialty'), logoImg: fd.get('logoImg'), website: fd.get('website'), tagline: fd.get('tagline'), description: fd.get('description') };
+  document.getElementById('a-add-proj-btn')?.addEventListener('click', () => {
+    openModal('Add Project Card', `
+      <div class="a-field"><label class="a-label">Project Title</label><input class="a-input" name="title" required /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Category (e.g. Defense & Radar)</label><input class="a-input" name="category" value="Defense & Radar" /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Client / Sector</label><input class="a-input" name="clientSector" value="Aerospace & Defense" /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Date / Timeline</label><input class="a-input" name="date" value="2026" /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Status (e.g. Deployed, Flight Qualified)</label><input class="a-input" name="status" value="Deployed" /></div>
+      <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Tags (comma separated)</label><input class="a-input" name="tags" placeholder="GaN SSPA, Cavity Filters, AESA" /></div>
+      ${renderImageUploadField('image', 'Project Cover Photo', '', 'Hero hardware photo')}
+      <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Description</label><textarea class="a-textarea" name="desc" required></textarea></div>
+    `, (data) => {
+      const items = d.items || [];
+      const tags = (data.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+      items.push({ id: 'proj-' + Date.now(), ...data, tags });
+      d.items = items;
+      ContentService.saveData('projects', d);
+    });
+  });
 
-    let products = ContentService.getData('products');
-    const idx = products.findIndex(p => p.id === prod.id);
-    if (idx >= 0) { products[idx] = { ...products[idx], ...prod }; }
-    else { products.unshift(prod); }
-    ContentService.saveData('products', products);
-    editingProductId = null;
-    rerender();
-    showToast('Product saved!', 'success');
+  document.querySelectorAll('.btn-edit-proj').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const proj = d.items[idx];
+      openModal('Edit Project Card', `
+        <div class="a-field"><label class="a-label">Project Title</label><input class="a-input" name="title" value="${proj.title}" required /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Category</label><input class="a-input" name="category" value="${proj.category || ''}" /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Client / Sector</label><input class="a-input" name="clientSector" value="${proj.clientSector || ''}" /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Date / Timeline</label><input class="a-input" name="date" value="${proj.date || ''}" /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Status</label><input class="a-input" name="status" value="${proj.status || ''}" /></div>
+        <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Tags (comma separated)</label><input class="a-input" name="tags" value="${(proj.tags || []).join(', ')}" /></div>
+        ${renderImageUploadField('image', 'Project Cover Photo', proj.image || '', 'Hero hardware photo')}
+        <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Description</label><textarea class="a-textarea" name="desc" required>${proj.desc || ''}</textarea></div>
+      `, (data) => {
+        const tags = (data.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+        d.items[idx] = { ...proj, ...data, tags };
+        ContentService.saveData('projects', d);
+      });
+    });
+  });
+
+  document.querySelectorAll('.btn-del-proj').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      if (confirm('Delete this project card?')) {
+        d.items.splice(idx, 1);
+        ContentService.saveData('projects', d);
+        rerender();
+        showToast('Project deleted.', '');
+      }
+    });
+  });
+
+  document.querySelectorAll('.btn-move-proj').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const dir = btn.getAttribute('data-dir');
+      const targetIdx = dir === 'up' ? idx - 1 : idx + 1;
+      d.items = reorderArray(d.items, idx, targetIdx);
+      ContentService.saveData('projects', d);
+      rerender();
+      showToast('Projects reordered!', 'success');
+    });
+  });
+}
+
+// ─── GALLERY PAGE EDITOR ─────────────────────────────────────────────────────
+function renderGalleryPageEditor() {
+  const d = ContentService.getData('gallery') || {};
+  const items = d.items || [];
+
+  return `
+    <form id="a-page-form" style="margin-bottom:20px;">
+      <div class="a-card">
+        <div class="a-card-header"><div><h3>Gallery Section Intro</h3><p>Page heading and gallery lead</p></div></div>
+        <div class="a-form-grid">
+          <div class="a-field"><label class="a-label">Section Title</label><input class="a-input" name="heroTitle" value="${d.heroTitle || 'Hardware & Facility Gallery'}"></div>
+          <div class="a-field"><label class="a-label">Section Subtitle</label><input class="a-input" name="heroSubtitle" value="${d.heroSubtitle || 'High-Reliability Components & Systems'}"></div>
+          <div class="a-field span2"><label class="a-label">Lead Paragraph</label><textarea class="a-textarea" name="heroLead">${d.heroLead || ''}</textarea></div>
+        </div>
+        <div style="display:flex; justify-content:flex-end; margin-top:14px;">
+          <button type="submit" class="a-btn a-btn-primary a-btn-sm"><i class="fa-solid fa-floppy-disk"></i> Save Header</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="a-cards-box">
+      <div class="a-cards-box-header">
+        <div>
+          <h3>Hardware Gallery Items (${items.length})</h3>
+          <p>Add, edit, delete, and reorder hardware photos and captions</p>
+        </div>
+        <button type="button" class="a-btn a-btn-primary a-btn-sm" id="a-add-gal-btn"><i class="fa-solid fa-plus"></i> Add Gallery Photo</button>
+      </div>
+      <div class="a-table-wrap">
+        <table class="a-table">
+          <thead><tr><th>Reorder</th><th>Photo</th><th>Item Title</th><th>Category</th><th>Caption</th><th>Actions</th></tr></thead>
+          <tbody>
+            ${items.map((gal, idx) => {
+              const img = ImageStorage.resolveImageUrl(gal.image);
+              return `
+                <tr>
+                  <td style="width:90px;">
+                    <div class="a-reorder-group">
+                      <button class="a-btn-reorder btn-move-gal" data-dir="up" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''}><i class="fa-solid fa-arrow-up"></i></button>
+                      <button class="a-btn-reorder btn-move-gal" data-dir="down" data-idx="${idx}" ${idx === items.length - 1 ? 'disabled' : ''}><i class="fa-solid fa-arrow-down"></i></button>
+                    </div>
+                  </td>
+                  <td>${img ? `<img src="${img}" class="a-img-preview" alt="Thumb" />` : '<span style="color:#94a3b8; font-size:0.75rem;">No image</span>'}</td>
+                  <td><strong>${gal.title}</strong></td>
+                  <td><span class="a-badge a-badge-blue">${gal.category || 'Component'}</span></td>
+                  <td style="font-size:0.82rem; color:var(--a-muted); max-width:260px;">${gal.caption || '—'}</td>
+                  <td>
+                    <button class="a-btn a-btn-outline a-btn-sm btn-edit-gal" data-idx="${idx}"><i class="fa-solid fa-pen"></i> Edit</button>
+                    <button class="a-btn a-btn-danger a-btn-sm btn-del-gal" data-idx="${idx}" style="margin-left:6px;"><i class="fa-solid fa-trash"></i></button>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function bindGalleryTabEvents() {
+  const d = ContentService.getData('gallery') || {};
+
+  document.getElementById('a-add-gal-btn')?.addEventListener('click', () => {
+    openModal('Add Gallery Photo', `
+      <div class="a-field"><label class="a-label">Item Title</label><input class="a-input" name="title" required /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Category (e.g. Semiconductors, Passives, Systems)</label><input class="a-input" name="category" value="Semiconductors" /></div>
+      ${renderImageUploadField('image', 'Hardware Photo', '', 'Upload or select image')}
+      <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Caption / Description</label><input class="a-input" name="caption" /></div>
+    `, (data) => {
+      const items = d.items || [];
+      items.push({ id: 'gal-' + Date.now(), ...data });
+      d.items = items;
+      ContentService.saveData('gallery', d);
+    });
+  });
+
+  document.querySelectorAll('.btn-edit-gal').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const gal = d.items[idx];
+      openModal('Edit Gallery Photo', `
+        <div class="a-field"><label class="a-label">Item Title</label><input class="a-input" name="title" value="${gal.title}" required /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Category</label><input class="a-input" name="category" value="${gal.category || ''}" /></div>
+        ${renderImageUploadField('image', 'Hardware Photo', gal.image || '', 'Upload or select image')}
+        <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Caption / Description</label><input class="a-input" name="caption" value="${gal.caption || ''}" /></div>
+      `, (data) => {
+        d.items[idx] = { ...gal, ...data };
+        ContentService.saveData('gallery', d);
+      });
+    });
+  });
+
+  document.querySelectorAll('.btn-del-gal').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      if (confirm('Delete this gallery photo?')) {
+        d.items.splice(idx, 1);
+        ContentService.saveData('gallery', d);
+        rerender();
+        showToast('Gallery photo deleted.', '');
+      }
+    });
+  });
+
+  document.querySelectorAll('.btn-move-gal').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const dir = btn.getAttribute('data-dir');
+      const targetIdx = dir === 'up' ? idx - 1 : idx + 1;
+      d.items = reorderArray(d.items, idx, targetIdx);
+      ContentService.saveData('gallery', d);
+      rerender();
+      showToast('Gallery reordered!', 'success');
+    });
+  });
+}
+
+// ─── TESTIMONIALS PAGE EDITOR ────────────────────────────────────────────────
+function renderTestimonialsPageEditor() {
+  const d = ContentService.getData('testimonials') || {};
+  const items = d.items || [];
+
+  return `
+    <form id="a-page-form" style="margin-bottom:20px;">
+      <div class="a-card">
+        <div class="a-card-header"><div><h3>Testimonials Section Header</h3><p>Section title and endorsement lead</p></div></div>
+        <div class="a-form-grid">
+          <div class="a-field"><label class="a-label">Section Title</label><input class="a-input" name="heroTitle" value="${d.heroTitle || 'Trusted by Industry Leaders'}"></div>
+          <div class="a-field"><label class="a-label">Section Subtitle</label><input class="a-input" name="heroSubtitle" value="${d.heroSubtitle || 'Client & Engineer Endorsements'}"></div>
+          <div class="a-field span2"><label class="a-label">Lead Paragraph</label><textarea class="a-textarea" name="heroLead">${d.heroLead || ''}</textarea></div>
+        </div>
+        <div style="display:flex; justify-content:flex-end; margin-top:14px;">
+          <button type="submit" class="a-btn a-btn-primary a-btn-sm"><i class="fa-solid fa-floppy-disk"></i> Save Header</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="a-cards-box">
+      <div class="a-cards-box-header">
+        <div>
+          <h3>Client Testimonial Cards (${items.length})</h3>
+          <p>Add, edit, delete, and reorder scientist &amp; engineering endorsements</p>
+        </div>
+        <button type="button" class="a-btn a-btn-primary a-btn-sm" id="a-add-test-btn"><i class="fa-solid fa-plus"></i> Add Testimonial</button>
+      </div>
+      <div class="a-table-wrap">
+        <table class="a-table">
+          <thead><tr><th>Reorder</th><th>Avatar</th><th>Client Name</th><th>Role &amp; Company</th><th>Stars</th><th>Industry Tag</th><th>Actions</th></tr></thead>
+          <tbody>
+            ${items.map((t, idx) => {
+              const avatar = ImageStorage.resolveImageUrl(t.avatar);
+              return `
+                <tr>
+                  <td style="width:90px;">
+                    <div class="a-reorder-group">
+                      <button class="a-btn-reorder btn-move-test" data-dir="up" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''}><i class="fa-solid fa-arrow-up"></i></button>
+                      <button class="a-btn-reorder btn-move-test" data-dir="down" data-idx="${idx}" ${idx === items.length - 1 ? 'disabled' : ''}><i class="fa-solid fa-arrow-down"></i></button>
+                    </div>
+                  </td>
+                  <td>${avatar ? `<img src="${avatar}" class="a-img-preview" alt="Avatar" style="width:40px; height:40px; border-radius:50%;" />` : '<div style="width:36px; height:36px; border-radius:50%; background:#e2e8f0; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem;">' + (t.name ? t.name.substring(0,2).toUpperCase() : 'CL') + '</div>'}</td>
+                  <td><strong>${t.name}</strong></td>
+                  <td style="font-size:0.82rem; color:var(--a-muted);">${t.role} · ${t.company}</td>
+                  <td><span style="color:#f59e0b;">${'★'.repeat(t.stars || 5)}</span></td>
+                  <td><span class="a-badge a-badge-blue">${t.industry || 'Defense'}</span></td>
+                  <td>
+                    <button class="a-btn a-btn-outline a-btn-sm btn-edit-test" data-idx="${idx}"><i class="fa-solid fa-pen"></i> Edit</button>
+                    <button class="a-btn a-btn-danger a-btn-sm btn-del-test" data-idx="${idx}" style="margin-left:6px;"><i class="fa-solid fa-trash"></i></button>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function bindTestimonialsTabEvents() {
+  const d = ContentService.getData('testimonials') || {};
+
+  document.getElementById('a-add-test-btn')?.addEventListener('click', () => {
+    openModal('Add Testimonial Card', `
+      <div class="a-field"><label class="a-label">Client Name</label><input class="a-input" name="name" required /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Role / Title</label><input class="a-input" name="role" required /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Organization / Company</label><input class="a-input" name="company" required /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Industry Tag (e.g. Radar & Defense EW)</label><input class="a-input" name="industry" value="Defense & Space" /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Rating Stars (1-5)</label><input class="a-input" type="number" min="1" max="5" name="stars" value="5" /></div>
+      ${renderImageUploadField('avatar', 'Client / OEM Avatar Photo', '', 'Upload avatar or logo')}
+      <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Quote Endorsement</label><textarea class="a-textarea" name="quote" required></textarea></div>
+    `, (data) => {
+      const items = d.items || [];
+      items.push({ id: 'test-' + Date.now(), ...data, stars: parseInt(data.stars, 10) || 5 });
+      d.items = items;
+      ContentService.saveData('testimonials', d);
+    });
+  });
+
+  document.querySelectorAll('.btn-edit-test').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const t = d.items[idx];
+      openModal('Edit Testimonial Card', `
+        <div class="a-field"><label class="a-label">Client Name</label><input class="a-input" name="name" value="${t.name}" required /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Role / Title</label><input class="a-input" name="role" value="${t.role || ''}" required /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Organization / Company</label><input class="a-input" name="company" value="${t.company || ''}" required /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Industry Tag</label><input class="a-input" name="industry" value="${t.industry || ''}" /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Rating Stars (1-5)</label><input class="a-input" type="number" min="1" max="5" name="stars" value="${t.stars || 5}" /></div>
+        ${renderImageUploadField('avatar', 'Client / OEM Avatar Photo', t.avatar || '', 'Upload avatar or logo')}
+        <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Quote Endorsement</label><textarea class="a-textarea" name="quote" required>${t.quote || ''}</textarea></div>
+      `, (data) => {
+        d.items[idx] = { ...t, ...data, stars: parseInt(data.stars, 10) || 5 };
+        ContentService.saveData('testimonials', d);
+      });
+    });
+  });
+
+  document.querySelectorAll('.btn-del-test').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      if (confirm('Delete this testimonial?')) {
+        d.items.splice(idx, 1);
+        ContentService.saveData('testimonials', d);
+        rerender();
+        showToast('Testimonial deleted.', '');
+      }
+    });
+  });
+
+  document.querySelectorAll('.btn-move-test').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const dir = btn.getAttribute('data-dir');
+      const targetIdx = dir === 'up' ? idx - 1 : idx + 1;
+      d.items = reorderArray(d.items, idx, targetIdx);
+      ContentService.saveData('testimonials', d);
+      rerender();
+      showToast('Testimonials reordered!', 'success');
+    });
+  });
+}
+
+// ─── CONTACT PAGE EDITOR ─────────────────────────────────────────────────────
+function renderContactPageEditor() {
+  const c = ContentService.getData('contact') || {};
+  const presets = c.presets || [];
+
+  return `
+    <div class="a-subtabs-nav">
+      <button type="button" class="a-subtab-btn ${currentSubTab === 'fields' ? 'active' : ''}" data-subtab="fields"><i class="fa-solid fa-building"></i> Offices &amp; Contact Info</button>
+      <button type="button" class="a-subtab-btn ${currentSubTab === 'presets' ? 'active' : ''}" data-subtab="presets"><i class="fa-solid fa-bolt"></i> Requirement Presets (${presets.length})</button>
+    </div>
+
+    ${currentSubTab === 'fields' ? `
+      <form id="a-page-form">
+        <div class="a-card">
+          <div class="a-card-header"><div><h3>Contact Page Headers</h3><p>RFQ and career tab headings</p></div></div>
+          <div class="a-form-grid">
+            <div class="a-field"><label class="a-label">Inquiry Hero Title</label><input class="a-input" name="heroTitle" value="${c.heroTitle || ''}"></div>
+            <div class="a-field"><label class="a-label">Careers Hero Title</label><input class="a-input" name="careersTitle" value="${c.careersTitle || ''}"></div>
+            <div class="a-field span2"><label class="a-label">Inquiry Lead</label><textarea class="a-textarea" name="heroLead">${c.heroLead || ''}</textarea></div>
+            <div class="a-field span2"><label class="a-label">Careers Lead</label><textarea class="a-textarea" name="careersLead">${c.careersLead || ''}</textarea></div>
+          </div>
+        </div>
+
+        <div class="a-card">
+          <div class="a-card-header"><div><h3>Global Office Locations</h3><p>Displayed in contact page and site footer</p></div></div>
+          <div class="a-form-grid">
+            <div class="a-section-divider span2">India Office (Headquarters)</div>
+            <div class="a-field"><label class="a-label">Office Name</label><input class="a-input" name="indiaOfficeName" value="${c.indiaOfficeName || ''}"></div>
+            <div class="a-field"><label class="a-label">Telephone</label><input class="a-input" name="indiaPhone" value="${c.indiaPhone || ''}"></div>
+            <div class="a-field span2"><label class="a-label">Address</label><textarea class="a-textarea" name="indiaAddress">${c.indiaAddress || ''}</textarea></div>
+            <div class="a-field span2"><label class="a-label">Email</label><input class="a-input" name="indiaEmail" value="${c.indiaEmail || ''}"></div>
+
+            <div class="a-section-divider span2">Singapore Office</div>
+            <div class="a-field"><label class="a-label">Office Name</label><input class="a-input" name="singaporeOfficeName" value="${c.singaporeOfficeName || ''}"></div>
+            <div class="a-field"><label class="a-label">Email</label><input class="a-input" name="singaporeEmail" value="${c.singaporeEmail || ''}"></div>
+            <div class="a-field span2"><label class="a-label">Address</label><textarea class="a-textarea" name="singaporeAddress">${c.singaporeAddress || ''}</textarea></div>
+
+            <div class="a-section-divider span2">USA Office</div>
+            <div class="a-field"><label class="a-label">Office Name</label><input class="a-input" name="usaOfficeName" value="${c.usaOfficeName || ''}"></div>
+            <div class="a-field"><label class="a-label">Telephone</label><input class="a-input" name="usaPhone" value="${c.usaPhone || ''}"></div>
+            <div class="a-field span2"><label class="a-label">Address</label><textarea class="a-textarea" name="usaAddress">${c.usaAddress || ''}</textarea></div>
+            <div class="a-field span2"><label class="a-label">Email</label><input class="a-input" name="usaEmail" value="${c.usaEmail || ''}"></div>
+
+            <div class="a-section-divider span2">Operating Hours</div>
+            <div class="a-field"><label class="a-label">Weekday Hours</label><input class="a-input" name="hoursWeekday" value="${c.hoursWeekday || ''}"></div>
+            <div class="a-field"><label class="a-label">Weekend Hours</label><input class="a-input" name="hoursWeekend" value="${c.hoursWeekend || ''}"></div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="submit" class="a-btn a-btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Contact Info</button>
+        </div>
+      </form>
+    ` : ''}
+
+    ${currentSubTab === 'presets' ? `
+      <div class="a-cards-box">
+        <div class="a-cards-box-header">
+          <div>
+            <h3>Quick Requirement Presets (${presets.length})</h3>
+            <p>One-click inquiry messages displayed on Home and Contact forms</p>
+          </div>
+          <button type="button" class="a-btn a-btn-primary a-btn-sm" id="a-add-preset-btn"><i class="fa-solid fa-plus"></i> Add Preset</button>
+        </div>
+        <div class="a-table-wrap">
+          <table class="a-table">
+            <thead><tr><th>Reorder</th><th>Preset Message</th><th>Actions</th></tr></thead>
+            <tbody>
+              ${presets.map((p, idx) => `
+                <tr>
+                  <td style="width:90px;">
+                    <div class="a-reorder-group">
+                      <button class="a-btn-reorder btn-move-preset" data-dir="up" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''}><i class="fa-solid fa-arrow-up"></i></button>
+                      <button class="a-btn-reorder btn-move-preset" data-dir="down" data-idx="${idx}" ${idx === presets.length - 1 ? 'disabled' : ''}><i class="fa-solid fa-arrow-down"></i></button>
+                    </div>
+                  </td>
+                  <td><strong>${p}</strong></td>
+                  <td>
+                    <button class="a-btn a-btn-outline a-btn-sm btn-edit-preset" data-idx="${idx}"><i class="fa-solid fa-pen"></i> Edit</button>
+                    <button class="a-btn a-btn-danger a-btn-sm btn-del-preset" data-idx="${idx}" style="margin-left:6px;"><i class="fa-solid fa-trash"></i></button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    ` : ''}
+  `;
+}
+
+function bindContactTabEvents() {
+  document.querySelectorAll('.a-subtab-btn[data-subtab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentSubTab = btn.getAttribute('data-subtab');
+      rerender();
+    });
+  });
+
+  const c = ContentService.getData('contact') || {};
+
+  document.getElementById('a-add-preset-btn')?.addEventListener('click', () => {
+    openModal('Add Quick Requirement Preset', `
+      <div class="a-field"><label class="a-label">Preset Message Text</label><input class="a-input" name="text" placeholder="e.g. Inquiring about High Power GaN Device and Beamforming IC." required /></div>
+    `, (data) => {
+      const presets = c.presets || [];
+      presets.push(data.text);
+      c.presets = presets;
+      ContentService.saveData('contact', c);
+    });
+  });
+
+  document.querySelectorAll('.btn-edit-preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const text = c.presets[idx];
+      openModal('Edit Requirement Preset', `
+        <div class="a-field"><label class="a-label">Preset Message Text</label><input class="a-input" name="text" value="${text}" required /></div>
+      `, (data) => {
+        c.presets[idx] = data.text;
+        ContentService.saveData('contact', c);
+      });
+    });
+  });
+
+  document.querySelectorAll('.btn-del-preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      if (confirm('Delete this preset?')) {
+        c.presets.splice(idx, 1);
+        ContentService.saveData('contact', c);
+        rerender();
+        showToast('Preset deleted.', '');
+      }
+    });
+  });
+
+  document.querySelectorAll('.btn-move-preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const dir = btn.getAttribute('data-dir');
+      const targetIdx = dir === 'up' ? idx - 1 : idx + 1;
+      c.presets = reorderArray(c.presets, idx, targetIdx);
+      ContentService.saveData('contact', c);
+      rerender();
+      showToast('Presets reordered!', 'success');
+    });
+  });
+}
+
+// ─── PRODUCTS / OEMS TAB ─────────────────────────────────────────────────────
+function renderProductsTab() {
+  const products = ContentService.getData('products') || [];
+
+  const rows = products.map((p, idx) => {
+    const logo = ImageStorage.resolveImageUrl(p.logoImg);
+    return `
+      <tr>
+        <td style="width:90px;">
+          <div class="a-reorder-group">
+            <button class="a-btn-reorder btn-move-prod" data-dir="up" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''}><i class="fa-solid fa-arrow-up"></i></button>
+            <button class="a-btn-reorder btn-move-prod" data-dir="down" data-idx="${idx}" ${idx === products.length - 1 ? 'disabled' : ''}><i class="fa-solid fa-arrow-down"></i></button>
+          </div>
+        </td>
+        <td>
+          ${logo ? `<img src="${logo}" class="a-img-preview" alt="${p.name}">` : '<span style="color:#94a3b8; font-size:0.75rem;">No logo</span>'}
+        </td>
+        <td><strong>${p.name}</strong></td>
+        <td style="color:var(--a-muted); font-size:0.8rem;">${p.specialty || p.category || '—'}</td>
+        <td>
+          <button class="a-btn a-btn-outline a-btn-sm prod-edit-btn" data-idx="${idx}">
+            <i class="fa-solid fa-pen"></i> Edit
+          </button>
+          <button class="a-btn a-btn-danger a-btn-sm prod-del-btn" data-idx="${idx}" style="margin-left:6px;">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  return `
+    <div class="a-cards-box">
+      <div class="a-cards-box-header">
+        <div>
+          <h3>All OEMs / Manufacturing Partners (${products.length})</h3>
+          <p>Add, edit, delete, and reorder authorized principals with logo upload</p>
+        </div>
+        <button type="button" class="a-btn a-btn-primary a-btn-sm" id="prod-add-btn"><i class="fa-solid fa-plus"></i> Add New OEM</button>
+      </div>
+      <div class="a-table-wrap">
+        <table class="a-table">
+          <thead><tr><th>Reorder</th><th>Logo</th><th>Principal Name</th><th>Specialty / Category</th><th>Actions</th></tr></thead>
+          <tbody>${rows || '<tr><td colspan="5">No products.</td></tr>'}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function bindProductsTabEvents() {
+  const products = ContentService.getData('products') || [];
+
+  document.getElementById('prod-add-btn')?.addEventListener('click', () => {
+    openModal('Add New Principal / OEM', `
+      <div class="a-field"><label class="a-label">OEM / Principal Name</label><input class="a-input" name="name" required /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Specialty / Category</label><input class="a-input" name="specialty" placeholder="e.g. RF & Microwave Components" /></div>
+      ${renderImageUploadField('logoImg', 'Principal Logo Image', '', 'Upload PNG/SVG logo with transparent background')}
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Official Website URL</label><input class="a-input" name="website" placeholder="https://..." /></div>
+      <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Tagline</label><input class="a-input" name="tagline" /></div>
+      <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Description</label><textarea class="a-textarea" name="description"></textarea></div>
+    `, (data) => {
+      products.push({
+        id: 'oem-' + Date.now(),
+        name: data.name,
+        specialty: data.specialty,
+        category: data.specialty,
+        logoImg: data.logoImg,
+        website: data.website,
+        tagline: data.tagline,
+        description: data.description,
+      });
+      ContentService.saveData('products', products);
+    });
   });
 
   document.querySelectorAll('.prod-edit-btn').forEach(btn => {
-    btn.addEventListener('click', () => { editingProductId = btn.getAttribute('data-id'); rerender(); });
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const p = products[idx];
+      openModal('Edit Principal: ' + p.name, `
+        <div class="a-field"><label class="a-label">OEM / Principal Name</label><input class="a-input" name="name" value="${p.name}" required /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Specialty / Category</label><input class="a-input" name="specialty" value="${p.specialty || p.category || ''}" /></div>
+        ${renderImageUploadField('logoImg', 'Principal Logo Image', p.logoImg || '', 'Upload PNG/SVG logo with transparent background')}
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Official Website URL</label><input class="a-input" name="website" value="${p.website || ''}" /></div>
+        <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Tagline</label><input class="a-input" name="tagline" value="${p.tagline || ''}" /></div>
+        <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Description</label><textarea class="a-textarea" name="description">${p.description || ''}</textarea></div>
+      `, (data) => {
+        products[idx] = {
+          ...p,
+          name: data.name,
+          specialty: data.specialty,
+          category: data.specialty,
+          logoImg: data.logoImg,
+          website: data.website,
+          tagline: data.tagline,
+          description: data.description,
+        };
+        ContentService.saveData('products', products);
+      });
+    });
   });
 
   document.querySelectorAll('.prod-del-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      if (!confirm('Delete this product?')) return;
-      let products = ContentService.getData('products');
-      ContentService.saveData('products', products.filter(p => p.id !== btn.getAttribute('data-id')));
-      rerender();
-      showToast('Product deleted.', '');
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      if (confirm('Delete this product/OEM?')) {
+        products.splice(idx, 1);
+        ContentService.saveData('products', products);
+        rerender();
+        showToast('Product deleted.', '');
+      }
     });
   });
 
-  document.getElementById('prod-cancel-btn')?.addEventListener('click', () => { editingProductId = null; rerender(); });
+  document.querySelectorAll('.btn-move-prod').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const dir = btn.getAttribute('data-dir');
+      const targetIdx = dir === 'up' ? idx - 1 : idx + 1;
+      const reordered = reorderArray(products, idx, targetIdx);
+      ContentService.saveData('products', reordered);
+      rerender();
+      showToast('Products reordered!', 'success');
+    });
+  });
 }
 
-// ─── Partners Tab ────────────────────────────────────────────────────────────
+// ─── PARTNERS TAB ────────────────────────────────────────────────────────────
 function renderPartnersTab() {
-  const partners = ContentService.getData('partners');
-  const editing = partnerEditId ? partners.find(p => p.id === partnerEditId) : null;
+  const partners = ContentService.getData('partners') || [];
 
-  const rows = partners.map(p => `
-    <tr>
-      <td>${p.logoImg ? `<img src="${p.logoImg}" class="a-img-preview" alt="${p.name}">` : '<span style="color:#94a3b8;font-size:0.75rem;">No logo</span>'}</td>
-      <td><strong>${p.name}</strong></td>
-      <td style="color:var(--a-muted);font-size:0.8rem;">${p.domain || '—'}</td>
-      <td>
-        <button class="a-btn a-btn-outline a-btn-sm partner-edit-btn" data-id="${p.id}" style="margin-right:6px;"><i class="fa-solid fa-pen"></i> Edit</button>
-        <button class="a-btn a-btn-danger a-btn-sm partner-del-btn" data-id="${p.id}"><i class="fa-solid fa-trash"></i></button>
-      </td>
-    </tr>
-  `).join('');
+  const rows = partners.map((p, idx) => {
+    const logo = ImageStorage.resolveImageUrl(p.logoImg);
+    return `
+      <tr>
+        <td style="width:90px;">
+          <div class="a-reorder-group">
+            <button class="a-btn-reorder btn-move-partner" data-dir="up" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''}><i class="fa-solid fa-arrow-up"></i></button>
+            <button class="a-btn-reorder btn-move-partner" data-dir="down" data-idx="${idx}" ${idx === partners.length - 1 ? 'disabled' : ''}><i class="fa-solid fa-arrow-down"></i></button>
+          </div>
+        </td>
+        <td>${logo ? `<img src="${logo}" class="a-img-preview" alt="${p.name}">` : '<span style="color:#94a3b8;font-size:0.75rem;">No logo</span>'}</td>
+        <td><strong>${p.name}</strong></td>
+        <td style="color:var(--a-muted);font-size:0.8rem;">${p.domain || '—'}</td>
+        <td>
+          <button class="a-btn a-btn-outline a-btn-sm partner-edit-btn" data-idx="${idx}"><i class="fa-solid fa-pen"></i> Edit</button>
+          <button class="a-btn a-btn-danger a-btn-sm partner-del-btn" data-idx="${idx}" style="margin-left:6px;"><i class="fa-solid fa-trash"></i></button>
+        </td>
+      </tr>
+    `;
+  }).join('');
 
   return `
-    <div class="a-card" style="margin-bottom:20px;">
-      <div class="a-card-header">
-        <div><h3>${editing ? 'Editing: ' + editing.name : 'Add New Partner'}</h3></div>
-      </div>
-      <form id="a-page-form" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-        <input type="hidden" name="id" value="${editing?.id || ''}">
-        <div class="a-field"><label class="a-label">Partner Name</label><input class="a-input" name="name" value="${editing?.name || ''}" required></div>
-        <div class="a-field"><label class="a-label">Domain / Specialty</label><input class="a-input" name="domain" value="${editing?.domain || ''}"></div>
-        <div class="a-field"><label class="a-label">Logo URL</label><input class="a-input" name="logoImg" value="${editing?.logoImg || ''}"></div>
-        <div class="a-field"><label class="a-label">Website URL</label><input class="a-input" name="website" value="${editing?.website || ''}"></div>
-        <div class="a-field" style="grid-column:span 2"><label class="a-label">Description</label><textarea class="a-textarea" name="description">${editing?.description || ''}</textarea></div>
-        <div style="grid-column:span 2;display:flex;gap:10px;justify-content:flex-end;">
-          ${editing ? `<button type="button" class="a-btn a-btn-outline" id="partner-cancel-btn">Cancel</button>` : ''}
-          <button type="submit" class="a-btn a-btn-primary"><i class="fa-solid fa-floppy-disk"></i> ${editing ? 'Update Partner' : 'Add Partner'}</button>
+    <div class="a-cards-box">
+      <div class="a-cards-box-header">
+        <div>
+          <h3>All Technology Partners (${partners.length})</h3>
+          <p>Add, edit, delete, and reorder partners with live logo upload</p>
         </div>
-      </form>
-    </div>
-    <div class="a-card">
-      <div class="a-card-header"><div><h3>All Partners</h3><p>${partners.length} entries</p></div></div>
-      <div class="a-table-wrap"><table class="a-table"><thead><tr><th>Logo</th><th>Name</th><th>Domain</th><th>Actions</th></tr></thead><tbody>${rows}</tbody></table></div>
+        <button type="button" class="a-btn a-btn-primary a-btn-sm" id="partner-add-btn"><i class="fa-solid fa-plus"></i> Add Partner</button>
+      </div>
+      <div class="a-table-wrap">
+        <table class="a-table">
+          <thead><tr><th>Reorder</th><th>Logo</th><th>Partner Name</th><th>Domain / Specialty</th><th>Actions</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
     </div>
   `;
 }
 
-function bindPartnerTab() {
-  const form = document.getElementById('a-page-form');
-  if (!form || currentTab !== 'partners') return;
+function bindPartnersTabEvents() {
+  const partners = ContentService.getData('partners') || [];
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const fd = new FormData(form);
-    const p = { id: fd.get('id') || ('partner-' + Date.now()), name: fd.get('name'), domain: fd.get('domain'), logoImg: fd.get('logoImg'), website: fd.get('website'), description: fd.get('description') };
-    let partners = ContentService.getData('partners');
-    const idx = partners.findIndex(x => x.id === p.id);
-    if (idx >= 0) partners[idx] = { ...partners[idx], ...p };
-    else partners.unshift(p);
-    ContentService.saveData('partners', partners);
-    partnerEditId = null;
-    rerender();
-    showToast('Partner saved!', 'success');
+  document.getElementById('partner-add-btn')?.addEventListener('click', () => {
+    openModal('Add New Technology Partner', `
+      <div class="a-field"><label class="a-label">Partner Name</label><input class="a-input" name="name" required /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Domain / Specialty</label><input class="a-input" name="domain" placeholder="e.g. High-Frequency Laminates" /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Accent Color (red / blue)</label><input class="a-input" name="accentColor" value="blue" /></div>
+      ${renderImageUploadField('logoImg', 'Partner Brand Logo', '', 'Transparent PNG/SVG')}
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Official Website URL</label><input class="a-input" name="website" placeholder="https://..." /></div>
+      <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Description</label><textarea class="a-textarea" name="description"></textarea></div>
+    `, (data) => {
+      partners.push({
+        id: 'partner-' + Date.now(),
+        ...data,
+      });
+      ContentService.saveData('partners', partners);
+    });
   });
 
   document.querySelectorAll('.partner-edit-btn').forEach(btn => {
-    btn.addEventListener('click', () => { partnerEditId = btn.getAttribute('data-id'); rerender(); });
-  });
-  document.querySelectorAll('.partner-del-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      if (!confirm('Delete this partner?')) return;
-      ContentService.saveData('partners', ContentService.getData('partners').filter(p => p.id !== btn.getAttribute('data-id')));
-      rerender();
-      showToast('Partner deleted.', '');
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const p = partners[idx];
+      openModal('Edit Partner: ' + p.name, `
+        <div class="a-field"><label class="a-label">Partner Name</label><input class="a-input" name="name" value="${p.name}" required /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Domain / Specialty</label><input class="a-input" name="domain" value="${p.domain || ''}" /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Accent Color (red / blue)</label><input class="a-input" name="accentColor" value="${p.accentColor || 'blue'}" /></div>
+        ${renderImageUploadField('logoImg', 'Partner Brand Logo', p.logoImg || '', 'Transparent PNG/SVG')}
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Official Website URL</label><input class="a-input" name="website" value="${p.website || ''}" /></div>
+        <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Description</label><textarea class="a-textarea" name="description">${p.description || ''}</textarea></div>
+      `, (data) => {
+        partners[idx] = { ...p, ...data };
+        ContentService.saveData('partners', partners);
+      });
     });
   });
-  document.getElementById('partner-cancel-btn')?.addEventListener('click', () => { partnerEditId = null; rerender(); });
+
+  document.querySelectorAll('.partner-del-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      if (confirm('Delete this partner?')) {
+        partners.splice(idx, 1);
+        ContentService.saveData('partners', partners);
+        rerender();
+        showToast('Partner deleted.', '');
+      }
+    });
+  });
+
+  document.querySelectorAll('.btn-move-partner').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const dir = btn.getAttribute('data-dir');
+      const targetIdx = dir === 'up' ? idx - 1 : idx + 1;
+      const reordered = reorderArray(partners, idx, targetIdx);
+      ContentService.saveData('partners', reordered);
+      rerender();
+      showToast('Partners reordered!', 'success');
+    });
+  });
 }
 
-// ─── Blogs Tab ───────────────────────────────────────────────────────────────
+// ─── BLOGS TAB ───────────────────────────────────────────────────────────────
 function renderBlogsTab() {
-  const blogs = ContentService.getData('blogs');
-  const rows = blogs.slice(0, 20).map(b => `
-    <tr>
-      <td><strong>${b.oemId || b.id || '—'}</strong></td>
-      <td style="font-size:0.82rem;">${b.headline || b.title || '—'}</td>
-      <td><a href="${b.officialWebsite || '#'}" target="_blank" style="font-size:0.78rem;color:var(--a-blue);">${b.portalName || 'View'}</a></td>
-    </tr>
-  `).join('');
+  const blogs = ContentService.getData('blogs') || [];
+
+  const rows = blogs.map((b, idx) => {
+    const img = ImageStorage.resolveImageUrl(b.coverImg);
+    return `
+      <tr>
+        <td style="width:90px;">
+          <div class="a-reorder-group">
+            <button class="a-btn-reorder btn-move-blog" data-dir="up" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''}><i class="fa-solid fa-arrow-up"></i></button>
+            <button class="a-btn-reorder btn-move-blog" data-dir="down" data-idx="${idx}" ${idx === blogs.length - 1 ? 'disabled' : ''}><i class="fa-solid fa-arrow-down"></i></button>
+          </div>
+        </td>
+        <td>${img ? `<img src="${img}" class="a-img-preview" alt="Thumb" />` : '<span style="color:#94a3b8; font-size:0.75rem;">No image</span>'}</td>
+        <td>
+          <strong>${b.headline || b.title || 'Untitled'}</strong>
+          <div style="font-size:0.75rem; color:var(--a-muted);">${b.oemId || ''} · ${b.date || ''}</div>
+        </td>
+        <td><span class="a-badge a-badge-blue">${b.tag || b.category || 'Article'}</span></td>
+        <td>
+          <button class="a-btn a-btn-outline a-btn-sm blog-edit-btn" data-idx="${idx}"><i class="fa-solid fa-pen"></i> Edit</button>
+          <button class="a-btn a-btn-danger a-btn-sm blog-del-btn" data-idx="${idx}" style="margin-left:6px;"><i class="fa-solid fa-trash"></i></button>
+        </td>
+      </tr>
+    `;
+  }).join('');
 
   return `
-    <div class="a-card">
-      <div class="a-card-header"><div><h3>Blog & OEM Resources</h3><p>Seeded from blogData.js — ${blogs.length} entries. Full CRUD requires backend integration.</p></div></div>
-      <div class="a-table-wrap"><table class="a-table"><thead><tr><th>OEM ID</th><th>Headline</th><th>Portal</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="a-cards-box">
+      <div class="a-cards-box-header">
+        <div>
+          <h3>Blog &amp; Technical Bulletins (${blogs.length})</h3>
+          <p>Add, edit, delete, and reorder articles with cover image upload</p>
+        </div>
+        <button type="button" class="a-btn a-btn-primary a-btn-sm" id="blog-add-btn"><i class="fa-solid fa-plus"></i> Add New Blog</button>
+      </div>
+      <div class="a-table-wrap">
+        <table class="a-table">
+          <thead><tr><th>Reorder</th><th>Cover</th><th>Headline &amp; Source</th><th>Category</th><th>Actions</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
     </div>
   `;
+}
+
+function bindBlogsTabEvents() {
+  const blogs = ContentService.getData('blogs') || [];
+
+  document.getElementById('blog-add-btn')?.addEventListener('click', () => {
+    openModal('Add New Blog Article', `
+      <div class="a-field"><label class="a-label">Headline / Title</label><input class="a-input" name="headline" required /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">OEM / Principal ID (e.g. rogers-corporation, qorvo)</label><input class="a-input" name="oemId" value="rogers-corporation" /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Author (e.g. Dr. Vikram Nair)</label><input class="a-input" name="author" value="Technical Applications Team" /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Category Tag (e.g. Technical Whitepaper)</label><input class="a-input" name="tag" value="Technical Note" /></div>
+      <div class="a-field" style="margin-top:12px;"><label class="a-label">Read Time</label><input class="a-input" name="readTime" value="5 min" /></div>
+      ${renderImageUploadField('coverImg', 'Article Cover Image', '', 'Hero banner for article')}
+      <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Excerpt / Summary</label><textarea class="a-textarea" name="excerpt" required></textarea></div>
+      <div class="a-field span2" style="margin-top:12px;"><label class="a-label">External Whitepaper / Portal Link</label><input class="a-input" name="officialWebsite" placeholder="https://..." /></div>
+    `, (data) => {
+      blogs.unshift({
+        id: 'blog-' + Date.now(),
+        date: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+        ...data,
+      });
+      ContentService.saveData('blogs', blogs);
+    });
+  });
+
+  document.querySelectorAll('.blog-edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const b = blogs[idx];
+      openModal('Edit Blog Article', `
+        <div class="a-field"><label class="a-label">Headline / Title</label><input class="a-input" name="headline" value="${b.headline || b.title || ''}" required /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">OEM / Principal ID</label><input class="a-input" name="oemId" value="${b.oemId || ''}" /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Author</label><input class="a-input" name="author" value="${b.author || ''}" /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Category Tag</label><input class="a-input" name="tag" value="${b.tag || b.category || ''}" /></div>
+        <div class="a-field" style="margin-top:12px;"><label class="a-label">Read Time</label><input class="a-input" name="readTime" value="${b.readTime || ''}" /></div>
+        ${renderImageUploadField('coverImg', 'Article Cover Image', b.coverImg || '', 'Hero banner for article')}
+        <div class="a-field span2" style="margin-top:12px;"><label class="a-label">Excerpt / Summary</label><textarea class="a-textarea" name="excerpt" required>${b.excerpt || b.desc || ''}</textarea></div>
+        <div class="a-field span2" style="margin-top:12px;"><label class="a-label">External Whitepaper / Portal Link</label><input class="a-input" name="officialWebsite" value="${b.officialWebsite || ''}" /></div>
+      `, (data) => {
+        blogs[idx] = { ...b, ...data };
+        ContentService.saveData('blogs', blogs);
+      });
+    });
+  });
+
+  document.querySelectorAll('.blog-del-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      if (confirm('Delete this blog entry?')) {
+        blogs.splice(idx, 1);
+        ContentService.saveData('blogs', blogs);
+        rerender();
+        showToast('Blog deleted.', '');
+      }
+    });
+  });
+
+  document.querySelectorAll('.btn-move-blog').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const dir = btn.getAttribute('data-dir');
+      const targetIdx = dir === 'up' ? idx - 1 : idx + 1;
+      const reordered = reorderArray(blogs, idx, targetIdx);
+      ContentService.saveData('blogs', reordered);
+      rerender();
+      showToast('Blogs reordered!', 'success');
+    });
+  });
+}
+
+// ─── HEADER & NAV EDITOR ─────────────────────────────────────────────────────
+function renderHeaderPageEditor() {
+  const h = ContentService.getData('header') || {};
+
+  return `
+    <form id="a-page-form">
+      <div class="a-card">
+        <div class="a-card-header"><div><h3>Logo &amp; Brand Image</h3><p>Main website logo displayed in top navigation</p></div></div>
+        <div class="a-form-grid">
+          ${renderImageUploadField('logoUrl', 'Header Brand Logo', h.logoUrl || '/icon-logo-transparent.png', 'Transparent PNG/SVG recommended')}
+        </div>
+      </div>
+
+      <div class="a-card">
+        <div class="a-card-header"><div><h3>Header Call-to-Action (CTA)</h3><p>Button in top-right corner &amp; mobile menu</p></div></div>
+        <div class="a-form-grid">
+          <div class="a-field"><label class="a-label">Button Label</label><input class="a-input" name="ctaLabel" value="${h.ctaLabel || 'Request Quote'}"></div>
+          <div class="a-field"><label class="a-label">Button Destination</label><input class="a-input" name="ctaLink" value="${h.ctaLink || '/contact'}"></div>
+        </div>
+      </div>
+
+      <div class="a-card">
+        <div class="a-card-header"><div><h3>Navigation Menu Labels</h3><p>Customize the 7 primary navigation links</p></div></div>
+        <div class="a-form-grid">
+          <div class="a-field"><label class="a-label">Home Link Label</label><input class="a-input" name="navHome" value="${h.navHome || 'Home'}"></div>
+          <div class="a-field"><label class="a-label">About Us Label</label><input class="a-input" name="navAbout" value="${h.navAbout || 'About Us'}"></div>
+          <div class="a-field"><label class="a-label">Partners Label</label><input class="a-input" name="navPartners" value="${h.navPartners || 'Partners'}"></div>
+          <div class="a-field"><label class="a-label">Products Label</label><input class="a-input" name="navProducts" value="${h.navProducts || 'Products'}"></div>
+          <div class="a-field"><label class="a-label">Services Label</label><input class="a-input" name="navServices" value="${h.navServices || 'Services'}"></div>
+          <div class="a-field"><label class="a-label">Blogs Label</label><input class="a-input" name="navBlogs" value="${h.navBlogs || 'Blogs'}"></div>
+          <div class="a-field"><label class="a-label">Contact Label</label><input class="a-input" name="navContact" value="${h.navContact || 'Contact'}"></div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button type="submit" class="a-btn a-btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Header &amp; Nav</button>
+      </div>
+    </form>
+  `;
+}
+
+// ─── FOOTER & OFFICES EDITOR ─────────────────────────────────────────────────
+function renderFooterPageEditor() {
+  const f = ContentService.getData('footer') || {};
+
+  return `
+    <form id="a-page-form">
+      <div class="a-card">
+        <div class="a-card-header"><div><h3>Footer Branding &amp; Tagline</h3><p>Footer brand column</p></div></div>
+        <div class="a-form-grid">
+          ${renderImageUploadField('logoUrl', 'Footer Logo Image', f.logoUrl || '/icon-logo-transparent.png', 'Transparent logo')}
+          <div class="a-field span2"><label class="a-label">Company Mission Tagline</label><textarea class="a-textarea" name="tagline">${f.tagline || ''}</textarea></div>
+          <div class="a-field span2"><label class="a-label">Copyright Notice</label><input class="a-input" name="copyrightText" value="${f.copyrightText || ''}"></div>
+        </div>
+      </div>
+
+      <div class="a-card">
+        <div class="a-card-header"><div><h3>Social Media Channels</h3><p>External links for social icons</p></div></div>
+        <div class="a-form-grid">
+          <div class="a-field"><label class="a-label">LinkedIn Company URL</label><input class="a-input" name="linkedinUrl" value="${f.linkedinUrl || ''}"></div>
+          <div class="a-field"><label class="a-label">YouTube URL</label><input class="a-input" name="youtubeUrl" value="${f.youtubeUrl || ''}"></div>
+        </div>
+      </div>
+
+      <div class="a-card">
+        <div class="a-card-header"><div><h3>Office Contacts (In Footer)</h3><p>Synced with contact page</p></div></div>
+        <div class="a-form-grid">
+          <div class="a-section-divider span2">India Office</div>
+          <div class="a-field"><label class="a-label">Office Name</label><input class="a-input" name="indiaOfficeName" value="${f.indiaOfficeName || ''}"></div>
+          <div class="a-field"><label class="a-label">Telephone</label><input class="a-input" name="indiaPhone" value="${f.indiaPhone || ''}"></div>
+          <div class="a-field span2"><label class="a-label">Address</label><textarea class="a-textarea" name="indiaAddress">${f.indiaAddress || ''}</textarea></div>
+          <div class="a-field span2"><label class="a-label">Email</label><input class="a-input" name="indiaEmail" value="${f.indiaEmail || ''}"></div>
+
+          <div class="a-section-divider span2">Singapore Office</div>
+          <div class="a-field"><label class="a-label">Office Name</label><input class="a-input" name="singaporeOfficeName" value="${f.singaporeOfficeName || ''}"></div>
+          <div class="a-field"><label class="a-label">Email</label><input class="a-input" name="singaporeEmail" value="${f.singaporeEmail || ''}"></div>
+          <div class="a-field span2"><label class="a-label">Address</label><textarea class="a-textarea" name="singaporeAddress">${f.singaporeAddress || ''}</textarea></div>
+
+          <div class="a-section-divider span2">USA Office</div>
+          <div class="a-field"><label class="a-label">Office Name</label><input class="a-input" name="usaOfficeName" value="${f.usaOfficeName || ''}"></div>
+          <div class="a-field"><label class="a-label">Telephone</label><input class="a-input" name="usaPhone" value="${f.usaPhone || ''}"></div>
+          <div class="a-field span2"><label class="a-label">Address</label><textarea class="a-textarea" name="usaAddress">${f.usaAddress || ''}</textarea></div>
+          <div class="a-field span2"><label class="a-label">Email</label><input class="a-input" name="usaEmail" value="${f.usaEmail || ''}"></div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button type="submit" class="a-btn a-btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Footer Settings</button>
+      </div>
+    </form>
+  `;
+}
+
+// ─── SEO SETTINGS EDITOR ─────────────────────────────────────────────────────
+function renderSeoPageEditor() {
+  const s = ContentService.getData('seo') || {};
+
+  return `
+    <form id="a-page-form">
+      <div class="a-card">
+        <div class="a-card-header"><div><h3>Global SEO &amp; Meta Tags</h3><p>Search engine optimization tokens</p></div></div>
+        <div class="a-form-grid">
+          <div class="a-field span2"><label class="a-label">Site &lt;title&gt; Tag</label><input class="a-input" name="siteTitle" value="${s.siteTitle || ''}"></div>
+          <div class="a-field span2"><label class="a-label">Meta Description</label><textarea class="a-textarea" name="metaDescription">${s.metaDescription || ''}</textarea></div>
+          <div class="a-field span2"><label class="a-label">Meta Keywords (Comma separated)</label><input class="a-input" name="metaKeywords" value="${s.metaKeywords || ''}"></div>
+        </div>
+      </div>
+
+      <div class="a-card">
+        <div class="a-card-header"><div><h3>Open Graph &amp; Social Share</h3><p>Preview cards when links are shared on LinkedIn, Twitter, etc.</p></div></div>
+        <div class="a-form-grid">
+          <div class="a-field"><label class="a-label">OG Title</label><input class="a-input" name="ogTitle" value="${s.ogTitle || ''}"></div>
+          <div class="a-field"><label class="a-label">OG Description</label><textarea class="a-textarea" name="ogDescription">${s.ogDescription || ''}</textarea></div>
+          ${renderImageUploadField('ogImage', 'OG Social Share Image', s.ogImage || '', 'Image preview shown in social posts')}
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button type="submit" class="a-btn a-btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save SEO Settings</button>
+      </div>
+    </form>
+  `;
+}
+
+// ─── Universal Card Manager Tab Helper ───────────────────────────────────────
+function renderCardsManagerTab(title, cardsArray, cardType, fieldsList) {
+  return `
+    <div class="a-cards-box">
+      <div class="a-cards-box-header">
+        <div>
+          <h3>${title} (${cardsArray.length})</h3>
+          <p>Add, edit, delete, and reorder cards in this collection</p>
+        </div>
+        <button type="button" class="a-btn a-btn-primary a-btn-sm" id="a-add-${cardType}-btn"><i class="fa-solid fa-plus"></i> Add ${title.replace(/\s*\(\d+\)/, '')}</button>
+      </div>
+      <div class="a-table-wrap">
+        <table class="a-table">
+          <thead>
+            <tr>
+              <th>Reorder</th>
+              ${fieldsList.includes('image') ? '<th>Photo</th>' : ''}
+              <th>Item / Heading</th>
+              <th>Details</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${cardsArray.map((card, idx) => {
+              const img = fieldsList.includes('image') ? ImageStorage.resolveImageUrl(card.image) : '';
+              const titleVal = card.title || card.text || card.year || card.number || ('Item #' + (idx + 1));
+              const subVal = card.desc || card.domain || card.subtitle || card.label || card.tag || card.company || '';
+              return `
+                <tr>
+                  <td style="width:90px;">
+                    <div class="a-reorder-group">
+                      <button class="a-btn-reorder btn-move-${cardType}" data-dir="up" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''}><i class="fa-solid fa-arrow-up"></i></button>
+                      <button class="a-btn-reorder btn-move-${cardType}" data-dir="down" data-idx="${idx}" ${idx === cardsArray.length - 1 ? 'disabled' : ''}><i class="fa-solid fa-arrow-down"></i></button>
+                    </div>
+                  </td>
+                  ${fieldsList.includes('image') ? `
+                    <td>${img ? `<img src="${img}" class="a-img-preview" alt="Thumb" />` : '<span style="color:#94a3b8; font-size:0.75rem;">No image</span>'}</td>
+                  ` : ''}
+                  <td><strong>${titleVal}</strong></td>
+                  <td style="font-size:0.82rem; color:var(--a-muted); max-width:300px;">${subVal}</td>
+                  <td>
+                    <button class="a-btn a-btn-outline a-btn-sm btn-edit-${cardType}" data-idx="${idx}"><i class="fa-solid fa-pen"></i> Edit</button>
+                    <button class="a-btn a-btn-danger a-btn-sm btn-del-${cardType}" data-idx="${idx}" style="margin-left:6px;"><i class="fa-solid fa-trash"></i></button>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function bindUniversalCardActions(pageKey, parentData, arrayPropName, cardType, renderAddForm, renderEditForm) {
+  const cards = parentData[arrayPropName] || [];
+
+  document.getElementById(`a-add-${cardType}-btn`)?.addEventListener('click', () => {
+    openModal('Add New Card', renderAddForm(), (data) => {
+      cards.push({ id: `${cardType}-${Date.now()}`, ...data });
+      parentData[arrayPropName] = cards;
+      ContentService.saveData(pageKey, parentData);
+    });
+  });
+
+  document.querySelectorAll(`.btn-edit-${cardType}`).forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const card = cards[idx];
+      openModal('Edit Card', renderEditForm(card), (data) => {
+        cards[idx] = { ...card, ...data };
+        parentData[arrayPropName] = cards;
+        ContentService.saveData(pageKey, parentData);
+      });
+    });
+  });
+
+  document.querySelectorAll(`.btn-del-${cardType}`).forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      if (confirm('Delete this card?')) {
+        cards.splice(idx, 1);
+        parentData[arrayPropName] = cards;
+        ContentService.saveData(pageKey, parentData);
+        rerender();
+        showToast('Card deleted.', '');
+      }
+    });
+  });
+
+  document.querySelectorAll(`.btn-move-${cardType}`).forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const dir = btn.getAttribute('data-dir');
+      const targetIdx = dir === 'up' ? idx - 1 : idx + 1;
+      parentData[arrayPropName] = reorderArray(cards, idx, targetIdx);
+      ContentService.saveData(pageKey, parentData);
+      rerender();
+      showToast('Card order updated!', 'success');
+    });
+  });
 }

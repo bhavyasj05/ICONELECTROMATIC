@@ -4,8 +4,10 @@
  * Note: "In Stock", "Authorized" badges, and direct external datasheet links are omitted per company policy.
  */
 
+import { ContentService } from '../data/ContentService.js';
+
 export function getProductDisplayImage(product) {
-  if (product.image) return product.image;
+  if (product.image) return ContentService.resolveImg(product.image);
 
   const cat = (product.category || product.categoryName || '').toLowerCase();
   const name = (product.name || product.model || '').toLowerCase();

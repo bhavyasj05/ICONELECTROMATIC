@@ -19,14 +19,19 @@ const DRAWER_LINKS = [
 export function renderHeaderInner(currentRoute) {
   const route = currentRoute || getCurrentPath();
 
+  const data = ContentService.getData('header');
+  const logoSrc = ContentService.resolveImg(data.logoUrl || '/icon-logo-transparent.png');
+  const ctaText = data.ctaLabel || data.ctaText || 'Request Quote';
+  const ctaLink = data.ctaLink || '/contact';
+
   const navLinks = [
-    { path: '/', label: 'Home' },
-    { path: '/about', label: 'About Us' },
-    { path: '/partners', label: 'Partners' },
-    { path: '/products', label: 'Products' },
-    { path: '/services', label: 'Services' },
-    { path: '/blogs', label: 'Blogs' },
-    { path: '/contact', label: 'Contact' },
+    { path: '/', label: data.navHome || 'Home' },
+    { path: '/about', label: data.navAbout || 'About Us' },
+    { path: '/partners', label: data.navPartners || 'Partners' },
+    { path: '/products', label: data.navProducts || 'Products' },
+    { path: '/services', label: data.navServices || 'Services' },
+    { path: '/blogs', label: data.navBlogs || 'Blogs' },
+    { path: '/contact', label: data.navContact || 'Contact' },
   ];
 
   const isLight = typeof window !== 'undefined' && (
@@ -35,12 +40,10 @@ export function renderHeaderInner(currentRoute) {
     document.documentElement.getAttribute('data-theme') === 'light'
   );
 
-  const data = ContentService.getData('header');
-
   return `
     <div class="header-inner">
       <a href="#/" class="logo-container" data-route="/" title="ICON ELECTROMATIC Home">
-        <img src="${data.logoUrl || '/icon-logo-transparent.png'}" alt="ICON ELECTROMATIC" />
+        <img src="${logoSrc}" alt="ICON ELECTROMATIC" />
       </a>
 
       <nav class="main-nav" id="main-nav">
@@ -50,15 +53,15 @@ export function renderHeaderInner(currentRoute) {
           </a>
         `).join('')}
         <div class="mobile-nav-cta">
-          <a href="#${data.ctaLink || '/contact'}" class="btn-relay-red mobile-drawer-cta" data-route="${data.ctaLink || '/contact'}">
-            ${data.ctaText || 'Request a Quote'} <i class="fa-solid fa-arrow-right"></i>
+          <a href="#${ctaLink}" class="btn-relay-red mobile-drawer-cta" data-route="${ctaLink}">
+            ${ctaText} <i class="fa-solid fa-arrow-right"></i>
           </a>
         </div>
       </nav>
 
       <div class="header-actions">
-        <a href="#${data.ctaLink || '/contact'}" class="btn-relay-border" data-route="${data.ctaLink || '/contact'}">
-          ${data.ctaText || 'Request Quote'}
+        <a href="#${ctaLink}" class="btn-relay-border" data-route="${ctaLink}">
+          ${ctaText}
         </a>
         <button class="theme-toggle-btn theme-toggle-switch ${isLight ? 'is-light' : ''}" id="theme-toggle-btn" role="switch" aria-checked="${isLight ? 'true' : 'false'}" aria-label="Toggle dark and light theme" title="${isLight ? 'Switch to Darker Version' : 'Switch to Lighter Version'}">
           <span class="theme-switch-track">
@@ -104,13 +107,26 @@ export function renderHeader() {
 function renderSidebarDrawerHTML(currentRoute) {
   const route = currentRoute || getCurrentPath();
   const data = ContentService.getData('header');
+  const logoSrc = ContentService.resolveImg(data.logoUrl || '/icon-logo-transparent.png');
+  const ctaText = data.ctaLabel || data.ctaText || 'Request Quote';
+  const ctaLink = data.ctaLink || '/contact';
+
+  const drawerLinks = [
+    { path: '/', label: data.navHome || 'Home', icon: 'fa-solid fa-house' },
+    { path: '/about', label: data.navAbout || 'About Us', icon: 'fa-solid fa-building' },
+    { path: '/partners', label: data.navPartners || 'Partners', icon: 'fa-solid fa-handshake' },
+    { path: '/products', label: data.navProducts || 'Products', icon: 'fa-solid fa-microchip' },
+    { path: '/services', label: data.navServices || 'Services', icon: 'fa-solid fa-gear' },
+    { path: '/blogs', label: data.navBlogs || 'Blogs', icon: 'fa-solid fa-newspaper' },
+    { path: '/contact', label: data.navContact || 'Contact', icon: 'fa-solid fa-envelope' },
+  ];
 
   return `
     <div class="sidebar-drawer-overlay" id="sidebar-drawer-overlay" aria-hidden="true"></div>
     <aside class="sidebar-drawer" id="sidebar-drawer" aria-label="Quick Navigation Sidebar" aria-hidden="true">
       <div class="drawer-header">
         <a href="#/" class="drawer-logo" data-route="/" title="ICON ELECTROMATIC Home">
-          <img src="${data.logoUrl || '/icon-logo-transparent.png'}" alt="ICON ELECTROMATIC" />
+          <img src="${logoSrc}" alt="ICON ELECTROMATIC" />
         </a>
         <button class="drawer-close-btn" id="drawer-close-btn" aria-label="Close navigation sidebar" title="Close">
           <i class="fa-solid fa-xmark"></i>
@@ -118,7 +134,7 @@ function renderSidebarDrawerHTML(currentRoute) {
       </div>
 
       <div class="drawer-body">
-        ${DRAWER_LINKS.map(link => `
+        ${drawerLinks.map(link => `
           <a href="#${link.path}" class="drawer-nav-item ${route === link.path ? 'active' : ''}" data-route="${link.path}">
             <div class="drawer-nav-item-content">
               <span class="drawer-icon"><i class="${link.icon}"></i></span>
@@ -140,8 +156,8 @@ function renderSidebarDrawerHTML(currentRoute) {
       </div>
 
       <div class="drawer-footer">
-        <a href="#${data.ctaLink || '/contact'}" class="btn-relay-red drawer-footer-cta" data-route="${data.ctaLink || '/contact'}">
-          ${data.ctaText || 'Request Quote'} <i class="fa-solid fa-arrow-right"></i>
+        <a href="#${ctaLink}" class="btn-relay-red drawer-footer-cta" data-route="${ctaLink}">
+          ${ctaText} <i class="fa-solid fa-arrow-right"></i>
         </a>
       </div>
     </aside>

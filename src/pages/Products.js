@@ -15,6 +15,32 @@ import {
   getTotalCategoryCount,
   getTotalOEMCount
 } from '../data/catalogData.js';
+import { ContentService } from '../data/ContentService.js';
+
+function getActiveOEMs() {
+  const cmsProds = ContentService.getData('products');
+  if (Array.isArray(cmsProds) && cmsProds.length > 0) {
+    const defaultOems = getOEMs();
+    const defaultMap = new Map(defaultOems.map(o => [o.id, o]));
+    return cmsProds.map(p => {
+      const orig = defaultMap.get(p.id) || {};
+      return {
+        ...orig,
+        ...p,
+        name: p.name || orig.name,
+        specialty: p.specialty || orig.specialty || p.category,
+        logoImg: p.logoImg || orig.logoImg,
+        tagline: p.tagline || orig.tagline,
+        description: p.description || orig.description,
+        website: p.website || orig.website,
+        categories: orig.categories || [],
+        accentColor: orig.accentColor || '#2563EB',
+        glowColor: orig.glowColor || 'rgba(37,99,235,0.3)',
+      };
+    });
+  }
+  return getOEMs();
+}
 
 let navState = {
   level: 'oems',       // 'oems' | 'categories' | 'products'
@@ -153,7 +179,7 @@ function renderCurrentLevel() {
 // LEVEL 1: ALL COMPANIES (15 OEMs)
 // ═════════════════════════════════════════════════════════════════════════════
 function renderOEMsLevel() {
-  const oems = getOEMs();
+  const oems = getActiveOEMs();
   
   // Extract unique specialties from catalog matching the Excel sheet's "Speciales in" column
   const specialties = [];
@@ -279,7 +305,7 @@ function renderOEMCard(oem) {
       <!-- Prominent OEM Logo Header Showcase -->
       <div class="oem-card-logo-showcase" style="border-bottom: 1px solid ${oem.accentColor}25;">
         <div class="oem-card-logo-container">
-          ${oem.logoImg ? `<img src="${oem.logoImg}" alt="${oem.name} Official Logo" class="oem-logo-img" loading="eager" />` : oem.logoSvg}
+          ${oem.logoImg ? `<img src="${ContentService.resolveImg(oem.logoImg)}" alt="${oem.name} Official Logo" class="oem-logo-img" loading="eager" />` : (oem.logoSvg || '')}
         </div>
       </div>
 
@@ -347,7 +373,7 @@ function renderCategoriesLevel() {
     <div class="catalog-oem-banner" style="--oem-accent: ${oem.accentColor}; --oem-glow: ${oem.glowColor};">
       <div class="catalog-oem-banner-top">
         <div class="catalog-oem-banner-logo-box">
-          ${oem.logoImg ? `<img src="${oem.logoImg}" alt="${oem.name} Official Logo" class="oem-banner-logo-img" loading="eager" />` : oem.logoSvg}
+          ${oem.logoImg ? `<img src="${ContentService.resolveImg(oem.logoImg)}" alt="${oem.name} Official Logo" class="oem-banner-logo-img" loading="eager" />` : (oem.logoSvg || '')}
         </div>
         <div class="catalog-oem-banner-links">
           <a class="oem-back-btn" data-nav-params="level=oems">
@@ -390,7 +416,7 @@ function renderCategoriesLevel() {
 function renderCategoryCard(oem, cat) {
   const params = buildNavParams('products', oem.id, cat.id);
   const sampleProd = cat.products[0] || {};
-  const image = sampleProd.image || oem.defaultImage || '/images/rf-filter.jpg';
+  const image = ContentService.resolveImg(sampleProd.image || oem.defaultImage || '/images/rf-filter.jpg');
 
   return `
     <div class="category-card" data-nav-params="${params}" style="--oem-accent: ${oem.accentColor};">
@@ -525,7 +551,7 @@ function renderProductsLevel() {
 
 function renderProductCard(product, index, oem, cat) {
   const isValidLink = product.link && product.link.startsWith('http');
-  const image = product.image || oem.defaultImage || '/images/rf-filter.jpg';
+  const image = ContentService.resolveImg(product.image || oem.defaultImage || '/images/rf-filter.jpg');
 
   // Format applications into individual chips
   let apps = [];
@@ -604,7 +630,7 @@ function renderProductCard(product, index, oem, cat) {
 
 function renderProductRow(product, index, oem) {
   const isValidLink = product.link && product.link.startsWith('http');
-  const image = product.image || oem.defaultImage || '/images/rf-filter.jpg';
+  const image = ContentService.resolveImg(product.image || oem.defaultImage || '/images/rf-filter.jpg');
 
   let apps = [];
   if (product.applications) {

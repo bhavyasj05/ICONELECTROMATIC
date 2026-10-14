@@ -15,6 +15,7 @@ import { renderContactPage, initContactPage } from './pages/Contact.js';
 import { renderChatbot, initChatbot } from './components/Chatbot.js';
 import { initCustomCursor } from './components/CustomCursor.js';
 import { renderAdminPage, initAdminPage } from './admin/Admin.js';
+import { ImageStorage } from './data/ImageStorage.js';
 
 const app = document.getElementById('app');
 
@@ -29,17 +30,9 @@ function renderPage(content, initFn) {
     document.body.insertBefore(header, app);
   }
   header.style.display = 'block';
-
-  if (!header.innerHTML.trim()) {
-    header.innerHTML = renderHeaderInner(currentPath);
-    initHeader();
-  } else {
-    header.querySelectorAll('.nav-link').forEach(link => {
-      const linkRoute = link.getAttribute('data-route') || link.getAttribute('href')?.replace(/^#/, '');
-      link.classList.toggle('active', linkRoute === currentPath);
-    });
-    updateDrawerActiveState(currentPath);
-  }
+  header.innerHTML = renderHeaderInner(currentPath);
+  initHeader();
+  updateDrawerActiveState(currentPath);
 
   // Always close mobile navigation drawer and sidebar drawer when a route loads
   const mainNav = document.getElementById('main-nav');
@@ -90,5 +83,7 @@ registerRoute('/admin', () => {
 });
 
 // Initialize router and components immediately
-initRouter();
-initCustomCursor();
+ImageStorage.init().finally(() => {
+  initRouter();
+  initCustomCursor();
+});
